@@ -471,14 +471,14 @@ folder “scripts” within your project folder, e.g. as
 </div>
 <p>We are living in an age of big data where biodiversity data are
 becoming increasingly available in digital format and at a global scale
-<span class="citation">(<strong>W_est_2019?</strong>)</span>. Many
-different types of biodiversity data exist, e.g. from standardised
-monitoring schemes, citizen science platforms, or expert knowledge. Each
-of these data types comes with own challenges. Here, we simply want to
-learn how we can obtain and process typical types of species data.
-Specifically, we will work with range maps of terrestrial animals and
-plants, and with occurrence data for terrestrial species in <a
-href="https://www.gbif.org/">GBIF</a>(the Global Biodiversity
+<span class="citation">(Wüest et al. 2020)</span>. Many different types
+of biodiversity data exist, e.g. from standardised monitoring schemes,
+citizen science platforms, or expert knowledge. Each of these data types
+comes with own challenges. Here, we simply want to learn how we can
+obtain and process typical types of species data. Specifically, we will
+work with range maps of terrestrial animals and plants, and with
+occurrence data for terrestrial species in <a
+href="https://www.gbif.org/">GBIF</a> (the Global Biodiversity
 Information facility).</p>
 <div id="range-maps" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Range maps</h1>
@@ -976,13 +976,13 @@ href="http://rspatial.org" class="uri">http://rspatial.org</a>.</p>
 
 # Check out the number of occurrences found in GBIF:
 occ_count()</code></pre>
-<pre><code>## [1] 2184340472</code></pre>
+<pre><code>## [1] 2184349123</code></pre>
 <pre class="r"><code># number of observations:
 occ_count(basisOfRecord=&#39;OBSERVATION&#39;)</code></pre>
 <pre><code>## [1] 19940099</code></pre>
 <pre class="r"><code># number of occurrences reported for Germany:
 occ_count(country=isocodes[grep(&quot;Germany&quot;, isocodes$name), &quot;code&quot;])</code></pre>
-<pre><code>## [1] 49852563</code></pre>
+<pre><code>## [1] 49852723</code></pre>
 <pre class="r"><code># number of observations reported for Germany:
 occ_count(country=isocodes[grep(&quot;Germany&quot;, isocodes$name), &quot;code&quot;],basisOfRecord=&#39;OBSERVATION&#39;)</code></pre>
 <pre><code>## [1] 290584</code></pre>
@@ -1190,6 +1190,13 @@ Krosby, M., C. B. Wilsey, J. L. McGuire, J. M. Duggan, T. M. Nogeire, J.
 A. Heinrichs, J. J. Tewksbury, and J. J. Lawler. 2015.
 <span>“Climate-Induced Range Overlap Among Closely Related
 Species.”</span> <em>Nature Climate Change</em> 5: 883–86.
+</div>
+<div id="ref-W_est_2020" class="csl-entry">
+Wüest, R. O., N. E. Zimmermann, D. Zurell, J. M. Alexander, S. A. Fritz,
+C. Hof, H. Kreft, et al. 2020. <span>“Macroecology in the Age of Big
+Data <span></span> Where to Go from Here?”</span> <em>Journal of
+Biogeography</em> 47 (1): 1–12. <a
+href="https://doi.org/10.1111/jbi.13633">https://doi.org/10.1111/jbi.13633</a>.
 </div>
 <div id="ref-Zizka2019" class="csl-entry">
 Zizka, A., D. Silvestro, T. Andermann, J. Azevedo, C. Duarte Ritter, D.
