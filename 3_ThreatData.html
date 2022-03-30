@@ -386,7 +386,7 @@ div.tocify {
       <a href="6_SDM_eval.html">6. SDMs: assessment and prediction</a>
     </li>
     <li>
-      <a href="7_SDM_algorithms.html">7. SDMs: algorihms and ensembles</a>
+      <a href="7_SDM_algorithms.html">7. SDMs: algorithms and ensembles</a>
     </li>
   </ul>
 </li>
@@ -749,27 +749,27 @@ href="https://www.iucnredlist.org/resources/threat-classification-scheme">Threat
 Classification Scheme</a>.</p>
 <pre class="r"><code>redlist_threats[sample(nrow(redlist_threats),10),-c(1:2)]</code></pre>
 <pre><code>##                                           title  timing             scope
-## 934   Small-holder grazing, ranching or farming Ongoing              &lt;NA&gt;
-## 22                 Livestock farming &amp; ranching Ongoing              &lt;NA&gt;
-## 631      Hunting &amp; trapping terrestrial animals Ongoing Majority (50-90%)
-## 1004  Abstraction of ground water (unknown use) Ongoing              &lt;NA&gt;
-## 16                     Scale Unknown/Unrecorded Ongoing              &lt;NA&gt;
-## 1148                                 Oil spills Ongoing           Unknown
-## 441  Abstraction of surface water (unknown use) Ongoing   Minority (&lt;50%)
-## 349               Motivation Unknown/Unrecorded Ongoing   Minority (&lt;50%)
-## 758  Agro-industry grazing, ranching or farming Ongoing              &lt;NA&gt;
-## 502                         Persecution/control Ongoing   Minority (&lt;50%)
-##                              severity         score invasive
-## 934                              &lt;NA&gt; Low Impact: 3     &lt;NA&gt;
-## 22                               &lt;NA&gt; Low Impact: 3     &lt;NA&gt;
-## 631               Negligible declines Low Impact: 5     &lt;NA&gt;
-## 1004                             &lt;NA&gt; Low Impact: 3     &lt;NA&gt;
-## 16                               &lt;NA&gt; Low Impact: 3     &lt;NA&gt;
-## 1148                          Unknown       Unknown     &lt;NA&gt;
-## 441  Causing/Could cause fluctuations Low Impact: 5     &lt;NA&gt;
-## 349                           Unknown       Unknown     &lt;NA&gt;
-## 758                              &lt;NA&gt; Low Impact: 3     &lt;NA&gt;
-## 502  Causing/Could cause fluctuations Low Impact: 5     &lt;NA&gt;</code></pre>
+## 863                   Herbicides and pesticides Ongoing   Minority (&lt;50%)
+## 203                   Herbicides and pesticides Ongoing Majority (50-90%)
+## 495           Subsistence/artisinal aquaculture Ongoing Majority (50-90%)
+## 171                     Type Unknown/Unrecorded Ongoing              &lt;NA&gt;
+## 170             Industrial &amp; military effluents Ongoing              &lt;NA&gt;
+## 851  Agro-industry grazing, ranching or farming Ongoing   Minority (&lt;50%)
+## 1042                      Housing &amp; urban areas Ongoing Majority (50-90%)
+## 759                           Roads &amp; railroads Ongoing              &lt;NA&gt;
+## 683                        Temperature extremes Ongoing      Whole (&gt;90%)
+## 266     Intentional use (species is the target) Ongoing              &lt;NA&gt;
+##                              severity            score invasive
+## 863        Slow, Significant Declines    Low Impact: 5     &lt;NA&gt;
+## 203                           Unknown          Unknown     &lt;NA&gt;
+## 495                    Rapid Declines Medium Impact: 7     &lt;NA&gt;
+## 171                              &lt;NA&gt;    Low Impact: 3     &lt;NA&gt;
+## 170                              &lt;NA&gt;    Low Impact: 3     &lt;NA&gt;
+## 851  Causing/Could cause fluctuations    Low Impact: 5     &lt;NA&gt;
+## 1042       Slow, Significant Declines Medium Impact: 6     &lt;NA&gt;
+## 759                              &lt;NA&gt;    Low Impact: 3     &lt;NA&gt;
+## 683  Causing/Could cause fluctuations Medium Impact: 7     &lt;NA&gt;
+## 266                              &lt;NA&gt;    Low Impact: 3     &lt;NA&gt;</code></pre>
 <p>We can extract many useful information from this table, for example,
 when specific threats occurred.</p>
 <pre class="r"><code>table(redlist_threats$timing)</code></pre>
