@@ -493,45 +493,53 @@ based on the IUCN range maps. We can quickly read the data back in:</p>
 load(&#39;data/lynx_thinned.RData&#39;)</code></pre>
 <p>Quickly set up the model according to session 5.</p>
 <pre class="r"><code>m_step &lt;- step(
-  glm( occ ~ bio6 + I(bio6^2) + bio10 + I(bio10^2), 
+  glm( occ ~ bio11 + I(bio11^2) + bio10 + I(bio10^2), 
                family=&#39;binomial&#39;, data=lynx_thinned)
   )</code></pre>
-<pre><code>## Start:  AIC=270.14
-## occ ~ bio6 + I(bio6^2) + bio10 + I(bio10^2)
+<pre><code>## Start:  AIC=269.86
+## occ ~ bio11 + I(bio11^2) + bio10 + I(bio10^2)
 ## 
 ##              Df Deviance    AIC
-## &lt;none&gt;            260.14 270.14
-## - I(bio6^2)   1   264.09 272.09
-## - bio6        1   288.38 296.38
-## - bio10       1   303.37 311.37
-## - I(bio10^2)  1   304.86 312.86</code></pre>
+## - I(bio11^2)  1   261.81 269.81
+## &lt;none&gt;            259.86 269.86
+## - I(bio10^2)  1   304.23 312.23
+## - bio10       1   304.59 312.59
+## - bio11       1   324.75 332.75
+## 
+## Step:  AIC=269.81
+## occ ~ bio11 + bio10 + I(bio10^2)
+## 
+##              Df Deviance    AIC
+## &lt;none&gt;            261.81 269.81
+## - I(bio10^2)  1   308.20 314.20
+## - bio10       1   309.01 315.01
+## - bio11       1   405.06 411.06</code></pre>
 <pre class="r"><code>summary(m_step)</code></pre>
 <pre><code>## 
 ## Call:
-## glm(formula = occ ~ bio6 + I(bio6^2) + bio10 + I(bio10^2), family = &quot;binomial&quot;, 
+## glm(formula = occ ~ bio11 + bio10 + I(bio10^2), family = &quot;binomial&quot;, 
 ##     data = lynx_thinned)
 ## 
 ## Deviance Residuals: 
-##     Min       1Q   Median       3Q      Max  
-## -2.1116  -0.3996  -0.0316   0.4443   3.1844  
+##      Min        1Q    Median        3Q       Max  
+## -2.22910  -0.40878  -0.05073   0.37329   3.08947  
 ## 
 ## Coefficients:
 ##               Estimate Std. Error z value Pr(&gt;|z|)    
-## (Intercept) -1.925e+01  3.056e+00  -6.298 3.02e-10 ***
-## bio6        -5.372e-02  1.230e-02  -4.368 1.25e-05 ***
-## I(bio6^2)   -1.211e-04  6.165e-05  -1.965   0.0494 *  
-## bio10        2.220e-01  4.124e-02   5.382 7.35e-08 ***
-## I(bio10^2)  -7.588e-04  1.410e-04  -5.381 7.39e-08 ***
+## (Intercept) -1.900e+01  3.124e+00  -6.084 1.17e-09 ***
+## bio11       -3.719e-02  4.188e-03  -8.880  &lt; 2e-16 ***
+## bio10        2.355e-01  4.228e-02   5.571 2.53e-08 ***
+## I(bio10^2)  -7.793e-04  1.433e-04  -5.437 5.41e-08 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## (Dispersion parameter for binomial family taken to be 1)
 ## 
 ##     Null deviance: 531.29  on 422  degrees of freedom
-## Residual deviance: 260.14  on 418  degrees of freedom
-## AIC: 270.14
+## Residual deviance: 261.81  on 419  degrees of freedom
+## AIC: 269.81
 ## 
-## Number of Fisher Scoring iterations: 8</code></pre>
+## Number of Fisher Scoring iterations: 7</code></pre>
 </div>
 </div>
 <div id="model-assessment" class="section level1" number="2">
@@ -558,10 +566,10 @@ function.</p>
 <pre class="r"><code># If we do not provide &quot;newdata&quot;, then predict() should simply return the fitted values: 
 head(predict(m_step, type=&#39;response&#39;))</code></pre>
 <pre><code>##            1            2            3            4            5            6 
-## 9.609411e-07 4.493609e-07 1.109808e-05 9.290470e-04 3.739806e-03 7.178475e-03</code></pre>
+## 8.382608e-06 2.074984e-06 3.432626e-05 1.653242e-03 1.042285e-02 2.004030e-02</code></pre>
 <pre class="r"><code>head(m_step$fitted)</code></pre>
 <pre><code>##            1            2            3            4            5            6 
-## 9.609411e-07 4.493609e-07 1.109808e-05 9.290470e-04 3.739806e-03 7.178475e-03</code></pre>
+## 8.382608e-06 2.074984e-06 3.432626e-05 1.653242e-03 1.042285e-02 2.004030e-02</code></pre>
 <p>If we want to predict model response along the two environmental
 gradients, we first need to define a grid that contains all combinations
 of the two variables. For this, we use a combination of the
@@ -570,20 +578,20 @@ of the two variables. For this, we use a combination of the
 # and along their entire environmental gradients:
 xyz &lt;- expand.grid(
   # We produce a sequence of environmental values within the predictor ranges:
-    bio6 = seq(min(lynx_thinned$bio6),max(lynx_thinned$bio6),length=50),
+    bio11 = seq(min(lynx_thinned$bio11),max(lynx_thinned$bio11),length=50),
     bio10 = seq(min(lynx_thinned$bio10),max(lynx_thinned$bio10),length=50)
     )
 
 # Now we can make predictions to this new data frame
 xyz$z &lt;- predict(m_step, newdata=xyz, type=&#39;response&#39;)
 summary(xyz)</code></pre>
-<pre><code>##       bio6             bio10              z            
-##  Min.   :-220.61   Min.   : 39.86   Min.   :0.0000000  
-##  1st Qu.:-144.05   1st Qu.:109.80   1st Qu.:0.0000083  
-##  Median : -64.31   Median :182.66   Median :0.0026296  
-##  Mean   : -64.31   Mean   :182.66   Mean   :0.1695909  
-##  3rd Qu.:  15.44   3rd Qu.:255.53   3rd Qu.:0.1853788  
-##  Max.   :  92.00   Max.   :325.47   Max.   :0.9499314</code></pre>
+<pre><code>##      bio11             bio10              z            
+##  Min.   :-157.50   Min.   : 39.86   Min.   :0.0000000  
+##  1st Qu.: -88.19   1st Qu.:109.80   1st Qu.:0.0000206  
+##  Median : -16.00   Median :182.66   Median :0.0041813  
+##  Mean   : -16.00   Mean   :182.66   Mean   :0.1673615  
+##  3rd Qu.:  56.19   3rd Qu.:255.53   3rd Qu.:0.1556227  
+##  Max.   : 125.50   Max.   :325.47   Max.   :0.9905326</code></pre>
 <pre class="r"><code># As result, we have a 3D data structure and want to visualise this.
 # Here, I first set a color palette
 library(RColorBrewer)
@@ -591,11 +599,11 @@ cls &lt;- colorRampPalette(rev(brewer.pal(11, &#39;RdYlBu&#39;)))(100)
 
 # Finally, we plot the response surface using the wireframe function from the lattice package
 library(lattice)
-wireframe(z ~ bio6 + bio10, data = xyz, zlab = list(&quot;Occurrence prob.&quot;, rot=90), 
+wireframe(z ~ bio11 + bio10, data = xyz, zlab = list(&quot;Occurrence prob.&quot;, rot=90), 
           drape = TRUE, col.regions = cls, scales = list(arrows = FALSE), zlim = c(0, 1))</code></pre>
 <p><img src="6_SDM_eval_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <pre class="r"><code># We can also rotate the axes to better see the surface
-wireframe(z ~ bio6 + bio10, data = xyz, zlab = list(&quot;Occurrence prob.&quot;, rot=90), 
+wireframe(z ~ bio11 + bio10, data = xyz, zlab = list(&quot;Occurrence prob.&quot;, rot=90), 
           drape = TRUE, col.regions = cls, scales = list(arrows = FALSE), zlim = c(0, 1), 
           screen=list(z = -120, x = -70, y = 3))</code></pre>
 <p><img src="6_SDM_eval_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
@@ -610,7 +618,7 @@ use the function <code>partial_response()</code> from the
 <pre class="r"><code>library(mecofun)
 
 # Names of our variables:
-my_preds &lt;- c(&#39;bio6&#39;, &#39;bio10&#39;)
+my_preds &lt;- c(&#39;bio11&#39;, &#39;bio10&#39;)
 
 # We want two panels next to each other:
 par(mfrow=c(1,2))
@@ -640,7 +648,7 @@ performance</h2>
 meaning how well the model fits the data.</p>
 <pre class="r"><code>expl_deviance(obs = lynx_thinned$occ,
               pred = m_step$fitted)</code></pre>
-<pre><code>## [1] 0.5103614</code></pre>
+<pre><code>## [1] 0.50721</code></pre>
 <p>Here, our two-predictor model explains roughly 40% of the variance in
 the data. However, often we are not only interested in how well our
 model fits the data but how robust the model is against changes in the
@@ -666,9 +674,7 @@ class="citation">(Roberts et al. 2017)</span>.</p>
 re-calibrate the model using only 4/5 of the original data and predict
 the model to the hold-out 1/5 of the data.</p>
 <pre class="r"><code>preds_cv &lt;- crossvalSDM(m_step, traindat = lynx_thinned, colname_species = &#39;occ&#39;, colname_pred = my_preds)</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
 <p>We receive a numeric vector of cross-validated prediction. Out of
 curiosity, let us compare the fitted values on the training data and the
 predictions on the cross-validation data. You should see that the
@@ -709,17 +715,17 @@ thresh_dat &lt;- data.frame(
 (thresh_cv &lt;- PresenceAbsence::optimal.thresholds(DATA= thresh_dat))</code></pre>
 <pre><code>##          Method      pred
 ## 1       Default 0.5000000
-## 2     Sens=Spec 0.4000000
-## 3  MaxSens+Spec 0.3900000
-## 4      MaxKappa 0.5500000
-## 5        MaxPCC 0.5500000
-## 6  PredPrev=Obs 0.4900000
+## 2     Sens=Spec 0.3800000
+## 3  MaxSens+Spec 0.3600000
+## 4      MaxKappa 0.5300000
+## 5        MaxPCC 0.5350000
+## 6  PredPrev=Obs 0.4550000
 ## 7       ObsPrev 0.3215130
-## 8      MeanProb 0.3208598
-## 9    MinROCdist 0.3900000
-## 10      ReqSens 0.3900000
-## 11      ReqSpec 0.3900000
-## 12         Cost 0.5500000</code></pre>
+## 8      MeanProb 0.3216002
+## 9    MinROCdist 0.3600000
+## 10      ReqSens 0.3800000
+## 11      ReqSpec 0.3500000
+## 12         Cost 0.5300000</code></pre>
 <p>We can compare observed vs. predicted presences and absences based on
 these tresholds. For this, we take our predictions from the
 cross-validation. The comparison is easiest illustrated in a confusion
@@ -732,8 +738,8 @@ thresholds data frame):</p>
 <pre class="r"><code>(cmx_maxSSS &lt;- PresenceAbsence::cmx(DATA= thresh_dat, threshold=thresh_cv[3,2]))</code></pre>
 <pre><code>##          observed
 ## predicted   1   0
-##         1 119  43
-##         0  17 244</code></pre>
+##         1 119  42
+##         0  17 245</code></pre>
 <p>From such a confusion matrix, we can calculate different evaluation
 criteria. For example,<br />
 - the proportion of correctly classified test observations
@@ -744,22 +750,22 @@ sensitivity or true positive rate<br />
 specificity or true negative rate</p>
 <pre class="r"><code># Proportion of correctly classified observations
 PresenceAbsence::pcc(cmx_maxSSS, st.dev=F)</code></pre>
-<pre><code>## [1] 0.858156</code></pre>
+<pre><code>## [1] 0.8605201</code></pre>
 <pre class="r"><code># Sensitivity = true positive rate
 PresenceAbsence::sensitivity(cmx_maxSSS, st.dev=F)</code></pre>
 <pre><code>## [1] 0.875</code></pre>
 <pre class="r"><code># Specificity = true negative rate
 PresenceAbsence::specificity(cmx_maxSSS, st.dev=F)</code></pre>
-<pre><code>## [1] 0.8501742</code></pre>
+<pre><code>## [1] 0.8536585</code></pre>
 <p>Other measures are <em>Kappa</em> and <em>TSS</em> (the true skill
 statistic). <span class="citation">Allouche, Tsoar, and Kadmon
 (2006)</span> explain how to calculate these.</p>
 <pre class="r"><code># Kappa
 PresenceAbsence::Kappa(cmx_maxSSS, st.dev=F)</code></pre>
-<pre><code>## [1] 0.6904501</code></pre>
+<pre><code>## [1] 0.6950476</code></pre>
 <pre class="r"><code># True skill statistic
 TSS(cmx_maxSSS) </code></pre>
-<pre><code>## [1] 0.7251742</code></pre>
+<pre><code>## [1] 0.7286585</code></pre>
 <p>According to <span class="citation">Araujo et al. (2005)</span>,
 <em>Kappa</em>&gt;0.4 indicate good predictions. For TSS, we often
 assume TSS&gt;0.5 to indicate good predictions.</p>
@@ -790,7 +796,7 @@ plot(roc_cv, col = &quot;grey70&quot;, lwd = 2)</code></pre>
 <p><img src="6_SDM_eval_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <pre class="r"><code># Compute the AUC:
 AUC::auc(roc_cv)</code></pre>
-<pre><code>## [1] 0.9278541</code></pre>
+<pre><code>## [1] 0.9302111</code></pre>
 <p>It seems our model is performing pretty well on hold-out data. We can
 thus attempt making predictions in space and time.</p>
 <p>Please be aware that many packages contain functions for evaluating
@@ -801,8 +807,8 @@ the <code>mecofun</code> package contains a function
 measures. By default, this function uses the <em>MaxSens+Spec</em>
 threshold.</p>
 <pre class="r"><code>evalSDM(lynx_thinned$occ, preds_cv)</code></pre>
-<pre><code>##         AUC       TSS     Kappa  Sens      Spec      PCC        D2 thresh
-## 1 0.9278541 0.7251742 0.6904501 0.875 0.8501742 0.858156 0.4918152   0.39</code></pre>
+<pre><code>##         AUC       TSS     Kappa  Sens      Spec       PCC        D2 thresh
+## 1 0.9302111 0.7286585 0.6950476 0.875 0.8536585 0.8605201 0.5022414   0.36</code></pre>
 <div class="alert alert-info">
 <p><em><strong>Exercise:</strong></em></p>
 <p>Use the <code>m2</code> model from the previous exercise and assess

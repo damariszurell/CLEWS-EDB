@@ -915,7 +915,7 @@ sum(lynx_thinned$occ)</code></pre>
 <p>According to the rule of thumb, we can include up to 13-14
 parameters, meaning we can include linear and quadratic terms for almost
 all of the weakly correlated variables. But for simplicity, let’s start
-with 2 variables. The most important in terms of AIC were bio6 and
+with 2 variables. The most important in terms of AIC were bio11 and
 bio10.</p>
 </div>
 </div>
@@ -926,35 +926,35 @@ can fit the full model and then simplify it. The latter is typically
 called model selection. Here, I only use the two most important
 variables and include linear and quadratic terms in the full model.</p>
 <pre class="r"><code># Fit the full model:
-m1 &lt;- glm( occ ~ bio6 + I(bio6^2) + bio10 + I(bio10^2), 
+m1 &lt;- glm( occ ~ bio11 + I(bio11^2) + bio10 + I(bio10^2), 
                family=&#39;binomial&#39;, data=lynx_thinned)
 
 # Inspect the model:
 summary(m1)</code></pre>
 <pre><code>## 
 ## Call:
-## glm(formula = occ ~ bio6 + I(bio6^2) + bio10 + I(bio10^2), family = &quot;binomial&quot;, 
-##     data = lynx_thinned)
+## glm(formula = occ ~ bio11 + I(bio11^2) + bio10 + I(bio10^2), 
+##     family = &quot;binomial&quot;, data = lynx_thinned)
 ## 
 ## Deviance Residuals: 
 ##     Min       1Q   Median       3Q      Max  
-## -2.1116  -0.3996  -0.0316   0.4443   3.1844  
+## -2.1214  -0.4037  -0.0303   0.4276   3.2879  
 ## 
 ## Coefficients:
 ##               Estimate Std. Error z value Pr(&gt;|z|)    
-## (Intercept) -1.925e+01  3.056e+00  -6.298 3.02e-10 ***
-## bio6        -5.372e-02  1.230e-02  -4.368 1.25e-05 ***
-## I(bio6^2)   -1.211e-04  6.165e-05  -1.965   0.0494 *  
-## bio10        2.220e-01  4.124e-02   5.382 7.35e-08 ***
-## I(bio10^2)  -7.588e-04  1.410e-04  -5.381 7.39e-08 ***
+## (Intercept) -1.808e+01  3.084e+00  -5.862 4.56e-09 ***
+## bio11       -4.721e-02  8.967e-03  -5.265 1.40e-07 ***
+## I(bio11^2)  -1.101e-04  7.988e-05  -1.379    0.168    
+## bio10        2.256e-01  4.178e-02   5.400 6.68e-08 ***
+## I(bio10^2)  -7.561e-04  1.418e-04  -5.334 9.60e-08 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## (Dispersion parameter for binomial family taken to be 1)
 ## 
 ##     Null deviance: 531.29  on 422  degrees of freedom
-## Residual deviance: 260.14  on 418  degrees of freedom
-## AIC: 270.14
+## Residual deviance: 259.86  on 418  degrees of freedom
+## AIC: 269.86
 ## 
 ## Number of Fisher Scoring iterations: 8</code></pre>
 <p>How much deviance is explained by our model? The function
@@ -965,7 +965,7 @@ the data in relation to the null model predictions.</p>
 <pre class="r"><code># Explained deviance:
 expl_deviance(obs = lynx_thinned$occ,
               pred = m1$fitted)</code></pre>
-<pre><code>## [1] 0.5103614</code></pre>
+<pre><code>## [1] 0.5108966</code></pre>
 <p>We can simplify the model further by using stepwise variable
 selection. The function <code>step()</code> uses the AIC to compare
 different subsets of the model. Specifically, it will iteratively drop
@@ -976,34 +976,33 @@ variables and add variables until the AIC cannot be improved further
 summary(m_step)</code></pre>
 <pre><code>## 
 ## Call:
-## glm(formula = occ ~ bio6 + I(bio6^2) + bio10 + I(bio10^2), family = &quot;binomial&quot;, 
+## glm(formula = occ ~ bio11 + bio10 + I(bio10^2), family = &quot;binomial&quot;, 
 ##     data = lynx_thinned)
 ## 
 ## Deviance Residuals: 
-##     Min       1Q   Median       3Q      Max  
-## -2.1116  -0.3996  -0.0316   0.4443   3.1844  
+##      Min        1Q    Median        3Q       Max  
+## -2.22910  -0.40878  -0.05073   0.37329   3.08947  
 ## 
 ## Coefficients:
 ##               Estimate Std. Error z value Pr(&gt;|z|)    
-## (Intercept) -1.925e+01  3.056e+00  -6.298 3.02e-10 ***
-## bio6        -5.372e-02  1.230e-02  -4.368 1.25e-05 ***
-## I(bio6^2)   -1.211e-04  6.165e-05  -1.965   0.0494 *  
-## bio10        2.220e-01  4.124e-02   5.382 7.35e-08 ***
-## I(bio10^2)  -7.588e-04  1.410e-04  -5.381 7.39e-08 ***
+## (Intercept) -1.900e+01  3.124e+00  -6.084 1.17e-09 ***
+## bio11       -3.719e-02  4.188e-03  -8.880  &lt; 2e-16 ***
+## bio10        2.355e-01  4.228e-02   5.571 2.53e-08 ***
+## I(bio10^2)  -7.793e-04  1.433e-04  -5.437 5.41e-08 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## (Dispersion parameter for binomial family taken to be 1)
 ## 
 ##     Null deviance: 531.29  on 422  degrees of freedom
-## Residual deviance: 260.14  on 418  degrees of freedom
-## AIC: 270.14
+## Residual deviance: 261.81  on 419  degrees of freedom
+## AIC: 269.81
 ## 
-## Number of Fisher Scoring iterations: 8</code></pre>
+## Number of Fisher Scoring iterations: 7</code></pre>
 <pre class="r"><code># Explained deviance:
 expl_deviance(obs = lynx_thinned$occ,
               pred = m_step$fitted)</code></pre>
-<pre><code>## [1] 0.5103614</code></pre>
+<pre><code>## [1] 0.50721</code></pre>
 <p>The final model only selected the linear terms for bio11 and bio8.
 The explained deviance is a tiny bit lower than for the quadratic model,
 but the linear model is more parsimonious.</p>
