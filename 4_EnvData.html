@@ -62,6 +62,28 @@ if (window.hljs) {
 
 
 
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 
 
@@ -447,7 +469,288 @@ your folder “scripts” within your project folder, e.g. as
 “4_EnvData.R”</li>
 </ul>
 </div>
-<p><em>Site under construction …</em></p>
+<p>In ecosystem and biodiversity modelling, we often aim to understand
+how environment is shaping ecosystems and biodiversity patterns. Thus,
+additional to our biodiversity data we need environmental information.
+Many data are now available at very high spatial resolution, e.g. lidar
+data. However, often, high resolution data are not necessarily available
+globally - although the data are constantly improving. I can’t give you
+a full overview over all available data sets. Rather, you should get an
+idea how you process the data to make best use of them for your
+ecosystem and biodiversity models.</p>
+<div id="climate-data" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Climate data</h1>
+<p>The <em>raster</em> package is offering direct access to some
+standard repositories; see the help pages <code>?getData</code>.</p>
+<pre class="r"><code>library(raster)</code></pre>
+<pre><code>## Loading required package: sp</code></pre>
+<p>We have already used this for extracting climate data from the
+worldclim database (<a href="http://worldclim.org/"
+class="uri">http://worldclim.org/</a>). Please note that there are newer
+climate data sets out, e.g. the Chelsa climatologies (<a
+href="http://chelsa-climate.org/"
+class="uri">http://chelsa-climate.org/</a>) that are preferable in many
+cases <span class="citation">(Karger et al. 2017)</span>.</p>
+<p>We download the 19 bioclimatic variables at a 10’ resolution
+(<code>res=10</code>). The variables are indicated by
+<code>var="bio"</code>. For an explanation of the 19 bioclimatic see
+here: <a href="https://www.worldclim.org/data/bioclim.html"
+class="uri">https://www.worldclim.org/data/bioclim.html</a>. (Note that
+Chelsa climatologies offer the same set of 19 bioclim variables.) Other
+valid variable names are ‘tmin’, ‘tmax’ and ‘prec’. See the
+<code>?getData</code> help pages for more information.</p>
+<pre class="r"><code>clim &lt;- getData(&quot;worldclim&quot;, var=&quot;bio&quot;, res=10, download=T, path=&quot;data&quot;)
+
+# Now, let&#39;s look at the data:
+clim
+# Can you explain, what a raster stack is?
+plot(clim[[1:2]])</code></pre>
+<pre><code>## class      : RasterStack 
+## dimensions : 900, 2160, 1944000, 19  (nrow, ncol, ncell, nlayers)
+## resolution : 0.1666667, 0.1666667  (x, y)
+## extent     : -180, 180, -60, 90  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## names      :  bio1,  bio2,  bio3,  bio4,  bio5,  bio6,  bio7,  bio8,  bio9, bio10, bio11, bio12, bio13, bio14, bio15, ... 
+## min values :  -269,     9,     8,    72,   -59,  -547,    53,  -251,  -450,   -97,  -488,     0,     0,     0,     0, ... 
+## max values :   314,   211,    95, 22673,   489,   258,   725,   375,   364,   380,   289,  9916,  2088,   652,   261, ...</code></pre>
+<p><img src="4_EnvData_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<div id="climate-scenarios" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Climate
+scenarios</h2>
+<p>The Chelsa and worldclim data bases also offer downscaled climate
+scenarios. The scenarios stem from the World Climate Research Programme
+Coupled Model Intercomparison Projects (CMIPs). The most recent is the
+CMIP6 and the corresponding scenarios can be downloaded form the Chelsa
+or worlclim websites. The built-in <code>raster</code> package function
+<code>getData()</code> only provides access to the CMIP5 scenarios but
+which we will use here for convenience. As argument for the dataset name
+we provide <code>CMIP5</code>. Additionally, we have to indicate which
+<code>model</code> (global circulation model, GCM) we want to download,
+which <code>rcp</code> (representative concentration pathway, RCP) and
+which <code>year</code> (projection period; 2050 = average for
+2041-2060, 2070 = average for 2061-2080). More information on the model
+abbreviations and the available RCPs can be found here: <a
+href="https://worldclim.org/data/cmip5_10m.html"
+class="uri">https://worldclim.org/data/cmip5_10m.html</a>. As above, we
+have to provide <code>var</code> and <code>res</code> arguments as
+well.</p>
+<pre class="r"><code># Please note that you have to set download=T if you haven&#39;t downloaded the data before:
+clim_fut &lt;- getData(&#39;CMIP5&#39;, var=&#39;bio&#39;, download=F, res=10, 
+                   rcp=45, model=&#39;NO&#39;, year=50, path=my_filepath)
+
+# Rename to hold the same bioclim names as the current climate layers
+names(clim_fut) &lt;- names(clim)
+
+# Plot climate layers (only the first 4 layers for simplicity)
+plot(clim_fut[[1:4]])</code></pre>
+<p><img src="4_EnvData_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<div class="alert alert-info">
+<p><em><strong>Exercise:</strong></em></p>
+<ul>
+<li>Take a look at available scenarios and download data for two other
+GCMs, RCPs, and time periods: <a
+href="https://worldclim.org/data/cmip5_10m.html"
+class="uri">https://worldclim.org/data/cmip5_10m.html</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="land-cover-data" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Land cover data</h1>
+<p>We use the Corine Land Cover (CLC) data coordinated by the European
+Environment Agency (EEA). Data for Europe are available through the
+online portal: <a
+href="https://land.copernicus.eu/pan-european/corine-land-cover/"
+class="uri">https://land.copernicus.eu/pan-european/corine-land-cover/</a>.
+The data are free of use but you have to register in order to proceed to
+downloading. CLC products are based on photointerpretation of satellite
+images and are available for different time slices since 1990. CLC
+provide information on the main land cover/use type at 100m spatial
+resolution, distinguishing 44 different land cover/use types. The data
+are provided as GeoTIFF, which can be easily read in using the
+<code>raster()</code> command.</p>
+<p><em>An alternative dataset at the global scale is the Collection 2 of
+the Copernicus Global Land Cover layers <span
+class="citation">(Buchhorn, Lesiv, et al. 2020)</span>, e.g. available
+for the year 2019 through <a
+href="https://doi.org/10.5281/zenodo.3939050"
+class="uri">https://doi.org/10.5281/zenodo.3939050</a> <span
+class="citation">(Buchhorn, Smets, et al. 2020)</span>. Data are
+available at 100m spatial resolution, offering fractional cover of the
+main land cover types as well as a discrete map of the main land cover
+type.</em></p>
+<p>Course participants can download the CLC data for Germany directly
+from moodle. Please place the GeoTIFF file (and its auxiliary file
+<em>aux.xml</em>) in your <em>data</em> folder.</p>
+<pre class="r"><code># Read in the CLC data for Germany:
+corine2018 &lt;- raster(&#39;data/CLC2018_DE.tif&#39;)
+
+# Read in the legend:
+legend &lt;- read.table(&#39;data/CLC2018_CLC2018_V2018_20_QGIS.txt&#39;,sep=&#39;,&#39;)  # columns 2-4 indicate the RGB colours for reproducing the standard CLC colour maps. Column 6 provides the land use/cover classes.
+
+legend[,6]</code></pre>
+<pre><code>##  [1] &quot;Continuous urban fabric&quot;                                                              
+##  [2] &quot;Discontinuous urban fabric&quot;                                                           
+##  [3] &quot;Industrial or commercial units&quot;                                                       
+##  [4] &quot;Road and rail networks and associated land&quot;                                           
+##  [5] &quot;Port areas&quot;                                                                           
+##  [6] &quot;Airports&quot;                                                                             
+##  [7] &quot;Mineral extraction sites&quot;                                                             
+##  [8] &quot;Dump sites&quot;                                                                           
+##  [9] &quot;Construction sites&quot;                                                                   
+## [10] &quot;Green urban areas&quot;                                                                    
+## [11] &quot;Sport and leisure facilities&quot;                                                         
+## [12] &quot;Non-irrigated arable land&quot;                                                            
+## [13] &quot;Permanently irrigated land&quot;                                                           
+## [14] &quot;Rice fields&quot;                                                                          
+## [15] &quot;Vineyards&quot;                                                                            
+## [16] &quot;Fruit trees and berry plantations&quot;                                                    
+## [17] &quot;Olive groves&quot;                                                                         
+## [18] &quot;Pastures&quot;                                                                             
+## [19] &quot;Annual crops associated with permanent crops&quot;                                         
+## [20] &quot;Complex cultivation patterns&quot;                                                         
+## [21] &quot;Land principally occupied by agriculture with significant areas of natural vegetation&quot;
+## [22] &quot;Agro-forestry areas&quot;                                                                  
+## [23] &quot;Broad-leaved forest&quot;                                                                  
+## [24] &quot;Coniferous forest&quot;                                                                    
+## [25] &quot;Mixed forest&quot;                                                                         
+## [26] &quot;Natural grasslands&quot;                                                                   
+## [27] &quot;Moors and heathland&quot;                                                                  
+## [28] &quot;Sclerophyllous vegetation&quot;                                                            
+## [29] &quot;Transitional woodland-shrub&quot;                                                          
+## [30] &quot;Beaches dunes sands&quot;                                                                  
+## [31] &quot;Bare rocks&quot;                                                                           
+## [32] &quot;Sparsely vegetated areas&quot;                                                             
+## [33] &quot;Burnt areas&quot;                                                                          
+## [34] &quot;Glaciers and perpetual snow&quot;                                                          
+## [35] &quot;Inland marshes&quot;                                                                       
+## [36] &quot;Peat bogs&quot;                                                                            
+## [37] &quot;Salt marshes&quot;                                                                         
+## [38] &quot;Salines&quot;                                                                              
+## [39] &quot;Intertidal flats&quot;                                                                     
+## [40] &quot;Water courses&quot;                                                                        
+## [41] &quot;Water bodies&quot;                                                                         
+## [42] &quot;Coastal lagoons&quot;                                                                      
+## [43] &quot;Estuaries&quot;                                                                            
+## [44] &quot;Sea and ocean&quot;                                                                        
+## [45] &quot;NODATA&quot;</code></pre>
+<pre class="r"><code># Plot the CLC map
+plot(corine2018)</code></pre>
+<p><img src="4_EnvData_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>For many modelling applications, we might actually be more interested
+in proportional land cover, and potentially at a coarser resolution. We
+can easily achieve this by aggregating the data to the desired coarser
+resolution, e.g. 1km. We can then express the proportional cover at 1km
+(or any coarser than the original) resolution as the relative number of
+100m cells within the coarser cells with a particular land cover
+class.</p>
+<p>For example, let’s calculate the proportional cover of broad-leaved,
+coniferous and mixed forest (CLC classes 23-25), respectively, at a 1 km
+resolution.</p>
+<pre class="r"><code># Number of cells in x/y direction that will be aggregated
+aggregation_factor &lt;- 10
+
+# Calculate proportional cover for class 23 (broad-leaved forest) at 1km resolution
+corine2018_1km &lt;- aggregate(corine2018,aggregation_factor, 
+                            fun=function(x,...){ sum(x==23)/(aggregation_factor^2) })
+
+# Calculate proportional cover for class 24 (Coniferous forest) and add to raster stack
+corine2018_1km &lt;- addLayer(corine2018_1km, 
+                           aggregate(corine2018,aggregation_factor, 
+                                     fun=function(x,...){ sum(x==24)/(aggregation_factor^2) }))
+
+# Calculate proportional cover for class 24 (Coniferous forest) and add to raster stack
+corine2018_1km &lt;- addLayer(corine2018_1km, 
+                           aggregate(corine2018,aggregation_factor, 
+                                     fun=function(x,...){ sum(x==25)/(aggregation_factor^2) }))
+
+# Add names to layers
+names(corine2018_1km) &lt;- c(&#39;broadleaved_forest&#39;,&#39;coniferous_forest&#39;,&#39;mixed_forest&#39;)
+
+# Plot the proportional covers
+plot(corine2018_1km)</code></pre>
+<p><img src="4_EnvData_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<pre class="r"><code># And don&#39;t forget to save the resulting raster
+writeRaster(corine2018_1km, &quot;data/corine2018_forestcover_1km.grd&quot;)</code></pre>
+<div class="alert alert-info">
+<p><em><strong>Exercise:</strong></em></p>
+<ul>
+<li>Pick a different spatial resolution (e.g. 5km or 10km) and calculate
+proportional cover of different agricultural land cover/use classes</li>
+</ul>
+</div>
+</div>
+<div id="remote-sensing-data" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Remote sensing
+data</h1>
+<p>A lot of land cover products are in essence derived from remote
+sensing data. But there are also other indicators that can be derived
+from remote sensing information, for example greenness. One such
+indicator is the Normalised Difference Vegetation Index (NDVI), which is
+derived from the spectral reflectance measurements acquired in the red
+(visible) and near-infrared wavebands. Healthy plants absorb red light
+and reflect near-infrared leading to strong differences in the
+reflectance of these wavebands. For living plants NDVI should always be
+positive, while for dead plants or rock or water surfaces NDVI will be
+negative. Healthy, dense canopy vegetation will have NDVI above 0.5.
+(These are just rough interpretations, please read up more on NDVI for
+exact details.)</p>
+<p>NDVI data from 2014 onwards can be downloaded from Copernicus Global
+Land Service (CGLS, <a
+href="https://land.copernicus.eu/global/products/ndvi"
+class="uri">https://land.copernicus.eu/global/products/ndvi</a>). The
+data are available at 300m or 1km resolution every two weeks. Older NDVI
+data for 1985-2015 are available as product of NOAA Global Inventory
+Monitoring and Modeling System (GIMMS) from the <a
+href="http://poles.tpdc.ac.cn/en/data/9775f2b4-7370-4e5e-a537-3482c9a83d88/">Big
+Earth Data Platform</a>, with 8km resolution and images every two
+weeks.</p>
+<p>I will not go into detail of how to download the NDVI data. The data
+are typically stored in NetCDF format which can also be read into R. I
+have already downloaded 1km NDVI data from the CGLS database for two
+time slices (01/12/2019 and 01/06/2020) and extracted the data for
+Germany. Course participants can download the raster stacks from moodle
+(please put it into your <em>data</em> folder).</p>
+<pre class="r"><code># Read in raster stack
+ndvi &lt;- stack(&#39;data/NDVI_1km_DE.grd&#39;)
+
+# plot NDVI layers
+plot(ndvi)</code></pre>
+<p><img src="4_EnvData_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<div class="alert alert-info">
+<p><em><strong>Exercise:</strong></em></p>
+<ul>
+<li>Plot the difference in summer and winter NDVI values. Where do we
+observe largest difference in greenness between summer and winter?
+Interpret.</li>
+</ul>
+</div>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1 class="unnumbered">References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Buchhorn_2020" class="csl-entry">
+Buchhorn, Marcel, Myroslava Lesiv, Nandin-Erdene Tsendbazar, Martin
+Herold, Luc Bertels, and Bruno Smets. 2020. <span>“Copernicus Global
+Land Cover Layers<span></span>collection 2.”</span> <em>Remote
+Sensing</em> 12 (6): 1044. <a
+href="https://doi.org/10.3390/rs12061044">https://doi.org/10.3390/rs12061044</a>.
+</div>
+<div id="ref-Buchhorn_zenodo" class="csl-entry">
+Buchhorn, Marcel, Bruno Smets, Luc Bertels, Bert De Roo, Myroslava
+Lesiv, Nandin-Erdene Tsendbazar, Martin Herold, and Steffen Fritz. 2020.
+<span>“Copernicus Global Land Service: Land Cover 100m: Collection 3:
+Epoch 2019: Globe.”</span> Zenodo. <a
+href="https://doi.org/10.5281/ZENODO.3939050">https://doi.org/10.5281/ZENODO.3939050</a>.
+</div>
+<div id="ref-Karger2017" class="csl-entry">
+Karger, D. N., O. Conrad, J. Boehner, T. Kawohl, H. Kreft, R. Wilber
+Soria-Auza, N. E. Zimmermann, H. P. Linder, and M. Kessler. 2017.
+<span>“Climatologies at High Resolution for the Earth’s Land Surface
+Areas.”</span> <em>Scientific Data</em> 4 (September): 170122.
+</div>
+</div>
+</div>
 
 <!DOCTYPE html>
 <html>
