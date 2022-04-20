@@ -2,4 +2,6 @@ data/r_mammals_eur.RData
 data/mammals_eur_redlist_status.csv
 data/mammals_eur_redlist_threats.csv
 data/lynx_thinned.RData
+data/CLC2018*
+data/corine2018*
 
