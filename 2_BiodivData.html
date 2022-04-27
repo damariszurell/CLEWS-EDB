@@ -773,6 +773,13 @@ proper presence map in the end.</p>
 map(&#39;world&#39;)
 plot(lynx_lynx_2deg, add=T, legend=F)</code></pre>
 <p><img src="2_BiodivData_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<div class="alert alert-info">
+<p><em><strong>Exercise:</strong></em></p>
+<ul>
+<li>Rasterise the range map of the mammal species you selected
+above.</li>
+</ul>
+</div>
 </div>
 <div id="rasterising-range-maps-with-letsr" class="section level3"
 number="2.2.2">
@@ -794,14 +801,6 @@ map(&#39;world&#39;,xlim = c(-100,-10),ylim = c(-60,15))
 plot(monkey_puzzle_SAm,col=&#39;blue&#39;,add=T)
 plot(r_monkey_puzzle, add=T, alpha=0.6, legend=F)</code></pre>
 <p><img src="2_BiodivData_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
-<div class="alert alert-info">
-<p><em><strong>Exercise:</strong></em></p>
-<ul>
-<li>Rasterise the range map of the mammal species you selected above.
-Try both approaches using the <code>raster</code> package and the
-<code>letsR</code> package.</li>
-</ul>
-</div>
 </div>
 <div id="bulk-rasterising-multiple-species-range-maps-with-letsr"
 class="section level3" number="2.2.3">
@@ -976,13 +975,13 @@ href="http://rspatial.org" class="uri">http://rspatial.org</a>.</p>
 
 # Check out the number of occurrences found in GBIF:
 occ_count()</code></pre>
-<pre><code>## [1] 2184349212</code></pre>
+<pre><code>## [1] 2185900387</code></pre>
 <pre class="r"><code># number of observations:
 occ_count(basisOfRecord=&#39;OBSERVATION&#39;)</code></pre>
-<pre><code>## [1] 19940099</code></pre>
+<pre><code>## [1] 20079081</code></pre>
 <pre class="r"><code># number of occurrences reported for Germany:
 occ_count(country=isocodes[grep(&quot;Germany&quot;, isocodes$name), &quot;code&quot;])</code></pre>
-<pre><code>## [1] 49852723</code></pre>
+<pre><code>## [1] 49861244</code></pre>
 <pre class="r"><code># number of observations reported for Germany:
 occ_count(country=isocodes[grep(&quot;Germany&quot;, isocodes$name), &quot;code&quot;],basisOfRecord=&#39;OBSERVATION&#39;)</code></pre>
 <pre><code>## [1] 290584</code></pre>
@@ -1006,7 +1005,7 @@ name_suggest(q=&#39;Sorex alpinus&#39;, rank=&#39;species&#39;)</code></pre>
 ## 1 2435986 Sorex alpinus SPECIES</code></pre>
 <pre class="r"><code># Check number of records - here filtered to those with coordinate information
 occ_search(scientificName = &quot;Sorex alpinus&quot;, hasCoordinate=T, limit = 10)</code></pre>
-<pre><code>## Records found [1208] 
+<pre><code>## Records found [1210] 
 ## Records returned [10] 
 ## No. unique hierarchies [1] 
 ## No. media records [10] 
@@ -1016,23 +1015,23 @@ occ_search(scientificName = &quot;Sorex alpinus&quot;, hasCoordinate=T, limit = 
 ## # A tibble: 10 × 92
 ##    key        scientificName  decimalLatitude decimalLongitude issues datasetKey
 ##    &lt;chr&gt;      &lt;chr&gt;                     &lt;dbl&gt;            &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;     
-##  1 3719300937 Sorex alpinus …            47.7            13.2  &quot;cdro… 8a863029-…
-##  2 3730008973 Sorex alpinus …            47.2            12.2  &quot;osii… 8a863029-…
-##  3 3117844078 Sorex alpinus …            46.2            11.3  &quot;cdro… 50c9509d-…
-##  4 3124800976 Sorex alpinus …            47.8            13.7  &quot;cdro… 50c9509d-…
-##  5 3307202767 Sorex alpinus …            47.1             9.32 &quot;cdro… 50c9509d-…
-##  6 3321365464 Sorex alpinus …            47.1             9.38 &quot;&quot;     aa5a1c3c-…
-##  7 3729228483 Sorex alpinus …            47.6            13.3  &quot;cdro… 8a863029-…
-##  8 3321353464 Sorex alpinus …            47.1             9.32 &quot;&quot;     aa5a1c3c-…
-##  9 3321367470 Sorex alpinus …            46.4             8.51 &quot;&quot;     aa5a1c3c-…
-## 10 3383444669 Sorex alpinus …            47.7            13.3  &quot;bri&quot;  c1492854-…
+##  1 3747051379 Sorex alpinus …            47.6            10.0  &quot;cdro… 50c9509d-…
+##  2 3719300937 Sorex alpinus …            47.7            13.2  &quot;cdro… 8a863029-…
+##  3 3730008973 Sorex alpinus …            47.2            12.2  &quot;osii… 8a863029-…
+##  4 3117844078 Sorex alpinus …            46.2            11.3  &quot;cdro… 50c9509d-…
+##  5 3124800976 Sorex alpinus …            47.8            13.7  &quot;cdro… 50c9509d-…
+##  6 3307202767 Sorex alpinus …            47.1             9.32 &quot;cdro… 50c9509d-…
+##  7 3321365464 Sorex alpinus …            47.1             9.38 &quot;&quot;     aa5a1c3c-…
+##  8 3729228483 Sorex alpinus …            47.6            13.3  &quot;cdro… 8a863029-…
+##  9 3321353464 Sorex alpinus …            47.1             9.32 &quot;&quot;     aa5a1c3c-…
+## 10 3321367470 Sorex alpinus …            46.4             8.51 &quot;&quot;     aa5a1c3c-…
 ## # … with 86 more variables: publishingOrgKey &lt;chr&gt;, installationKey &lt;chr&gt;,
 ## #   publishingCountry &lt;chr&gt;, protocol &lt;chr&gt;, lastCrawled &lt;chr&gt;,
 ## #   lastParsed &lt;chr&gt;, crawlId &lt;int&gt;, hostingOrganizationKey &lt;chr&gt;,
-## #   basisOfRecord &lt;chr&gt;, individualCount &lt;int&gt;, occurrenceStatus &lt;chr&gt;,
-## #   lifeStage &lt;chr&gt;, taxonKey &lt;int&gt;, kingdomKey &lt;int&gt;, phylumKey &lt;int&gt;,
-## #   classKey &lt;int&gt;, orderKey &lt;int&gt;, familyKey &lt;int&gt;, genusKey &lt;int&gt;,
-## #   speciesKey &lt;int&gt;, acceptedTaxonKey &lt;int&gt;, acceptedScientificName &lt;chr&gt;, …</code></pre>
+## #   basisOfRecord &lt;chr&gt;, occurrenceStatus &lt;chr&gt;, taxonKey &lt;int&gt;,
+## #   kingdomKey &lt;int&gt;, phylumKey &lt;int&gt;, classKey &lt;int&gt;, orderKey &lt;int&gt;,
+## #   familyKey &lt;int&gt;, genusKey &lt;int&gt;, speciesKey &lt;int&gt;, acceptedTaxonKey &lt;int&gt;,
+## #   acceptedScientificName &lt;chr&gt;, kingdom &lt;chr&gt;, phylum &lt;chr&gt;, order &lt;chr&gt;, …</code></pre>
 <div class="alert alert-info">
 <p><strong><em>Exercise:</em></strong></p>
 <p>What does the argument <code>hasCoordinate=T</code> do? Look up the
@@ -1051,7 +1050,7 @@ basis of record etc. Take a look at the arguments you can set in
 <code>?occ_search</code> to get an overview. For example, we can limit
 the data to those observations that were done by humans:</p>
 <pre class="r"><code>occ_search(scientificName = &quot;Sorex alpinus&quot;, hasCoordinate=T, basisOfRecord=&#39;HUMAN_OBSERVATION&#39;, limit = 10)</code></pre>
-<pre><code>## Records found [592] 
+<pre><code>## Records found [593] 
 ## Records returned [10] 
 ## No. unique hierarchies [1] 
 ## No. media records [10] 
@@ -1061,23 +1060,23 @@ the data to those observations that were done by humans:</p>
 ## # A tibble: 10 × 92
 ##    key        scientificName  decimalLatitude decimalLongitude issues datasetKey
 ##    &lt;chr&gt;      &lt;chr&gt;                     &lt;dbl&gt;            &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;     
-##  1 3719300937 Sorex alpinus …            47.7            13.2  &quot;cdro… 8a863029-…
-##  2 3730008973 Sorex alpinus …            47.2            12.2  &quot;osii… 8a863029-…
-##  3 3117844078 Sorex alpinus …            46.2            11.3  &quot;cdro… 50c9509d-…
-##  4 3124800976 Sorex alpinus …            47.8            13.7  &quot;cdro… 50c9509d-…
-##  5 3307202767 Sorex alpinus …            47.1             9.32 &quot;cdro… 50c9509d-…
-##  6 3729228483 Sorex alpinus …            47.6            13.3  &quot;cdro… 8a863029-…
-##  7 3321353464 Sorex alpinus …            47.1             9.32 &quot;&quot;     aa5a1c3c-…
-##  8 3321367470 Sorex alpinus …            46.4             8.51 &quot;&quot;     aa5a1c3c-…
-##  9 3415936638 Sorex alpinus …            47.9            15.9  &quot;cdro… 50c9509d-…
-## 10 3455191238 Sorex alpinus …            45.9            10.7  &quot;cdro… 50c9509d-…
+##  1 3747051379 Sorex alpinus …            47.6            10.0  &quot;cdro… 50c9509d-…
+##  2 3719300937 Sorex alpinus …            47.7            13.2  &quot;cdro… 8a863029-…
+##  3 3730008973 Sorex alpinus …            47.2            12.2  &quot;osii… 8a863029-…
+##  4 3117844078 Sorex alpinus …            46.2            11.3  &quot;cdro… 50c9509d-…
+##  5 3124800976 Sorex alpinus …            47.8            13.7  &quot;cdro… 50c9509d-…
+##  6 3307202767 Sorex alpinus …            47.1             9.32 &quot;cdro… 50c9509d-…
+##  7 3729228483 Sorex alpinus …            47.6            13.3  &quot;cdro… 8a863029-…
+##  8 3321353464 Sorex alpinus …            47.1             9.32 &quot;&quot;     aa5a1c3c-…
+##  9 3321367470 Sorex alpinus …            46.4             8.51 &quot;&quot;     aa5a1c3c-…
+## 10 3415936638 Sorex alpinus …            47.9            15.9  &quot;cdro… 50c9509d-…
 ## # … with 86 more variables: publishingOrgKey &lt;chr&gt;, installationKey &lt;chr&gt;,
 ## #   publishingCountry &lt;chr&gt;, protocol &lt;chr&gt;, lastCrawled &lt;chr&gt;,
 ## #   lastParsed &lt;chr&gt;, crawlId &lt;int&gt;, hostingOrganizationKey &lt;chr&gt;,
-## #   basisOfRecord &lt;chr&gt;, individualCount &lt;int&gt;, occurrenceStatus &lt;chr&gt;,
-## #   lifeStage &lt;chr&gt;, taxonKey &lt;int&gt;, kingdomKey &lt;int&gt;, phylumKey &lt;int&gt;,
-## #   classKey &lt;int&gt;, orderKey &lt;int&gt;, familyKey &lt;int&gt;, genusKey &lt;int&gt;,
-## #   speciesKey &lt;int&gt;, acceptedTaxonKey &lt;int&gt;, acceptedScientificName &lt;chr&gt;, …</code></pre>
+## #   basisOfRecord &lt;chr&gt;, occurrenceStatus &lt;chr&gt;, taxonKey &lt;int&gt;,
+## #   kingdomKey &lt;int&gt;, phylumKey &lt;int&gt;, classKey &lt;int&gt;, orderKey &lt;int&gt;,
+## #   familyKey &lt;int&gt;, genusKey &lt;int&gt;, speciesKey &lt;int&gt;, acceptedTaxonKey &lt;int&gt;,
+## #   acceptedScientificName &lt;chr&gt;, kingdom &lt;chr&gt;, phylum &lt;chr&gt;, order &lt;chr&gt;, …</code></pre>
 <p>Now, let’s download the records and plot them. We had a bit less than
 600 records for the shrew, and use this as <code>limit</code>. Of
 course, the map will only help us judging the data quality if we have a
@@ -1134,7 +1133,7 @@ cl_gbif_shrew &lt;- clean_coordinates(gbif_shrew, lon=&quot;decimalLongitude&quo
 <pre><code>## Flagged 0 records.</code></pre>
 <pre><code>## Testing duplicates</code></pre>
 <pre><code>## Flagged 195 records.</code></pre>
-<pre><code>## Flagged 211 of 592 records, EQ = 0.36.</code></pre>
+<pre><code>## Flagged 211 of 593 records, EQ = 0.36.</code></pre>
 <pre class="r"><code>plot(wrld_simpl,xlim=c(5,50), ylim=c(40,55))
 points(gbif_shrew$decimalLongitude, gbif_shrew$decimalLatitude, col=&#39;red&#39;,  pch=19)
 points(gbif_shrew$decimalLongitude[cl_gbif_shrew$.summary], gbif_shrew$decimalLatitude[cl_gbif_shrew$.summary], col=&#39;blue&#39;,  pch=18)</code></pre>
