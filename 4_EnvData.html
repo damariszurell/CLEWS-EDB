@@ -483,7 +483,7 @@ ecosystem and biodiversity models.</p>
 <p>The <em>raster</em> package is offering direct access to some
 standard repositories; see the help pages <code>?getData</code>.</p>
 <pre class="r"><code>library(raster)</code></pre>
-<pre><code>## Loading required package: sp</code></pre>
+<pre><code>## Lade nötiges Paket: sp</code></pre>
 <p>We have already used this for extracting climate data from the
 worldclim database (<a href="http://worldclim.org/"
 class="uri">http://worldclim.org/</a>). Please note that there are newer
@@ -659,7 +659,7 @@ corine2018_1km &lt;- addLayer(corine2018_1km,
                            aggregate(corine2018,aggregation_factor, 
                                      fun=function(x,...){ sum(x==24)/(aggregation_factor^2) }))
 
-# Calculate proportional cover for class 24 (Coniferous forest) and add to raster stack
+# Calculate proportional cover for class 25 (Coniferous forest) and add to raster stack
 corine2018_1km &lt;- addLayer(corine2018_1km, 
                            aggregate(corine2018,aggregation_factor, 
                                      fun=function(x,...){ sum(x==25)/(aggregation_factor^2) }))
