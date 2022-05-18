@@ -619,8 +619,8 @@ href="https://www.worldclim.org/"
 class="uri">https://www.worldclim.org/</a>). The coarsest resolution
 offered for download is 10 min, which we aggregate to 1° resolution to
 match the lynx data.</p>
-<pre class="r"><code># You may have to adjust the path to your folder structure:
-clim &lt;- getData(&quot;worldclim&quot;, var=&quot;bio&quot;, res=10, download=T, path=&quot;data/clim_data&quot;)</code></pre>
+<pre class="r"><code># Set download=T if you haven&#39;t downloaded the data in the previous practical
+clim &lt;- getData(&quot;worldclim&quot;, var=&quot;bio&quot;, res=10, download=F, path=&quot;data&quot;)</code></pre>
 <pre class="r"><code># Aggregate to 1° resolution
 clim_1deg &lt;- aggregate(clim, 6)
 
@@ -888,9 +888,9 @@ out the help pages for <code>?select07</code>.</p>
 # Run select07()
 var_sel &lt;- select07(X=lynx_thinned[,-c(1:3)], 
                     y=lynx_thinned$occ, 
-                    threshold=0.7)</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-<pre class="r"><code># Check out the structure of the resulting object:
+                    threshold=0.7)
+
+# Check out the structure of the resulting object:
 str(var_sel)</code></pre>
 <pre><code>## List of 3
 ##  $ AIC     : Named num [1:19] 311 311 322 349 384 ...
