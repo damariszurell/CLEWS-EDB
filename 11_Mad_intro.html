@@ -11,7 +11,7 @@
 
 
 
-<title>MadingleyR introduction</title>
+<title>Getting started with MadingleyR</title>
 
 <script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -62,6 +62,28 @@ if (window.hljs) {
 
 
 
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 
 
@@ -427,7 +449,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">MadingleyR introduction</h1>
+<h1 class="title toc-ignore">Getting started with MadingleyR</h1>
 
 </div>
 
@@ -446,9 +468,269 @@ folder “scripts” within your project folder, e.g. as
 “11_Mad_intro.R”</li>
 </ul>
 </div>
-<p><em>Site under construction …</em></p>
-<div id="references" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> References</h1>
+<p>In the remaining three practicals of this course, we are going to
+work with the mechanistic general ecosystem model Madingley <span
+class="citation">(Harfoot et al. 2014)</span>, and more specifically
+with the R package <code>MadingleyR</code> <span class="citation">(Hoeks
+et al. 2021)</span>. Madingley uses a trait-based approach to model the
+biomass of photo-autotrophs and heterotrophs and interactions between
+these. By that it can simulate the trophic structure of ecosystems from
+local to global scale, and the emerging top-down (predator-regulated) or
+bottom-up (resource-regulated) forces in the food webs.</p>
+<p><code>MadingleyR</code> is available for the terrestrial realm <span
+class="citation">(Hoeks et al. 2021)</span>. The heterotrophs are
+simulated using an individual-based approach, the autotrophs are
+modelled as stock (total biomass). Heterotrophic organisms are described
+within cohorts of identical traits (body mass, age, functional
+characteristics). All stocks and cohorts belong to functional groups.
+Terrestrial autotroph functional groups are characterised by their leaf
+strategy. Terrestrial heterotroph functional groups are characterised by
+their feeding mode (herbivores, omnivores, carnivores), their metabolism
+(endotherm, ectotherm), and their reproductive strategy (semelparous,
+iteroparous) <span class="citation">(Harfoot et al. 2014; Hoeks et al.
+2020)</span>. The rates of feeding, metabolism and dispersal will then
+differ between cohorts according to body mass.</p>
+<div id="introduction-to-madingleyr" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Introduction to
+<code>MadingleyR</code></h1>
+<p>This practical is meant as overview of <code>MadingleyR</code>
+functionality. It mostly builds on the vignette provided along with the
+R package <span class="citation">(Hoeks et al. 2021)</span>. Thus, all
+credits go to Selwyn Hoeks and coauthors.</p>
+<div id="installing-madingleyr" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Installing
+<code>MadingleyR</code></h2>
+<p>The package has to be built from the github repo <a
+href="https://github.com/MadingleyR/MadingleyR"
+class="uri">https://github.com/MadingleyR/MadingleyR</a>.</p>
+<pre class="r"><code>library(devtools)
+
+# Install the MadingleyR package
+install_github(&#39;MadingleyR/MadingleyR&#39;, subdir=&#39;Package&#39;, build_vignettes = TRUE)</code></pre>
+<p>One installed, you can load the library as usual, look at the version
+information or open the accompanying vignette.</p>
+<pre class="r"><code># Load MadingleyR package 
+library(&#39;MadingleyR&#39;)
+
+# Get version MadingleyR and C++ source code
+madingley_version( )</code></pre>
+<pre><code>##                              
+## MadingleyR           -&gt; 1.0.4
+## Madingley C++ source -&gt;  2.02</code></pre>
+<pre class="r"><code># View the MadingleyR tutorial vignette
+vignette(&#39;MadingleyR&#39;)</code></pre>
+</div>
+</div>
+<div id="madingleyr-workflow" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> <code>MadingleyR</code>
+workflow</h1>
+<p>The <code>MadingleyR</code> workflow is nicely summarised in Fig. 2
+of <span class="citation">(Hoeks et al. 2021)</span>.</p>
+<div id="setting-up-directory" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Setting up
+directory</h2>
+<p>We set up a directory to store all modelling results. Use your file
+explorer on your machine, navigate to the “models” folder within your
+project, and create a sub-folder for the current practical called
+“Mad_intro”. Next, return to your RStudio project and store the path in
+a variable. This has to be the absolute path to the models folder.</p>
+<pre class="r"><code>dirpath = paste0(getwd(),&quot;/models/Mad_intro&quot;)</code></pre>
+</div>
+<div id="model-initialisation" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Model
+initialisation</h2>
+<p>The <code>madingley_init()</code> generates the cohort and stock data
+sets. Per default, the model uses a 1° spatial resolution and a spatial
+window ranging from 32° to 35° LON and from -4° to -1° LAT
+(corresponding to Serengeti). The initialised data sets contain the
+initial distribution and biomass of all heterotroph cohorts (defined by
+functional groups and body mass) and autotroph stocks (defined by leaf
+strategy), the definitions of the heterophic and autotrophic functional
+groups, the spatial window and the spatial resolution (grid size).</p>
+<pre class="r"><code># Initialise MadingleyR data with default values
+mdata = madingley_init()</code></pre>
+<pre><code>## Reading default input rasters from:  /Library/Frameworks/R.framework/Versions/4.1/Resources/library/MadingleyR/spatial_input_rasters.............
+## Processing: realm_classification, land_mask, hanpp, available_water_capacity
+## Processing: Ecto_max, Endo_C_max, Endo_H_max, Endo_O_max
+## Processing: terrestrial_net_primary_productivity_1-12
+## Processing: near-surface_temperature_1-12
+## Processing: precipitation_1-12
+## Processing: ground_frost_frequency_1-12
+## Processing: diurnal_temperature_range_1-12
+## </code></pre>
+<pre class="r"><code># Structure of initialissed data
+str(mdata,1)</code></pre>
+<pre><code>## List of 6
+##  $ cohorts       :&#39;data.frame&#39;:  4455 obs. of  16 variables:
+##  $ stocks        :&#39;data.frame&#39;:  18 obs. of  3 variables:
+##  $ cohort_def    :&#39;data.frame&#39;:  9 obs. of  14 variables:
+##  $ stock_def     :&#39;data.frame&#39;:  2 obs. of  10 variables:
+##  $ spatial_window: num [1:4] 32 35 -4 -1
+##  $ grid_size     : num 1</code></pre>
+<pre class="r"><code># Initialised spatial window
+plot_spatialwindow(mdata$spatial_window)</code></pre>
+<p><img src="11_Mad_intro_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>These inputs can also be loaded individually and changed.</p>
+<pre class="r"><code># Check potential inputs
+madingley_inputs()</code></pre>
+<pre><code>## possible input arguments are: &quot;spatial inputs&quot;; &quot;cohort definition&quot;; &quot;stock definition&quot;; &quot;model parameters&quot;;</code></pre>
+<pre class="r"><code># Load default inputs for spatial layers
+sptl_inp = madingley_inputs(&quot;spatial inputs&quot;)</code></pre>
+<pre><code>## Reading default input rasters from:  /Library/Frameworks/R.framework/Versions/4.1/Resources/library/MadingleyR/spatial_input_rasters.............</code></pre>
+<pre class="r"><code># Look at structure of spatial input layers
+str(sptl_inp,1)</code></pre>
+<pre><code>## List of 13
+##  $ realm_classification                :Formal class &#39;RasterLayer&#39; [package &quot;raster&quot;] with 12 slots
+##  $ land_mask                           :Formal class &#39;RasterLayer&#39; [package &quot;raster&quot;] with 12 slots
+##  $ hanpp                               :Formal class &#39;RasterLayer&#39; [package &quot;raster&quot;] with 12 slots
+##  $ available_water_capacity            :Formal class &#39;RasterLayer&#39; [package &quot;raster&quot;] with 12 slots
+##  $ Ecto_max                            :Formal class &#39;RasterLayer&#39; [package &quot;raster&quot;] with 12 slots
+##  $ Endo_C_max                          :Formal class &#39;RasterLayer&#39; [package &quot;raster&quot;] with 12 slots
+##  $ Endo_H_max                          :Formal class &#39;RasterLayer&#39; [package &quot;raster&quot;] with 12 slots
+##  $ Endo_O_max                          :Formal class &#39;RasterLayer&#39; [package &quot;raster&quot;] with 12 slots
+##  $ terrestrial_net_primary_productivity:Formal class &#39;RasterBrick&#39; [package &quot;raster&quot;] with 12 slots
+##  $ near-surface_temperature            :Formal class &#39;RasterBrick&#39; [package &quot;raster&quot;] with 12 slots
+##  $ precipitation                       :Formal class &#39;RasterBrick&#39; [package &quot;raster&quot;] with 12 slots
+##  $ ground_frost_frequency              :Formal class &#39;RasterBrick&#39; [package &quot;raster&quot;] with 12 slots
+##  $ diurnal_temperature_range           :Formal class &#39;RasterBrick&#39; [package &quot;raster&quot;] with 12 slots</code></pre>
+<p>If you change the input layers, you have to provide these new input
+layers to the initalisation function. For example, we restrict the
+maximum size of omnivores to 150 kg by manipulating the the spatial
+inputs raster layer for this functional group.</p>
+<pre class="r"><code># Inspect raster layer for endothermic omnivores
+sptl_inp$Endo_O_max</code></pre>
+<pre><code>## class      : RasterLayer 
+## dimensions : 140, 359, 50260  (nrow, ncol, ncell)
+## resolution : 1, 1  (x, y)
+## extent     : -179, 180, -56, 84  (xmin, xmax, ymin, ymax)
+## crs        : NA 
+## source     : Endo_O_max.tif 
+## names      : Endo_O_max 
+## values     : 5.6, 190792.3  (min, max)</code></pre>
+<pre class="r"><code># Restrict size to 150 kg (150&#39;000 g)
+sptl_inp$Endo_O_max[sptl_inp$Endo_O_max&gt;150000] = 150000
+
+# Plot initial body mass distribution of endothermic omnivores
+plot(sptl_inp$Endo_O_max)</code></pre>
+<p><img src="11_Mad_intro_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code># Reinitialise the model
+mdata = madingley_init(spatial_inputs = sptl_inp)</code></pre>
+<pre><code>## Processing: realm_classification, land_mask, hanpp, available_water_capacity
+## Processing: Ecto_max, Endo_C_max, Endo_H_max, Endo_O_max
+## Processing: terrestrial_net_primary_productivity_1-12
+## Processing: near-surface_temperature_1-12
+## Processing: precipitation_1-12
+## Processing: ground_frost_frequency_1-12
+## Processing: diurnal_temperature_range_1-12
+## </code></pre>
+</div>
+<div id="run-the-simulation" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Run the
+simulation</h2>
+<p>When all stocks and cohorts are initialised, we can run the
+simulation using the <code>madingley_run()</code> function. A typical
+spin-up model run should be 100-1000 years. Here, we only simulate 20
+years for simplicity. Also, we limit the maximum number of cohorts to
+200 to speed up computation. In the runtime information, you will see
+that the model simulates the stocks and cohorts in monthly time
+steps.</p>
+<pre class="r"><code># Run spin-up of 50 years
+mres = madingley_run(madingley_data = mdata, 
+                     years = 20,
+                     max_cohort = 200,
+                     out_dir=dirpath)
+
+# save model object
+save(mres,file=paste0(dirpath,&#39;/mres.RData&#39;))</code></pre>
+<pre class="r"><code># Look at structure of output data sets
+str(mres,1)</code></pre>
+<pre><code>## List of 10
+##  $ cohorts          :&#39;data.frame&#39;:   1780 obs. of  16 variables:
+##  $ stocks           :&#39;data.frame&#39;:   18 obs. of  3 variables:
+##  $ cohort_def       :&#39;data.frame&#39;:   9 obs. of  14 variables:
+##  $ stock_def        :&#39;data.frame&#39;:   2 obs. of  10 variables:
+##  $ time_line_cohorts:&#39;data.frame&#39;:   239 obs. of  11 variables:
+##  $ time_line_stocks :&#39;data.frame&#39;:   239 obs. of  3 variables:
+##  $ out_dir_name     : chr &quot;/madingley_outs_27_05_22_17_43_12/&quot;
+##  $ spatial_window   : num [1:4] 32 35 -4 -1
+##  $ out_path         : chr &quot;/Users/zurell/data/Lehre/UP_Lehre/CLEWS/EcosystemDynamics/edb-course/models/Mad_intro&quot;
+##  $ grid_size        : num 1</code></pre>
+<p>The structre of the results data sets is largely analogous to the
+input data sets. The cohorts and stocks data now contain the
+distribution of biomass within the functional groups and cohorts of the
+last time step. This way, we can continue simulations by simply starting
+the model run at this final time step (see next practical).
+Additionally, we obtain to <em>timeline</em> data sets that hold the
+biomass of the different heterotroph and autotroph functional groups
+over time.</p>
+</div>
+<div id="plot-results" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> Plot results</h2>
+<p>The <code>MadingleyR</code> package provides a number of useful
+plotting functions, for plotting the biomass time series, the body mass
+distributions in the different functional groups, the food web and
+trophic pyramids with biomass flows, and the spatial biomass
+distribution.</p>
+<pre class="r"><code># Plot biomass time series
+plot_timelines(mres)</code></pre>
+<p><img src="11_Mad_intro_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<pre class="r"><code># Plot body mass distributions of heterotroph functional groups 
+# (note that semelparous and iteroparous ectotherms are pooled together)
+plot_densities(mres)</code></pre>
+<pre><code>## loading inputs from: /Users/zurell/data/Lehre/UP_Lehre/CLEWS/EcosystemDynamics/edb-course/models/Mad_intro/madingley_outs_27_05_22_17_43_12/</code></pre>
+<p><img src="11_Mad_intro_files/figure-html/unnamed-chunk-11-2.png" width="672" /></p>
+<pre class="r"><code># Plot trophic pyramid
+plot_trophicpyramid(mres)</code></pre>
+<pre><code>## loading inputs from: /Users/zurell/data/Lehre/UP_Lehre/CLEWS/EcosystemDynamics/edb-course/models/Mad_intro/madingley_outs_27_05_22_17_43_12/</code></pre>
+<p><img src="11_Mad_intro_files/figure-html/unnamed-chunk-11-3.png" width="672" /></p>
+<pre class="r"><code># Plot foodweb plot
+plot_foodweb(mres, max_flows = 5)</code></pre>
+<pre><code>## loading inputs from: /Users/zurell/data/Lehre/UP_Lehre/CLEWS/EcosystemDynamics/edb-course/models/Mad_intro/madingley_outs_27_05_22_17_43_12/</code></pre>
+<p><img src="11_Mad_intro_files/figure-html/unnamed-chunk-11-4.png" width="672" /></p>
+<pre class="r"><code># Plot total abundance per grid cell and abundance distribution per functional group
+plot_spatialabundances(mres)</code></pre>
+<pre><code>## loading inputs from: /Users/zurell/data/Lehre/UP_Lehre/CLEWS/EcosystemDynamics/edb-course/models/Mad_intro/madingley_outs_27_05_22_17_43_12/</code></pre>
+<p><img src="11_Mad_intro_files/figure-html/unnamed-chunk-11-5.png" width="672" /></p>
+<pre class="r"><code>plot_spatialabundances(mres, functional_filter = T)</code></pre>
+<pre><code>## loading inputs from: /Users/zurell/data/Lehre/UP_Lehre/CLEWS/EcosystemDynamics/edb-course/models/Mad_intro/madingley_outs_27_05_22_17_43_12/</code></pre>
+<p><img src="11_Mad_intro_files/figure-html/unnamed-chunk-11-6.png" width="672" /></p>
+<pre class="r"><code># Plot total biomass per grid cell and biomass distribution per functional group
+plot_spatialbiomass(mres)</code></pre>
+<pre><code>## loading inputs from: /Users/zurell/data/Lehre/UP_Lehre/CLEWS/EcosystemDynamics/edb-course/models/Mad_intro/madingley_outs_27_05_22_17_43_12/</code></pre>
+<p><img src="11_Mad_intro_files/figure-html/unnamed-chunk-11-7.png" width="672" /></p>
+<pre class="r"><code>plot_spatialbiomass(mres, functional_filter = T)</code></pre>
+<pre><code>## loading inputs from: /Users/zurell/data/Lehre/UP_Lehre/CLEWS/EcosystemDynamics/edb-course/models/Mad_intro/madingley_outs_27_05_22_17_43_12/</code></pre>
+<p><img src="11_Mad_intro_files/figure-html/unnamed-chunk-11-8.png" width="672" /></p>
+</div>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1 class="unnumbered">References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Harfoot2014a" class="csl-entry">
+Harfoot, Michael B. J., Tim Newbold, Derek P. Tittensor, Stephen Emmott,
+Jon Hutton, Vassily Lyutsarev, Matthew J. Smith, Jörn P. W. Scharlemann,
+and Drew W. Purves. 2014. <span>“Emergent Global Patterns of Ecosystem
+Structure and Function from a Mechanistic General Ecosystem
+Model.”</span> <em><span>PLoS</span> Biology</em> 12 (4): e1001841. <a
+href="https://doi.org/10.1371/journal.pbio.1001841">https://doi.org/10.1371/journal.pbio.1001841</a>.
+</div>
+<div id="ref-Hoeks_2020" class="csl-entry">
+Hoeks, Selwyn, Mark A. J. Huijbregts, Michela Busana, Michael B. J.
+Harfoot, Jens-Christian Svenning, and Luca Santini. 2020.
+<span>“Mechanistic Insights into the Role of Large Carnivores for
+Ecosystem Structure and Functioning.”</span> <em>Ecography</em> 43 (12):
+1752–63. <a
+href="https://doi.org/10.1111/ecog.05191">https://doi.org/10.1111/ecog.05191</a>.
+</div>
+<div id="ref-Hoeks_2021" class="csl-entry">
+Hoeks, Selwyn, Marlee A. Tucker, Mark A. J. Huijbregts, Mike B. J.
+Harfoot, Mike Bithell, and Luca Santini. 2021.
+<span>“<span>MadingleyR</span>: An r Package for Mechanistic Ecosystem
+Modelling.”</span> <em>Global Ecology and Biogeography</em> 30 (9):
+1922–33. <a
+href="https://doi.org/10.1111/geb.13354">https://doi.org/10.1111/geb.13354</a>.
+</div>
+</div>
 </div>
 
 <!DOCTYPE html>
