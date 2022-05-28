@@ -5,5 +5,13 @@ data/lynx_thinned.RData
 data/CLC2018*
 data/corine2018*
 data/NDVI*
+data/*.dbf
+data/*.prj
+data/*.shp
+data/*.shx
+data/*.grd
+data/*.gri
+data/*.txt
+data/gbif_shrew.RData
 models/
 
