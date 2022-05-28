@@ -94,11 +94,11 @@ mres_removal_S = madingley_run(madingley_data = mres_removal_S,
 
 
 ## --------------------------------------------------------------------------------------
-## # save model objects
-## save(mres_spinup_B, mres_spinup_S, mres_control_B, mres_control_S, mres_removal_B, mres_removal_S, file=paste0(dirpath,'/mres_carnivores.RData'))
+# save model objects
+save(mres_spinup_B, mres_spinup_S, mres_control_B, mres_control_S, mres_removal_B, mres_removal_S, file=paste0(dirpath,'/mres_carnivores.RData'))
 
 
-## ----warning=F, message=F------------------------------------------------------------------------
+## ---------------------------------------------------------------------------
 par(mfrow=c(2,2))
 
 # Plot time series for Carnivores
