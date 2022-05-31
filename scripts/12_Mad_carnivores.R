@@ -18,15 +18,28 @@ mdat_B = madingley_init(spatial_window = sptl_bialowieza)
 mdat_S = madingley_init(spatial_window = sptl_serengeti)
 
 
-
 ## ----------------------------------------------------------------------------
+# Define maximum body size of endotherms in the cohort definitions:
+c_defs_B =c_defs_S = madingley_inputs('cohort definition')
+
+c_defs_B$PROPERTY_Maximum.mass[1] = 500000 # Largest herbivore Bialowieza: Bison bonasus - bison (500 kg)
+c_defs_B$PROPERTY_Maximum.mass[2] = 32000 # Largest carnivore Bialowieza: Canis lupus -wolve (32 kg)
+c_defs_B$PROPERTY_Maximum.mass[3] = 181000 # Largest omnivore Bialowieza: Ursus arctos - brown bear (181 kg)
+
+c_defs_S$PROPERTY_Maximum.mass[1] = 3940000 # Largest herbivore Serengeti: Loxodonta africana - elefant (3940 kg)
+c_defs_S$PROPERTY_Maximum.mass[2] = 162000 # Largest carnivore Serengeti: Panthera leo - lion (162 kg)
+c_defs_S$PROPERTY_Maximum.mass[3] = 83000 # Largest omnivore Serengeti: Phacochoerus africanus - warthog (83 kg)
+
+
 # Run spin-up of 50 years for Bialowieza and for Serengeti
 mres_spinup_B = madingley_run(madingley_data = mdat_B,
-                      years = 50,
+                    years = 50,
+                    cohort_def = c_defs_B,
                     out_dir=dirpath)
 
 mres_spinup_S = madingley_run(madingley_data = mdat_S,
-                      years = 50,
+                    years = 50,
+                    cohort_def = c_defs_S,
                     out_dir=dirpath)
 
 
@@ -40,10 +53,12 @@ save(mres_spinup_B, mres_spinup_S, file=paste0(dirpath,'/mres_carnivores.RData')
 # Note that simulations start from spinup results:
 mres_control_B = madingley_run(madingley_data = mres_spinup_B,
                       years = 50,
+                      cohort_def = c_defs_B,
                       out_dir=dirpath)
 
 mres_control_S = madingley_run(madingley_data = mres_spinup_S,
                       years = 50,
+                      cohort_def = c_defs_B,
                       out_dir=dirpath)
 
 
@@ -65,30 +80,34 @@ summary(subset(mres_spinup_S$cohorts, FunctionalGroupIndex==1)$AdultMass)
 mres_removal_B = mres_spinup_B
 mres_removal_S = mres_spinup_S
 
-# Remove large carnivores in Bialowieza
+# Remove large carnivores >21 kg in Bialowieza
 remove_idx_B = which(mres_removal_B$cohorts$AdultMass > 21000 &
                     mres_removal_B$cohorts$FunctionalGroupIndex == 1)
 mres_removal_B$cohorts = mres_removal_B$cohorts[-remove_idx_B, ]
 
-# Remove large carnivores in Serengeti
+# Remove large carnivores >21 kg in Serengeti
 remove_idx_S = which(mres_removal_S$cohorts$AdultMass > 21000 &
                     mres_removal_S$cohorts$FunctionalGroupIndex == 1)
 mres_removal_S$cohorts = mres_removal_S$cohorts[-remove_idx_S, ]
 
-# Define maximum body size of endotherm carnivores in spatial input layers:
-sptl_inp = madingley_inputs('spatial inputs')
-sptl_inp$Endo_C_max[ ] = 21000
+
+# Restrict maximum body size of endotherm carnivores in the cohort definitions to <21kg:
+c_defs_B_removal = c_defs_B
+c_defs_B_removal$PROPERTY_Maximum.mass[2] = 21000
+c_defs_S_removal = c_defs_S
+c_defs_S_removal$PROPERTY_Maximum.mass[2] = 21000
+
 
 # Run simulation:
 # Bialowieza
 mres_removal_B = madingley_run(madingley_data = mres_removal_B,
-                      spatial_inputs = sptl_inp,
+                      cohort_def = c_defs_B_removal,
                       years = 50,
                       out_dir=dirpath)
 
 # Serengeti
 mres_removal_S = madingley_run(madingley_data = mres_removal_S,
-                      spatial_inputs = sptl_inp,
+                      cohort_def = c_defs_S_removal,
                       years = 50,
                       out_dir=dirpath)
 
@@ -137,7 +156,10 @@ lines(dens_change_aut_S,col='khaki',lwd=2)
 
 
 ## ------------------------------------------------------------------------------------------------
+
+
 # Plot foodweb plot
+par(mfrow=c(1,1))
 plot_foodweb(mres_control_B, max_flows = 5)
 title('Bialowieza - control scenario')
 plot_foodweb(mres_removal_B, max_flows = 5)
@@ -147,13 +169,20 @@ title('Serengeti - control scenario')
 plot_foodweb(mres_removal_S, max_flows = 5)
 title('Serengeti - removal scenario')
 
-# Plot trophic pyramid
-plot_trophicpyramid(mres_control_B)
-title('Bialowieza - control scenario')
-plot_trophicpyramid(mres_removal_B)
-title('Bialowieza - removal scenario')
-plot_trophicpyramid(mres_control_S)
-title('Serengeti - control scenario')
-plot_trophicpyramid(mres_removal_S)
-title('Serengeti - removal scenario')
+# Plot body mass densities
+par(mfcol=c(3,2))
+hist(subset(mres_control_B$cohorts, FunctionalGroupIndex==0)$AdultMass/1000, main='Bialowieza control - herbivores', xlab='Body mass kg')
+hist(subset(mres_control_B$cohorts, FunctionalGroupIndex==1)$AdultMass/1000, main='Bialowieza control - carnivores', xlab='Body mass kg')
+hist(subset(mres_control_B$cohorts, FunctionalGroupIndex==2)$AdultMass/1000, main='Bialowieza control - omnivores', xlab='Body mass kg')
+hist(subset(mres_removal_B$cohorts, FunctionalGroupIndex==0)$AdultMass/1000, main='Bialowieza removal - herbivores', xlab='Body mass kg')
+hist(subset(mres_removal_B$cohorts, FunctionalGroupIndex==1)$AdultMass/1000, main='Bialowieza removal - carnivores', xlab='Body mass kg')
+hist(subset(mres_removal_B$cohorts, FunctionalGroupIndex==2)$AdultMass/1000, main='Bialowieza removal - omnivores', xlab='Body mass kg')
+
+par(mfcol=c(3,2))
+hist(subset(mres_control_S$cohorts, FunctionalGroupIndex==0)$AdultMass/1000, main='Serengeti control - herbivores', xlab='Body mass kg')
+hist(subset(mres_control_S$cohorts, FunctionalGroupIndex==1)$AdultMass/1000, main='Serengeti control - carnivores', xlab='Body mass kg')
+hist(subset(mres_control_S$cohorts, FunctionalGroupIndex==2)$AdultMass/1000, main='Serengeti control - omnivores', xlab='Body mass kg')
+hist(subset(mres_removal_S$cohorts, FunctionalGroupIndex==0)$AdultMass/1000, main='Serengeti removal - herbivores', xlab='Body mass kg')
+hist(subset(mres_removal_S$cohorts, FunctionalGroupIndex==1)$AdultMass/1000, main='Serengeti removal - carnivores', xlab='Body mass kg')
+hist(subset(mres_removal_S$cohorts, FunctionalGroupIndex==2)$AdultMass/1000, main='Serengeti removal - omnivores', xlab='Body mass kg')
 
