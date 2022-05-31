@@ -783,20 +783,20 @@ plot_foodweb(mres_control_B, max_flows = 5)</code></pre>
 <p><img src="12_Mad_carnivores_files/figure-html/unnamed-chunk-12-4.png" width="672" /></p>
 <pre class="r"><code># Plot body mass densities
 par(mfcol=c(3,2))
-hist(subset(mres_control_B$cohorts, FunctionalGroupIndex==0)$AdultMass/1000, main=&#39;Bialowieza control - herbivores&#39;, xlab=&#39;Body mass kg&#39;)
-hist(subset(mres_control_B$cohorts, FunctionalGroupIndex==1)$AdultMass/1000, main=&#39;Bialowieza control - carnivores&#39;, xlab=&#39;Body mass kg&#39;)
-hist(subset(mres_control_B$cohorts, FunctionalGroupIndex==2)$AdultMass/1000, main=&#39;Bialowieza control - omnivores&#39;, xlab=&#39;Body mass kg&#39;)
-hist(subset(mres_removal_B$cohorts, FunctionalGroupIndex==0)$AdultMass/1000, main=&#39;Bialowieza removal - herbivores&#39;, xlab=&#39;Body mass kg&#39;)
-hist(subset(mres_removal_B$cohorts, FunctionalGroupIndex==1)$AdultMass/1000, main=&#39;Bialowieza removal - carnivores&#39;, xlab=&#39;Body mass kg&#39;)
-hist(subset(mres_removal_B$cohorts, FunctionalGroupIndex==2)$AdultMass/1000, main=&#39;Bialowieza removal - omnivores&#39;, xlab=&#39;Body mass kg&#39;)</code></pre>
+hist(subset(mres_control_B$cohorts, FunctionalGroupIndex==0)$AdultMass/1000, main=&#39;Bialowieza control - herbivores&#39;, xlab=&#39;Body mass [kg]&#39;)
+hist(subset(mres_control_B$cohorts, FunctionalGroupIndex==1)$AdultMass/1000, main=&#39;Bialowieza control - carnivores&#39;, xlab=&#39;Body mass [kg]&#39;)
+hist(subset(mres_control_B$cohorts, FunctionalGroupIndex==2)$AdultMass/1000, main=&#39;Bialowieza control - omnivores&#39;, xlab=&#39;Body mass [kg]&#39;)
+hist(subset(mres_removal_B$cohorts, FunctionalGroupIndex==0)$AdultMass/1000, main=&#39;Bialowieza removal - herbivores&#39;, xlab=&#39;Body mass [kg]&#39;)
+hist(subset(mres_removal_B$cohorts, FunctionalGroupIndex==1)$AdultMass/1000, main=&#39;Bialowieza removal - carnivores&#39;, xlab=&#39;Body mass [kg]&#39;)
+hist(subset(mres_removal_B$cohorts, FunctionalGroupIndex==2)$AdultMass/1000, main=&#39;Bialowieza removal - omnivores&#39;, xlab=&#39;Body mass [kg]&#39;)</code></pre>
 <p><img src="12_Mad_carnivores_files/figure-html/unnamed-chunk-12-5.png" width="672" /></p>
 <pre class="r"><code>par(mfcol=c(3,2))
-hist(subset(mres_control_S$cohorts, FunctionalGroupIndex==0)$AdultMass/1000, main=&#39;Serengeti control - herbivores&#39;, xlab=&#39;Body mass kg&#39;)
-hist(subset(mres_control_S$cohorts, FunctionalGroupIndex==1)$AdultMass/1000, main=&#39;Serengeti control - carnivores&#39;, xlab=&#39;Body mass kg&#39;)
-hist(subset(mres_control_S$cohorts, FunctionalGroupIndex==2)$AdultMass/1000, main=&#39;Serengeti control - omnivores&#39;, xlab=&#39;Body mass kg&#39;)
-hist(subset(mres_removal_S$cohorts, FunctionalGroupIndex==0)$AdultMass/1000, main=&#39;Serengeti removal - herbivores&#39;, xlab=&#39;Body mass kg&#39;)
-hist(subset(mres_removal_S$cohorts, FunctionalGroupIndex==1)$AdultMass/1000, main=&#39;Serengeti removal - carnivores&#39;, xlab=&#39;Body mass kg&#39;)
-hist(subset(mres_removal_S$cohorts, FunctionalGroupIndex==2)$AdultMass/1000, main=&#39;Serengeti removal - omnivores&#39;, xlab=&#39;Body mass kg&#39;)</code></pre>
+hist(subset(mres_control_S$cohorts, FunctionalGroupIndex==0)$AdultMass/1000, main=&#39;Serengeti control - herbivores&#39;, xlab=&#39;Body mass [kg]&#39;)
+hist(subset(mres_control_S$cohorts, FunctionalGroupIndex==1)$AdultMass/1000, main=&#39;Serengeti control - carnivores&#39;, xlab=&#39;Body mass [kg]&#39;)
+hist(subset(mres_control_S$cohorts, FunctionalGroupIndex==2)$AdultMass/1000, main=&#39;Serengeti control - omnivores&#39;, xlab=&#39;Body mass [kg]&#39;)
+hist(subset(mres_removal_S$cohorts, FunctionalGroupIndex==0)$AdultMass/1000, main=&#39;Serengeti removal - herbivores&#39;, xlab=&#39;Body mass [kg]&#39;)
+hist(subset(mres_removal_S$cohorts, FunctionalGroupIndex==1)$AdultMass/1000, main=&#39;Serengeti removal - carnivores&#39;, xlab=&#39;Body mass [kg]&#39;)
+hist(subset(mres_removal_S$cohorts, FunctionalGroupIndex==2)$AdultMass/1000, main=&#39;Serengeti removal - omnivores&#39;, xlab=&#39;Body mass [kg]&#39;)</code></pre>
 <p><img src="12_Mad_carnivores_files/figure-html/unnamed-chunk-12-6.png" width="672" /></p>
 <div class="alert alert-info">
 <p><strong>Task: extend analyses</strong></p>
