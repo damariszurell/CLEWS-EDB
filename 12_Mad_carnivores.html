@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>MadingleyR: Role of large carnivores</title>
+
+<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Ecosystem dynamics and biodiversity</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Pracs: Spatial data
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="0_setup.html">0. Getting started</a>
+    </li>
+    <li>
+      <a href="1_SpatialData.html">1. Spatial data in R</a>
+    </li>
+    <li>
+      <a href="2_BiodivData.html">2. Biodiversity data in R</a>
+    </li>
+    <li>
+      <a href="3_ThreatData.html">3. Threat data in R</a>
+    </li>
+    <li>
+      <a href="4_EnvData.html">4. Environmental data in R</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Pracs: Species distribution models
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="5_SDM_intro.html">5. SDMs: simple model fitting</a>
+    </li>
+    <li>
+      <a href="6_SDM_eval.html">6. SDMs: assessment and prediction</a>
+    </li>
+    <li>
+      <a href="7_SDM_algorithms.html">7. SDMs: algorithms and ensembles</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Pracs: population modelling
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="8_RS_intro.html">8. Getting started with RangeShiftR</a>
+    </li>
+    <li>
+      <a href="9_RS_lynx.html">9. RangeShiftR: Eurasian lynx reintroduction</a>
+    </li>
+    <li>
+      <a href="10_RS_grouse.html">10. RangeShiftR: Black grouse range dynamics</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Pracs: ecosystem modelling
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="11_Mad_intro.html">11. Running MadingleyR</a>
+    </li>
+    <li>
+      <a href="12_Mad_carnivores.html">12. MadingleyR: Role of large carnivores</a>
+    </li>
+    <li>
+      <a href="13_Mad_landuse.html">13. MadingleyR: land use change effects</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://www.uni-potsdam.de/en/ibb-macroecology/index">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://twitter.com/ZurellLab">
+    <span class="fa fa-twitter"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">MadingleyR: Role of large carnivores</h1>
+
+</div>
+
+
+<div class="alert alert-info">
+<p><strong>RStudio project</strong></p>
+<p>Open the RStudio project that we created in the first session. I
+recommend to use this RStudio project for the entire course and within
+the RStudio project create separate R scripts for each session.</p>
+<ul>
+<li>Create a new empty R script by going to the tab “File”, select “New
+File” and then “R script”</li>
+<li>In the new R script, type
+<code># Session 12: MadingleyR, role of large carnivores</code> and save
+the file in your folder “scripts” within your project folder, e.g. as
+“12_Mad_carnivores.R”</li>
+</ul>
+</div>
+<p>This practical illustrates how <code>MadingleyR</code> can be used to
+study top-down and bottom-up regulation of biomass across functional
+groups. As example, we re-implement parts of the large carnivore-removal
+case study described in <span class="citation">(Hoeks et al.
+2020)</span>. The workflow follows the example case study on
+herbivore-removal provided on <a
+href="https://github.com/MadingleyR/MadingleyR"
+class="uri">https://github.com/MadingleyR/MadingleyR</a>.</p>
+<div id="large-carnivore-removal-scenario" class="section level1"
+number="1">
+<h1><span class="header-section-number">1</span> Large-carnivore removal
+scenario</h1>
+<p>Large terrestrial herbivores and carnivores are particularly
+vulnerable to extinction <span class="citation">(Dirzo et al.
+2014)</span> while also being of vital importance for ecosystem
+structure and functioning <span class="citation">(Svenning et al.
+2016)</span>. <span class="citation">Hoeks et al. (2020)</span> used
+Madingley to investigate the importance of large carnivores for
+ecosystem structure and dynamics. They hypothesised that herbivores
+should increase in biomass when large predators are lost as the top-down
+regulation weakens and the bottom-up (resource) regulation
+strengthens.</p>
+<p>To understand the effect of large carnivore removal on ecosystem
+structure and, thus, the importance of top-down control on the
+ecosystem, <span class="citation">Hoeks et al. (2020)</span> ran a
+simulation in which they remove all large (&gt;21 kg) endothermic
+carnivores and compared this to a control, no-removal simulation. Here,
+we will not simulate global biomass differences, but just run the model
+for two 5x5° locations from <span class="citation">Hoeks et al.
+(2020)</span>, Białowieża (Poland) and Serengeti (Kenya and
+Tanzania).</p>
+<div id="setting-up-directory" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Setting up
+directory</h2>
+<p>We set up a directory to store all modelling results. Use your file
+explorer on your machine, navigate to the “models” folder within your
+project, and create a sub-folder for the current practical called
+“Mad_carnivores”. Next, return to your RStudio project and store the
+path in a variable. This has to be the absolute path to the models
+folder.</p>
+<pre class="r"><code>dirpath = paste0(getwd(),&quot;/models/Mad_carnivores&quot;)</code></pre>
+</div>
+<div id="initialise-the-model" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Initialise the
+model</h2>
+<p>First, we define the spatial windows for the two locations and
+initialise the model.</p>
+<pre class="r"><code>library(MadingleyR)
+
+# Spatial window Bialowieza:
+sptl_bialowieza = c(20, 25, 50, 54) 
+
+# Spatial window Serengeti:
+sptl_serengeti = c(32, 36, -4, 0)
+
+# Initialise models for the two locations
+mdat_B = madingley_init(spatial_window = sptl_bialowieza)</code></pre>
+<pre><code>## Reading default input rasters from:  /Library/Frameworks/R.framework/Versions/4.1/Resources/library/MadingleyR/spatial_input_rasters.............
+## Processing: realm_classification, land_mask, hanpp, available_water_capacity
+## Processing: Ecto_max, Endo_C_max, Endo_H_max, Endo_O_max
+## Processing: terrestrial_net_primary_productivity_1-12
+## Processing: near-surface_temperature_1-12
+## Processing: precipitation_1-12
+## Processing: ground_frost_frequency_1-12
+## Processing: diurnal_temperature_range_1-12
+## </code></pre>
+<pre class="r"><code>mdat_S = madingley_init(spatial_window = sptl_serengeti)</code></pre>
+<pre><code>## Reading default input rasters from:  /Library/Frameworks/R.framework/Versions/4.1/Resources/library/MadingleyR/spatial_input_rasters.............
+## Processing: realm_classification, land_mask, hanpp, available_water_capacity
+## Processing: Ecto_max, Endo_C_max, Endo_H_max, Endo_O_max
+## Processing: terrestrial_net_primary_productivity_1-12
+## Processing: near-surface_temperature_1-12
+## Processing: precipitation_1-12
+## Processing: ground_frost_frequency_1-12
+## Processing: diurnal_temperature_range_1-12
+## </code></pre>
+</div>
+<div id="run-spin-up-simulations-and-control-scenario"
+class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Run spin-up
+simulations and control scenario</h2>
+<p>We first let the model spin up for 50 years. Remember that this
+spinup phase should typically cover 100-1000 years; we shorten this for
+computational reasons in this demonstration. On my computer, this
+simulation runs through in 3-4 min (i.e. 0.20-0.25 sec per monthly
+timestep). Should it take much longer on your computer, you can reduce
+computational burden e.g. by reducing the maximum number of cohorts that
+are being simulated (in the <code>madingley_run()</code> function).</p>
+<p>In the simulation, we define the maximum body masses of herbivores,
+carnivores and omnivores that are typically found at those locations
+(according to Table 2 of <span class="citation">Hoeks et al.
+(2020)</span>).</p>
+<p>In contrast to <span class="citation">Hoeks et al. (2020)</span>, we
+only run a single replicate per scenario.</p>
+<pre class="r"><code># Define maximum body size of endotherms in the cohort definitions:
+c_defs_B =c_defs_S = madingley_inputs(&#39;cohort definition&#39;)
+
+c_defs_B$PROPERTY_Maximum.mass[1] = 500000 # Largest herbivore Bialowieza: Bison bonasus - bison (500 kg)
+c_defs_B$PROPERTY_Maximum.mass[2] = 32000 # Largest carnivore Bialowieza: Canis lupus -wolve (32 kg)
+c_defs_B$PROPERTY_Maximum.mass[3] = 181000 # Largest omnivore Bialowieza: Ursus arctos - brown bear (181 kg)
+
+c_defs_S$PROPERTY_Maximum.mass[1] = 3940000 # Largest herbivore Serengeti: Loxodonta africana - elefant (3940 kg)
+c_defs_S$PROPERTY_Maximum.mass[2] = 162000 # Largest carnivore Serengeti: Panthera leo - lion (162 kg)
+c_defs_S$PROPERTY_Maximum.mass[3] = 83000 # Largest omnivore Serengeti: Phacochoerus africanus - warthog (83 kg)
+
+
+# Run spin-up of 50 years for Bialowieza and for Serengeti
+mres_spinup_B = madingley_run(madingley_data = mdat_B, 
+                     years = 50,
+                     cohort_def = c_defs_B,
+                     out_dir=dirpath)
+
+mres_spinup_S = madingley_run(madingley_data = mdat_S, 
+                     years = 50,
+                     cohort_def = c_defs_S,
+                     out_dir=dirpath)</code></pre>
+<p>Save all model objects for later usage (such that you do not need to
+rerun the models for plotting).</p>
+<pre class="r"><code># save model objects
+save(mres_spinup_B, mres_spinup_S, file=paste0(dirpath,&#39;/mres_carnivores.RData&#39;))</code></pre>
+<p>For the control scenario, we simply continue the simulations for
+another 50 years. To do so, we use the output of the spin-up simulation
+as input data for this new simulation.</p>
+<p><em>If your machine runs very slow, simplify the example to just one
+location.</em></p>
+<pre class="r"><code># Run control scenario for 50 years.
+# Note that simulations start from spinup results: 
+mres_control_B = madingley_run(madingley_data = mres_spinup_B, 
+                       years = 50,
+                       cohort_def = c_defs_B,
+                       out_dir=dirpath)
+
+mres_control_S = madingley_run(madingley_data = mres_spinup_S, 
+                       years = 50,
+                       cohort_def = c_defs_B,
+                       out_dir=dirpath)</code></pre>
+<pre class="r"><code># save model objects
+save(mres_spinup_B, mres_spinup_S, mres_control_B, mres_control_S, file=paste0(dirpath,&#39;/mres_carnivores.RData&#39;))</code></pre>
+</div>
+<div id="run-large-predator-removal-scenario" class="section level2"
+number="1.4">
+<h2><span class="header-section-number">1.4</span> Run large predator
+removal scenario</h2>
+<!-- @Hoeks_2020 simulated a gradual removal of large carnivores, starting with the largest predators and ending with predators with body mass of 21 kg. They argued that a gradual removal reduced the shock to the system and thus the chance of stochastic extinctions. Consequently, they removed only a small proportion of the largest predators in each time step of a 20-year period, with equal proportions of biomass removed each year. We simplify this approach further and remove the largest endothermic carnivores in a 5-year period. -->
+<!-- The endothermic carnivores have the functional group index of 1 (check out `mdat_B$cohort_def`; the count starts at `0`).  -->
+<!-- ```{r} -->
+<!-- # Inspect adult body mass of endothermic carnivores in Bialowieza -->
+<!-- summary(subset(mres_spinup_B$cohorts, FunctionalGroupIndex==1)$AdultMass) -->
+<!-- max_bodymass_carnivores_B = max(subset(mres_spinup_B$cohorts,  FunctionalGroupIndex==1)$AdultMass) -->
+<!-- # Inspect adult body mass of endothermic carnivores in Serengeti -->
+<!-- summary(subset(mres_spinup_S$cohorts, FunctionalGroupIndex==1)$AdultMass) -->
+<!-- max_bodymass_carnivores_S = max(subset(mres_spinup_S$cohorts, FunctionalGroupIndex==1)$AdultMass) -->
+<!-- # Define removal thresholds: -->
+<!-- thresh_bodymass_B = seq(max_bodymass_carnivores_B, 21000, length=6)[-1] -->
+<!-- thresh_bodymass_S = seq(max_bodymass_carnivores_S, 21000, length=6)[-1] -->
+<!-- # Define new outputs: -->
+<!-- mres_removal_B = mres_spinup_B -->
+<!-- mres_removal_S = mres_spinup_S -->
+<!-- # Loop over 5 removal thresholds to remove largest endothermic carnivores from cohorts -->
+<!-- for (i in 1:5) -->
+<!-- { -->
+<!--   # Remove large carnivores in Bialowieza -->
+<!--   remove_idx_B = which(mres_removal_B$cohorts$AdultMass > thresh_bodymass[i] &  -->
+<!--                      mres_removal_B$cohorts$FunctionalGroupIndex == 1) -->
+<!--   mres_removal_B$cohorts = mres_removal_B$cohorts[-remove_idx_B, ] -->
+<!--   # Remove large carnivores in Serengeti -->
+<!--   remove_idx_S = which(mres_removal_S$cohorts$AdultMass > thresh_bodymass[i] &  -->
+<!--                      mres_removal_S$cohorts$FunctionalGroupIndex == 1) -->
+<!--   mres_removal_S$cohorts = mres_removal_S$cohorts[-remove_idx_B, ] -->
+<!--   # Run simulation: 1 year during removal phase, 46 years after removal phase -->
+<!--   if (i<5){ -->
+<!--     # Bialowieza -->
+<!--     mres_removal_B = madingley_run(madingley_data = mres_removal_B,  -->
+<!--                        years = 1) -->
+<!--     # Serengeti -->
+<!--     mres_removal_S = madingley_run(madingley_data = mres_removal_S,  -->
+<!--                        years = 1) -->
+<!--   } else { -->
+<!--     # Bialowieza - remaining 45+1 years -->
+<!--     mres_removal_B = madingley_run(madingley_data = mres_removal_B,  -->
+<!--                        years = 45) -->
+<!--     mres_removal_B2 = madingley_run(madingley_data = mres_removal_B,  -->
+<!--                        years = 1) -->
+<!--     # Serengeti - remaining 45+1 years -->
+<!--     mres_removal_S = madingley_run(madingley_data = mres_removal_S,  -->
+<!--                        years = 45) -->
+<!--     mres_removal_S2 = madingley_run(madingley_data = mres_removal_S,  -->
+<!--                        years = 1) -->
+<!--   } -->
+<!-- } -->
+<!-- ``` -->
+<p><span class="citation">Hoeks et al. (2020)</span> simulated a gradual
+removal of large carnivores, starting with the largest predators and
+ending with predators with body mass of 21 kg. They argued that a
+gradual removal reduced the shock to the system and thus the chance of
+stochastic extinctions. Consequently, they removed only a small
+proportion of the largest predators in each time step of a 20-year
+period, with equal proportions of biomass removed each year. For
+simplicity, we remove all large endothermic carnivores &gt;21 kg at
+once.</p>
+<p>The endothermic carnivores have the functional group index of 1
+(check out <code>mdat_B$cohort_def</code>; the count starts at
+<code>0</code>).</p>
+<pre class="r"><code># Inspect adult body mass of endothermic carnivores in Bialowieza
+summary(subset(mres_spinup_B$cohorts, FunctionalGroupIndex==1)$AdultMass)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    4419    9538   13634   14587   18444   32001</code></pre>
+<pre class="r"><code># Inspect adult body mass of endothermic carnivores in Serengeti
+summary(subset(mres_spinup_S$cohorts, FunctionalGroupIndex==1)$AdultMass)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    2327   11730   22907   38283   52502  162001</code></pre>
+<pre class="r"><code># Define new output
+mres_removal_B = mres_spinup_B
+mres_removal_S = mres_spinup_S
+
+# Remove large carnivores &gt;21 kg in Bialowieza
+remove_idx_B = which(mres_removal_B$cohorts$AdultMass &gt; 21000 &amp; 
+                     mres_removal_B$cohorts$FunctionalGroupIndex == 1)
+mres_removal_B$cohorts = mres_removal_B$cohorts[-remove_idx_B, ]
+  
+# Remove large carnivores &gt;21 kg in Serengeti
+remove_idx_S = which(mres_removal_S$cohorts$AdultMass &gt; 21000 &amp; 
+                     mres_removal_S$cohorts$FunctionalGroupIndex == 1)
+mres_removal_S$cohorts = mres_removal_S$cohorts[-remove_idx_S, ]
+  
+# Restrict maximum body size of endotherm carnivores in the cohort definitions to &lt;21kg:
+c_defs_B_removal = c_defs_B
+c_defs_B_removal$PROPERTY_Maximum.mass[2] = 21000
+c_defs_S_removal = c_defs_S
+c_defs_S_removal$PROPERTY_Maximum.mass[2] = 21000
+
+
+# Run simulation:
+# Bialowieza
+mres_removal_B = madingley_run(madingley_data = mres_removal_B,
+                      cohort_def = c_defs_B_removal,
+                      years = 50,
+                      out_dir=dirpath)
+
+# Serengeti
+mres_removal_S = madingley_run(madingley_data = mres_removal_S,
+                      cohort_def = c_defs_S_removal,
+                      years = 50,
+                      out_dir=dirpath)</code></pre>
+<pre class="r"><code># save model objects
+save(mres_spinup_B, mres_spinup_S, mres_control_B, mres_control_S, mres_removal_B, mres_removal_S, file=paste0(dirpath,&#39;/mres_carnivores.RData&#39;))</code></pre>
+</div>
+<div id="compare-scenarios" class="section level2" number="1.5">
+<h2><span class="header-section-number">1.5</span> Compare
+scenarios</h2>
+<p>First, we plot the relative changes in density over time between the
+removal and the control scenario. Values below 1 mean that lower density
+in the removal scenario, values above 1 indicate higher density in the
+removal compared to the control scenario.</p>
+<pre class="r"><code>par(mfrow=c(2,2))
+
+# Plot time series for Carnivores
+dens_change_carn_B &lt;- mres_removal_B$time_line_cohorts$Biomass_FG_1 / mres_control_B$time_line_cohorts$Biomass_FG_1
+dens_change_carn_S &lt;- mres_removal_S$time_line_cohorts$Biomass_FG_1 / mres_control_S$time_line_cohorts$Biomass_FG_1
+
+plot(dens_change_carn_B,type=&#39;l&#39;, col=&quot;cyan4&quot;,lwd=2, xlab=&#39;Months&#39;, ylab=&#39;Change in density&#39;,ylim=c(0,2), main =&#39;Carnivores&#39;)
+abline(1,0, lty=&#39;dotted&#39;, col=&#39;grey&#39;)
+lines(dens_change_carn_S,col=&#39;khaki&#39;,lwd=2)
+legend(&#39;bottom&#39;,ncol=2,col=c(&#39;cyan4&#39;,&#39;khaki&#39;),lwd=2,legend=c(&#39;Bialowieza&#39;,&#39;Serengeti&#39;), bty=&#39;n&#39;)
+
+# Plot time series for Herbivores
+dens_change_herb_B &lt;- mres_removal_B$time_line_cohorts$Biomass_FG_0 / mres_control_B$time_line_cohorts$Biomass_FG_0
+dens_change_herb_S &lt;- mres_removal_S$time_line_cohorts$Biomass_FG_0 / mres_control_S$time_line_cohorts$Biomass_FG_0
+
+plot(dens_change_herb_B,type=&#39;l&#39;, col=&quot;cyan4&quot;,lwd=2, xlab=&#39;Months&#39;, ylab=&#39;Change in density&#39;,ylim=c(0.5,5), main=&#39;Herbivores&#39;)
+abline(1,0, lty=&#39;dotted&#39;, col=&#39;grey&#39;)
+lines(dens_change_herb_S,col=&#39;khaki&#39;,lwd=2)
+
+# Plot time series for Omnivores
+dens_change_omn_B &lt;- mres_removal_B$time_line_cohorts$Biomass_FG_2 / mres_control_B$time_line_cohorts$Biomass_FG_2
+dens_change_omn_S &lt;- mres_removal_S$time_line_cohorts$Biomass_FG_2 / mres_control_S$time_line_cohorts$Biomass_FG_2
+
+plot(dens_change_omn_B,type=&#39;l&#39;, col=&quot;cyan4&quot;,lwd=2, xlab=&#39;Months&#39;, ylab=&#39;Change in density&#39;,ylim=c(0.5,3), main=&#39;Omnivores&#39;)
+abline(1,0, lty=&#39;dotted&#39;, col=&#39;grey&#39;)
+lines(dens_change_omn_S,col=&#39;khaki&#39;,lwd=2)
+
+# Plot time series for Autotrophs
+dens_change_aut_B &lt;- mres_removal_B$time_line_stocks$TotalStockBiomass / mres_control_B$time_line_stocks$TotalStockBiomass
+dens_change_aut_S &lt;- mres_removal_S$time_line_stocks$TotalStockBiomass / mres_control_S$time_line_stocks$TotalStockBiomass
+
+plot(dens_change_aut_B,type=&#39;l&#39;, col=&quot;cyan4&quot;,lwd=2, xlab=&#39;Months&#39;, ylab=&#39;Change in density&#39;,ylim=c(0,1.5), main=&#39;Autotrophs&#39;)
+abline(1,0, lty=&#39;dotted&#39;, col=&#39;grey&#39;)
+lines(dens_change_aut_S,col=&#39;khaki&#39;,lwd=2)</code></pre>
+<p><img src="12_Mad_carnivores_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>Let’s also compare the resulting food webs. <span
+class="citation">Hoeks et al. (2020)</span> found that large herbivores
+increased in biomass after large carnivore removal, especially in the
+Serengeti; the biomass of medium-sized endothermic carnivores (10-21kg)
+was increased; the biomass of large (&gt;100 kg) endothermic omnivores
+decreased. Compare to our simulation results below.</p>
+<pre class="r"><code># Plot foodweb plot
+par(mfrow=c(1,1))
+plot_foodweb(mres_control_B, max_flows = 5)</code></pre>
+<pre><code>## loading inputs from: /Users/zurell/data/Lehre/UP_Lehre/CLEWS/EcosystemDynamics/edb-course/models/Mad_carnivores/madingley_outs_31_05_22_20_01_50/</code></pre>
+<pre class="r"><code>title(&#39;Bialowieza - control scenario&#39;)</code></pre>
+<p><img src="12_Mad_carnivores_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<pre class="r"><code>plot_foodweb(mres_removal_B, max_flows = 5)</code></pre>
+<pre><code>## loading inputs from: /Users/zurell/data/Lehre/UP_Lehre/CLEWS/EcosystemDynamics/edb-course/models/Mad_carnivores/madingley_outs_31_05_22_20_10_35/</code></pre>
+<pre class="r"><code>title(&#39;Bialowieza - removal scenario&#39;)</code></pre>
+<p><img src="12_Mad_carnivores_files/figure-html/unnamed-chunk-12-2.png" width="672" /></p>
+<pre class="r"><code>plot_foodweb(mres_control_S, max_flows = 5)</code></pre>
+<pre><code>## loading inputs from: /Users/zurell/data/Lehre/UP_Lehre/CLEWS/EcosystemDynamics/edb-course/models/Mad_carnivores/madingley_outs_31_05_22_20_04_58/</code></pre>
+<pre class="r"><code>title(&#39;Serengeti - control scenario&#39;)</code></pre>
+<p><img src="12_Mad_carnivores_files/figure-html/unnamed-chunk-12-3.png" width="672" /></p>
+<pre class="r"><code>plot_foodweb(mres_removal_S, max_flows = 5)</code></pre>
+<pre><code>## loading inputs from: /Users/zurell/data/Lehre/UP_Lehre/CLEWS/EcosystemDynamics/edb-course/models/Mad_carnivores/madingley_outs_31_05_22_20_13_49/</code></pre>
+<pre class="r"><code>title(&#39;Serengeti - removal scenario&#39;)</code></pre>
+<p><img src="12_Mad_carnivores_files/figure-html/unnamed-chunk-12-4.png" width="672" /></p>
+<pre class="r"><code># Plot body mass densities
+par(mfcol=c(3,2))
+hist(subset(mres_control_B$cohorts, FunctionalGroupIndex==0)$AdultMass/1000, main=&#39;Bialowieza control - herbivores&#39;, xlab=&#39;Body mass kg&#39;)
+hist(subset(mres_control_B$cohorts, FunctionalGroupIndex==1)$AdultMass/1000, main=&#39;Bialowieza control - carnivores&#39;, xlab=&#39;Body mass kg&#39;)
+hist(subset(mres_control_B$cohorts, FunctionalGroupIndex==2)$AdultMass/1000, main=&#39;Bialowieza control - omnivores&#39;, xlab=&#39;Body mass kg&#39;)
+hist(subset(mres_removal_B$cohorts, FunctionalGroupIndex==0)$AdultMass/1000, main=&#39;Bialowieza removal - herbivores&#39;, xlab=&#39;Body mass kg&#39;)
+hist(subset(mres_removal_B$cohorts, FunctionalGroupIndex==1)$AdultMass/1000, main=&#39;Bialowieza removal - carnivores&#39;, xlab=&#39;Body mass kg&#39;)
+hist(subset(mres_removal_B$cohorts, FunctionalGroupIndex==2)$AdultMass/1000, main=&#39;Bialowieza removal - omnivores&#39;, xlab=&#39;Body mass kg&#39;)</code></pre>
+<p><img src="12_Mad_carnivores_files/figure-html/unnamed-chunk-12-5.png" width="672" /></p>
+<pre class="r"><code>par(mfcol=c(3,2))
+hist(subset(mres_control_S$cohorts, FunctionalGroupIndex==0)$AdultMass/1000, main=&#39;Serengeti control - herbivores&#39;, xlab=&#39;Body mass kg&#39;)
+hist(subset(mres_control_S$cohorts, FunctionalGroupIndex==1)$AdultMass/1000, main=&#39;Serengeti control - carnivores&#39;, xlab=&#39;Body mass kg&#39;)
+hist(subset(mres_control_S$cohorts, FunctionalGroupIndex==2)$AdultMass/1000, main=&#39;Serengeti control - omnivores&#39;, xlab=&#39;Body mass kg&#39;)
+hist(subset(mres_removal_S$cohorts, FunctionalGroupIndex==0)$AdultMass/1000, main=&#39;Serengeti removal - herbivores&#39;, xlab=&#39;Body mass kg&#39;)
+hist(subset(mres_removal_S$cohorts, FunctionalGroupIndex==1)$AdultMass/1000, main=&#39;Serengeti removal - carnivores&#39;, xlab=&#39;Body mass kg&#39;)
+hist(subset(mres_removal_S$cohorts, FunctionalGroupIndex==2)$AdultMass/1000, main=&#39;Serengeti removal - omnivores&#39;, xlab=&#39;Body mass kg&#39;)</code></pre>
+<p><img src="12_Mad_carnivores_files/figure-html/unnamed-chunk-12-6.png" width="672" /></p>
+<div class="alert alert-info">
+<p><strong>Task: extend analyses</strong></p>
+<p>Now, it’s your turn. Test other locations from <span
+class="citation">Hoeks et al. (2020)</span>. Or implement several
+replicates and compare results.</p>
+</div>
+</div>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1 class="unnumbered">References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Dirzo_2014" class="csl-entry">
+Dirzo, Rodolfo, Hillary S. Young, Mauro Galetti, Gerardo Ceballos, Nick
+J. B. Isaac, and Ben Collen. 2014. <span>“Defaunation in the
+Anthropocene.”</span> <em>Science</em> 345 (6195): 401–6. <a
+href="https://doi.org/10.1126/science.1251817">https://doi.org/10.1126/science.1251817</a>.
+</div>
+<div id="ref-Hoeks_2020" class="csl-entry">
+Hoeks, Selwyn, Mark A. J. Huijbregts, Michela Busana, Michael B. J.
+Harfoot, Jens-Christian Svenning, and Luca Santini. 2020.
+<span>“Mechanistic Insights into the Role of Large Carnivores for
+Ecosystem Structure and Functioning.”</span> <em>Ecography</em> 43 (12):
+1752–63. <a
+href="https://doi.org/10.1111/ecog.05191">https://doi.org/10.1111/ecog.05191</a>.
+</div>
+<div id="ref-Svenning2016" class="csl-entry">
+Svenning, Jens-Christian, Pil B. M. Pedersen, C. Josh Donlan, Rasmus
+Ejrnæs, Søren Faurby, Mauro Galetti, Dennis M. Hansen, et al. 2016.
+<span>“Science for a Wilder Anthropocene: Synthesis and Future
+Directions for Trophic Rewilding Research.”</span> <em>Proceedings of
+the National Academy of Sciences</em> 113 (4): 898–906. <a
+href="https://doi.org/10.1073/pnas.1502556112">https://doi.org/10.1073/pnas.1502556112</a>.
+</div>
+</div>
+</div>
+
+<!DOCTYPE html>
+<html>
+
+<br>
+<hr />
+<div id="footer">
+<p>Damaris Zurell 2022 <a href="http://creativecommons.org/licenses/by/4.0/" >(CC BY 4.0)</a>.  </p>
+</div>
+
+</html>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
