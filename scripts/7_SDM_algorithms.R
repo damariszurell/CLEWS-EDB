@@ -42,6 +42,11 @@ m_bc <- bioclim(bio_curr[[my_preds]], # provide environmental raster
                 lynx_train[lynx_train$occ==1,1:2]) # provide coordinates of presence locations
 plot(m_bc)
 
+# by hand:
+lynx_env <- extract(bio_curr[[my_preds]],lynx_train[lynx_train$occ==1,1:2])
+plot(lynx_env)
+polygon(quantile(lynx_env[,1],c(.05,.95,.95,.05)), quantile(lynx_env[,2],c(.05,.05,.95,.95)))
+polygon(quantile(lynx_env[,1],c(.025,.975,.975,.025)), quantile(lynx_env[,2],c(.025,.025,.975,.975)),lty='dotted')
 
 # For the response surface, we first prepare the 3D-grid with environmental gradient and predictions
 xyz <- expand.grid(
