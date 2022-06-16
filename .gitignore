@@ -14,4 +14,4 @@ data/*.gri
 data/*.txt
 data/gbif_shrew.RData
 models/
-
+scripts/9a_lynx_reforestation.R
