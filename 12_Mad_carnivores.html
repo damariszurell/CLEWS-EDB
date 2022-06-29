@@ -592,7 +592,7 @@ save(mres_spinup_B, mres_spinup_S, file=paste0(dirpath,&#39;/mres_carnivores.RDa
 another 50 years. To do so, we use the output of the spin-up simulation
 as input data for this new simulation.</p>
 <p><em>If your machine runs very slow, simplify the example to just one
-location.</em></p>
+location or reduce the spatial window you are simulating.</em></p>
 <pre class="r"><code># Run control scenario for 50 years.
 # Note that simulations start from spinup results: 
 mres_control_B = madingley_run(madingley_data = mres_spinup_B, 
@@ -602,7 +602,7 @@ mres_control_B = madingley_run(madingley_data = mres_spinup_B,
 
 mres_control_S = madingley_run(madingley_data = mres_spinup_S, 
                        years = 50,
-                       cohort_def = c_defs_B,
+                       cohort_def = c_defs_S,
                        out_dir=dirpath)</code></pre>
 <pre class="r"><code># save model objects
 save(mres_spinup_B, mres_spinup_S, mres_control_B, mres_control_S, file=paste0(dirpath,&#39;/mres_carnivores.RData&#39;))</code></pre>
@@ -774,7 +774,7 @@ plot_foodweb(mres_control_B, max_flows = 5)</code></pre>
 <pre class="r"><code>title(&#39;Bialowieza - removal scenario&#39;)</code></pre>
 <p><img src="12_Mad_carnivores_files/figure-html/unnamed-chunk-12-2.png" width="672" /></p>
 <pre class="r"><code>plot_foodweb(mres_control_S, max_flows = 5)</code></pre>
-<pre><code>## loading inputs from: /Users/zurell/data/Lehre/UP_Lehre/CLEWS/EcosystemDynamics/edb-course/models/Mad_carnivores/madingley_outs_31_05_22_20_04_58/</code></pre>
+<pre><code>## loading inputs from: /Users/zurell/data/Lehre/UP_Lehre/CLEWS/EcosystemDynamics/edb-course/models/Mad_carnivores/madingley_outs_29_06_22_11_33_27/</code></pre>
 <pre class="r"><code>title(&#39;Serengeti - control scenario&#39;)</code></pre>
 <p><img src="12_Mad_carnivores_files/figure-html/unnamed-chunk-12-3.png" width="672" /></p>
 <pre class="r"><code>plot_foodweb(mres_removal_S, max_flows = 5)</code></pre>
