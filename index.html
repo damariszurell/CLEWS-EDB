@@ -14,7 +14,7 @@
 
 <title>Practicals for the CLEWS-Master module Ecosystem Dynamics and Biodiversity</title>
 
-<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -144,11 +144,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -177,8 +181,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -186,16 +190,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -268,10 +265,7 @@ $(document).ready(function () {
       <a href="2_BiodivData.html">2. Biodiversity data in R</a>
     </li>
     <li>
-      <a href="3_ThreatData.html">3. Threat data in R</a>
-    </li>
-    <li>
-      <a href="4_EnvData.html">4. Environmental data in R</a>
+      <a href="3_EnvData.html">3. Environmental data in R</a>
     </li>
   </ul>
 </li>
@@ -283,13 +277,13 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="5_SDM_intro.html">5. SDMs: simple model fitting</a>
+      <a href="4_SDM_intro.html">4. SDMs: simple model fitting</a>
     </li>
     <li>
-      <a href="6_SDM_eval.html">6. SDMs: assessment and prediction</a>
+      <a href="5_SDM_eval.html">5. SDMs: assessment and prediction</a>
     </li>
     <li>
-      <a href="7_SDM_algorithms.html">7. SDMs: algorithms and ensembles</a>
+      <a href="6_SDM_algorithms.html">6. SDMs: algorithms and ensembles</a>
     </li>
   </ul>
 </li>
@@ -301,13 +295,13 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="8_RS_intro.html">8. Getting started with RangeShiftR</a>
+      <a href="7_RS_intro.html">7. Getting started with RangeShiftR</a>
     </li>
     <li>
-      <a href="9_RS_lynx.html">9. RangeShiftR: Eurasian lynx reintroduction</a>
+      <a href="8_RS_lynx.html">8. RangeShiftR: Eurasian lynx reintroduction</a>
     </li>
     <li>
-      <a href="10_RS_grouse.html">10. RangeShiftR: Black grouse range dynamics</a>
+      <a href="9_RS_grouse.html">9. RangeShiftR: Black grouse range dynamics</a>
     </li>
   </ul>
 </li>
@@ -319,13 +313,13 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="11_Mad_intro.html">11. Running MadingleyR</a>
+      <a href="10_Mad_intro.html">10. Running MadingleyR</a>
     </li>
     <li>
-      <a href="12_Mad_carnivores.html">12. MadingleyR: Role of large carnivores</a>
+      <a href="11_Mad_carnivores.html">11. MadingleyR: Role of large carnivores</a>
     </li>
     <li>
-      <a href="13_Mad_landuse.html">13. MadingleyR: land use change effects</a>
+      <a href="12_Mad_landuse.html">12. MadingleyR: land use change effects</a>
     </li>
   </ul>
 </li>
@@ -394,7 +388,7 @@ preparatory course</em></a> first.</p>
 <br>
 <hr />
 <div id="footer">
-<p>Damaris Zurell 2022 <a href="http://creativecommons.org/licenses/by/4.0/" >(CC BY 4.0)</a>.  </p>
+<p>Damaris Zurell 2023 <a href="http://creativecommons.org/licenses/by/4.0/" >(CC BY 4.0)</a>.  </p>
 </div>
 
 </html>

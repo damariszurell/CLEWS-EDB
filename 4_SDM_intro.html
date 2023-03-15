@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Introduction to SDMs: simple model fitting</title>
+
+<script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Ecosystem dynamics and biodiversity</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Pracs: Spatial data
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="0_setup.html">0. Getting started</a>
+    </li>
+    <li>
+      <a href="1_SpatialData.html">1. Spatial data in R</a>
+    </li>
+    <li>
+      <a href="2_BiodivData.html">2. Biodiversity data in R</a>
+    </li>
+    <li>
+      <a href="3_EnvData.html">3. Environmental data in R</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Pracs: Species distribution models
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="4_SDM_intro.html">4. SDMs: simple model fitting</a>
+    </li>
+    <li>
+      <a href="5_SDM_eval.html">5. SDMs: assessment and prediction</a>
+    </li>
+    <li>
+      <a href="6_SDM_algorithms.html">6. SDMs: algorithms and ensembles</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Pracs: population modelling
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="7_RS_intro.html">7. Getting started with RangeShiftR</a>
+    </li>
+    <li>
+      <a href="8_RS_lynx.html">8. RangeShiftR: Eurasian lynx reintroduction</a>
+    </li>
+    <li>
+      <a href="9_RS_grouse.html">9. RangeShiftR: Black grouse range dynamics</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Pracs: ecosystem modelling
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="10_Mad_intro.html">10. Running MadingleyR</a>
+    </li>
+    <li>
+      <a href="11_Mad_carnivores.html">11. MadingleyR: Role of large carnivores</a>
+    </li>
+    <li>
+      <a href="12_Mad_landuse.html">12. MadingleyR: land use change effects</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://www.uni-potsdam.de/en/ibb-macroecology/index">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://twitter.com/ZurellLab">
+    <span class="fa fa-twitter"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Introduction to SDMs: simple model
+fitting</h1>
+
+</div>
+
+
+<div class="alert alert-info">
+<p><strong>RStudio project</strong></p>
+<p>Open the RStudio project that we created in the first session. I
+recommend to use this RStudio project for the entire course and within
+the RStudio project create separate R scripts for each session.</p>
+<ul>
+<li>Create a new empty R script by going to the tab “File”, select “New
+File” and then “R script”</li>
+<li>In the new R script, type <code># Session 4: SDM introduction</code>
+and save the file in your folder “scripts” within your project folder,
+e.g. as “4_SDM_intro.R”</li>
+</ul>
+</div>
+<div id="introduction" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Introduction</h1>
+<p>This session will introduce you to simple species distribution models
+(SDMs). Species distribution models (SDMs) are a popular tool in
+quantitative ecology <span class="citation">(Franklin 2010; Peterson et
+al. 2011; Guisan, Thuiller, and Zimmermann 2017)</span> and constitute
+the most widely used modelling framework in global change impact
+assessments for projecting potential future range shifts of species
+<span class="citation">(IPBES 2016)</span>. There are several reasons
+that make them so popular: they are comparably easy to use because many
+software packages <span class="citation">(e.g. Thuiller et al. 2009;
+Phillips, Anderson, and Schapire 2006)</span> and guidelines <span
+class="citation">(e.g. Elith, Leathwick, and Hastie 2008; Elith et al.
+2011; Merow, Smith, and Silander Jr 2013; Guisan, Thuiller, and
+Zimmermann 2017)</span> are available, and they have comparably low data
+requirements.</p>
+<p>SDMs relate biodiversity observations (e.g. presence-only,
+presence/absence, abundance, species richness) at specific sites to the
+prevailing environmental conditions at those sites. Different
+statistical and machine-learning algorithms are available for this.
+Based on the estimated biodiversity-environment relationship, we can
+make predictions in space and in time by projecting the model onto
+available environmental layers (Figure 1).</p>
+<div class="figure">
+<img src="figures/sdm.png" alt="**Figure 1. Schematic representation of the species distribution modelling concept. First, biodiversity and environmental information are sampled in geographic space. Second, a statistical model (here, generalised linear model) is used to estimate the species-environment relationship. Third, the species–environment relationship can be mapped onto geographic layers of environmental information to delineate the potential distribution of the species. Mapping to the sampling area and period is usually referred to as interpolation, while transferring to a different time period or geographic area is referred to as extrapolation.**" width="70%" />
+<p class="caption">
+<strong>Figure 1. Schematic representation of the species distribution
+modelling concept. First, biodiversity and environmental information are
+sampled in geographic space. Second, a statistical model (here,
+generalised linear model) is used to estimate the species-environment
+relationship. Third, the species–environment relationship can be mapped
+onto geographic layers of environmental information to delineate the
+potential distribution of the species. Mapping to the sampling area and
+period is usually referred to as interpolation, while transferring to a
+different time period or geographic area is referred to as
+extrapolation.</strong>
+</p>
+</div>
+<p>We distinguish five main modelling steps for SDMs: (i)
+conceptualisation, (ii) data preparation, (iii) model fitting, (iv)
+model assessment, and (v) prediction (Figure 2.). The last step
+(prediction) is not always part of SDM studies but depends on the model
+objective <span class="citation">(Zurell et al. 2020)</span>. Generally,
+we distinguish three main objectives for SDMs: (a) inference and
+explanation, (b) mapping and interpolation, and (c) forecast and
+transfer. I recommend getting more familiar with critical assumptions
+and modelling decisions by studying the many excellent review articles
+<span class="citation">(Guisan and Zimmermann 2000; Guisan and Thuiller
+2005; Elith and Leathwick 2009)</span> and textbooks on SDMs <span
+class="citation">(Peterson et al. 2011; Franklin 2010; Guisan, Thuiller,
+and Zimmermann 2017)</span>.</p>
+<p>I would also like to emphasise that model building is an iterative
+process and there is much to learn on the way. In consequence, you may
+want to revisit and improve certain modelling steps, for example improve
+the spatial sampling design. Because of that I like to regard model
+building as a cycle rather than a workflow with a pre-defined
+termination point (Figure 2.)<span class="citation">(Zurell et al.
+2020)</span>.</p>
+<div class="figure">
+<img src="figures/sdm_steps.png" alt="**Figure 2. The main modelling cycle in species distribution modelling.**" width="50%" />
+<p class="caption">
+<strong>Figure 2. The main modelling cycle in species distribution
+modelling.</strong>
+</p>
+</div>
+<div id="prac-overview" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Prac overview</h2>
+<p>In this session, we will only work with Generalised Linear Models
+(GLMs) and concentrate on the first three model building steps (Figure
+2.)</p>
+</div>
+<div id="generalised-linear-models-glms" class="section level2"
+number="1.2">
+<h2><span class="header-section-number">1.2</span> Generalised linear
+models (GLMs)</h2>
+<p>Why do we not simply use linear regression to fit our
+species-environment relationship? Well, strictly, ordinary least squares
+(OLS) linear regression is only valid if the response (or rather the
+error) is normally distributed and ranges (<span
+class="math inline">\(-\infty,\infty\)</span>). OLS regression looks
+like this</p>
+<p><span class="math display">\[E(Y|X)=\beta X+\epsilon\]</span></p>
+<p>where <span class="math inline">\(E(Y|X)\)</span> is the
+<em>conditional mean</em>, meaning the expected value of the response
+<span class="math inline">\(Y\)</span> given the environmental
+predictors <span class="math inline">\(X\)</span> <span
+class="citation">(Hosmer and Lemeshow 2013)</span>. <span
+class="math inline">\(X\)</span> is the matrix of predictors (including
+the intercept), <span class="math inline">\(\beta\)</span> are the
+coefficients for the predictors, and <span
+class="math inline">\(\epsilon\)</span> is the (normally distributed!)
+error term. <span class="math inline">\(\beta X\)</span> is referred to
+as the linear predictor.</p>
+<p>When we want to predict species occurrence based on environment, then
+the conditional mean <span class="math inline">\(E(Y|X)\)</span> is
+binary and bounded between 0 (absence) and 1 (presence). Thus, the
+assumptions of OLS regression are not met. GLMs are more flexible
+regression models that allow the response variable to follow other
+distributions. Similar to OLS regression, we also fit a linear predictor
+<span class="math inline">\(\beta X\)</span> and then relate this linear
+predictor to the mean of the response variable using a link function.
+The link function is used to transform the response to normality. In
+case of a binary response, we typically use the logit link (or sometimes
+the probit link). The conditional mean is then given by:</p>
+<p><span class="math display">\[E(Y|X) = \pi (X) = \frac{e^{\beta
+X+\epsilon}}{1+e^{\beta X+\epsilon}}\]</span></p>
+<p>The logit transformation is defined as: <span
+class="math display">\[g(X)  = ln \left( \frac{\pi (X)}{1-\pi (X)}
+\right)   = \beta X+\epsilon\]</span></p>
+<p>The trick is that the logit, g(X), is now linear in its parameters,
+is continuous and may range (<span
+class="math inline">\(-\infty,\infty\)</span>). GLMs with a logit link
+are also called logistic regression models.</p>
+</div>
+</div>
+<div id="conceptualisation" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Conceptualisation</h1>
+<p>In the conceptualisation phase, we formulate our main research
+objectives and decide on the model and study setup based on any previous
+knowledge on the species and study system. An important point here is
+whether we can use available data or have to gather own biodiversity
+(and environmental) data, which would require deciding on an appropriate
+sampling design. Then, we carefully check the main underlying
+assumptions of SDMs, for example whether the species is in
+pseudo-equilibrium with environment and whether the data could be biased
+in any way <span class="citation">(cf. chapter 5 in Guisan, Thuiller,
+and Zimmermann 2017)</span>. The choice of adequate environmental
+predictors, of modelling algorithms and of desired model complexity
+should be guided by the research objective and by hypotheses regarding
+the species-environment relationship. We can divide environmental
+variables into three types of predictors: resource variables, direct
+variables and indirect variables <span class="citation">(Austin 1980;
+Guisan and Zimmermann 2000)</span>.</p>
+<div id="example-eurasian-lynx" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Example: Eurasian
+lynx</h2>
+<p>We aim at assessing potential climate change effects on the Eurasian
+lynx (<em>Lynx lynx</em>) in Europe (Figure 3), a middle-sized carnivore
+of Central, Northern and Easter Europe and Asia. First, we try to make
+ourselves familiar with Lynx ecology, for example through the <a
+href="https://www.iucnredlist.org/species/12519/121707666">IUCN
+website</a>). Think about which factors could limit the distribution of
+lynx in Europe.</p>
+<div class="figure">
+<img src="figures/lynx.png" alt="Eurasian lynx. Copyright Petr Katrochvil" width="25%" />
+<p class="caption">
+Eurasian lynx. Copyright Petr Katrochvil
+</p>
+</div>
+</div>
+</div>
+<div id="data-preparation" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Data preparation</h1>
+<p>In this step, the actual biodiversity and environmental data are
+gathered and processed. This concerns all data that are required for
+model fitting but also data that are used for making transfers. Here, we
+will use the rasterised mammal data set from practical 2 at 1° spatial
+resolution. This is a very coarse resolution and we need to be aware
+that we model coarse-scale environmental (or climate) relationships
+rather than fine-scale habitat choice.</p>
+<p>Read in the data:</p>
+<pre class="r"><code>library(terra)
+library(letsR)
+
+load(&#39;data/r_mammals_eur_1deg.RData&#39;)
+lynx_dist &lt;- data.frame(r_mammals_eur$Presence_and_Absence_Matrix[,1:2],
+                        occ = r_mammals_eur$Presence_and_Absence_Matrix[,&#39;Lynx lynx&#39;])
+
+# plot the distribution
+plot(terra::rast(lynx_dist, type=&#39;xyz&#39;))</code></pre>
+<p><img src="4_SDM_intro_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>We also retrieve climate data from worldclim (<a
+href="https://www.worldclim.org/"
+class="uri">https://www.worldclim.org/</a>). The coarsest resolution
+offered for download is 10 min, which we aggregate to 1° resolution to
+match the lynx data.</p>
+<pre class="r"><code>library(geodata)
+
+# Set download=T if you haven&#39;t downloaded the data in the previous practical
+clim &lt;- geodata::worldclim_global(var = &#39;bio&#39;, res = 10, download = F, path = &#39;data&#39;)</code></pre>
+<pre class="r"><code># Aggregate to 1° resolution
+clim_1deg &lt;- terra::aggregate(clim, 6)
+
+# Merge with Lynx data
+lynx_dist &lt;- data.frame(lynx_dist,
+                        terra::extract(x = clim_1deg, y = lynx_dist[,1:2]))
+
+# The column names of the bioclim variables are a bit awkward, so let&#39;s change them to a more convenient form
+head(lynx_dist)</code></pre>
+<pre><code>##   Longitude.x. Latitude.y. occ ID wc2.1_10m_bio_1 wc2.1_10m_bio_2
+## 1        -14.5        71.5   0  1              NA              NA
+## 2        -13.5        71.5   0  2              NA              NA
+## 3        -12.5        71.5   0  3              NA              NA
+## 4        -11.5        71.5   0  4              NA              NA
+## 5        -10.5        71.5   0  5              NA              NA
+## 6         -9.5        71.5   0  6              NA              NA
+##   wc2.1_10m_bio_3 wc2.1_10m_bio_4 wc2.1_10m_bio_5 wc2.1_10m_bio_6
+## 1              NA              NA              NA              NA
+## 2              NA              NA              NA              NA
+## 3              NA              NA              NA              NA
+## 4              NA              NA              NA              NA
+## 5              NA              NA              NA              NA
+## 6              NA              NA              NA              NA
+##   wc2.1_10m_bio_7 wc2.1_10m_bio_8 wc2.1_10m_bio_9 wc2.1_10m_bio_10
+## 1              NA              NA              NA               NA
+## 2              NA              NA              NA               NA
+## 3              NA              NA              NA               NA
+## 4              NA              NA              NA               NA
+## 5              NA              NA              NA               NA
+## 6              NA              NA              NA               NA
+##   wc2.1_10m_bio_11 wc2.1_10m_bio_12 wc2.1_10m_bio_13 wc2.1_10m_bio_14
+## 1               NA               NA               NA               NA
+## 2               NA               NA               NA               NA
+## 3               NA               NA               NA               NA
+## 4               NA               NA               NA               NA
+## 5               NA               NA               NA               NA
+## 6               NA               NA               NA               NA
+##   wc2.1_10m_bio_15 wc2.1_10m_bio_16 wc2.1_10m_bio_17 wc2.1_10m_bio_18
+## 1               NA               NA               NA               NA
+## 2               NA               NA               NA               NA
+## 3               NA               NA               NA               NA
+## 4               NA               NA               NA               NA
+## 5               NA               NA               NA               NA
+## 6               NA               NA               NA               NA
+##   wc2.1_10m_bio_19
+## 1               NA
+## 2               NA
+## 3               NA
+## 4               NA
+## 5               NA
+## 6               NA</code></pre>
+<pre class="r"><code>names(lynx_dist)[5:23] &lt;- c(paste0(&#39;bio0&#39;,1:9), paste0(&#39;bio&#39;,10:19))
+
+# Exclude NAs (cells without climate data)
+lynx_dist &lt;- na.exclude(lynx_dist)</code></pre>
+<p>The data provide us with presence and absence information. However,
+to avoid problems with spatial autocorrelation in our SDMs, we should
+spatially thin these data such that they do not contain adjacent cells.
+There are different ways to do the thinning. A particularly fast one is
+the <code>gridSample()</code> function in the <code>dismo</code>
+package.</p>
+<pre class="r"><code>library(dismo)
+
+# We create a background map at 1° spatial resolution with European land masses - this is only for plotting purposes
+bg &lt;- terra::rast(lynx_dist[,1:3], type=&#39;xyz&#39;)
+values(bg)[!is.na(values(bg))] &lt;- 0
+
+# We only want to have one record per 2°x2° and use a mask to achieve this
+mask &lt;- terra::aggregate(bg,2)
+
+# Thinned coordinates
+set.seed(54321)
+xy &lt;- dismo::gridSample(lynx_dist[,1:2], mask, n=1)
+
+# Checking number of data points 
+nrow(xy)</code></pre>
+<pre><code>## [1] 323</code></pre>
+<pre class="r"><code>nrow(lynx_dist)</code></pre>
+<pre><code>## [1] 1046</code></pre>
+<pre class="r"><code># Reducing the Lynx data
+lynx_thinned &lt;- merge(xy,lynx_dist)
+
+# Plot European land mass
+plot(bg,col=&#39;grey&#39;,axes=F,legend=F)
+
+# Plot presences in red and absences in black
+points(lynx_thinned[,1:2],pch=19,col=c(&#39;black&#39;,&#39;red&#39;)[as.factor(lynx_thinned$occ)])</code></pre>
+<p><img src="4_SDM_intro_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div id="model-fitting" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Model fitting</h1>
+<div id="fitting-our-first-glm" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Fitting our first
+GLM</h2>
+<p>Before we start into the complexities of the different model fitting
+steps, let us look at a GLM in more detail. We fit our first GLM with
+only one predictor assuming a linear relationship between response and
+predictor. The <code>glm</code> function is contained in the R
+<em>stats</em> package. We need to specify a <em>formula</em> describing
+how the response should be related to the predictors, and the
+<em>data</em> specifying the data frame that contains the response and
+predictor variables, and a <em>family</em> argument specifying the type
+of response and the link function. In our case, we use the
+<em>logit</em> link in the <em>binomial</em> family.</p>
+<pre class="r"><code># We first fit a GLM for the bio11 variable assuming a linear relationship:
+m1 &lt;- glm(occ ~ bio11, family=&quot;binomial&quot;, data= lynx_thinned)
+    
+# We can get a summary of the model:
+summary(m1) </code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = occ ~ bio11, family = &quot;binomial&quot;, data = lynx_thinned)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.4451  -0.6179  -0.2026   0.6534   2.8198  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -1.45453    0.20828  -6.984 2.88e-12 ***
+## bio11       -0.34571    0.03669  -9.423  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 444.40  on 322  degrees of freedom
+## Residual deviance: 275.65  on 321  degrees of freedom
+## AIC: 279.65
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+<div id="deviance-and-aic" class="section level3" number="4.1.1">
+<h3><span class="header-section-number">4.1.1</span> Deviance and
+AIC</h3>
+<p>Additional to the slope values, there are a few interesting metrics
+printed in the output called deviance and AIC. These metrics tell us
+something about how closely the model fits the observed data.</p>
+<p>Basically, we want to know whether a predictor is “important”. We
+thus need to evaluate whether a model including this variable tells us
+more about the response than a model without that variable <span
+class="citation">(Hosmer and Lemeshow 2013)</span>. Importantly, we do
+not look at the significance level of predictors. Such p-values merely
+tell us whether the slope coefficient is significantly different from
+zero. Rather, we assess whether the predicted values are closer to the
+observed values when the variable is included in the model versus when
+it is not included.</p>
+<p>In logistic regression, we compare the observed to predicted values
+using the log-likelihood function:</p>
+<p><span class="math display">\[L( \beta ) = ln[l( \beta)] =
+\sum_{i=1}^{n} \left( y_i \times ln[\pi (x_i)] + (1-y_i) \times ln[1-
+\pi (x_i)] \right)\]</span></p>
+<p><span class="math inline">\(L( \beta )\)</span> is the <em>Likelihood
+of the fitted model</em>. From this, we can calculate the deviance <span
+class="math inline">\(D\)</span> defined as:</p>
+<p><span class="math display">\[D = -2 \times L\]</span></p>
+<p>In our model output, the deviance measure is called
+<code>Residual deviance</code>. This deviance is an important measure
+used for comparing models. For example, it serves for the calculation of
+<em>Information criteria</em> that are used for comparing models
+containing different numbers of parameters. One prominent measure is the
+<em>Akaike Information Criterion</em>, usually abbreviated as AIC. It is
+defined as: <span class="math display">\[AIC = -2 \times L + 2 \times
+(p+1) = D + 2 \times (p+1)\]</span></p>
+<p>where <span class="math inline">\(p\)</span> is the number of
+regression coefficients in the model. AIC thus takes into account model
+complexity. In general, lower values of AIC are preferable.</p>
+<p>We can also use the deviance to calculate the <em>Explained
+deviance</em> <span class="math inline">\(D^2\)</span>, which is the
+amount of variation explained by the model compared to the null
+expectation: <span class="math display">\[D^2 = 1 -
+\frac{D(model)}{D(Null.model)}\]</span> The model output also provides
+the <code>Null deviance</code>, so we can easily calculate the explained
+deviance <span class="math inline">\(D^2\)</span>.</p>
+</div>
+</div>
+<div id="more-complex-glms" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> More complex
+GLMs</h2>
+<p>We can also fit quadratic or higher polynomial terms (check
+<code>?poly</code>) and interactions between predictors:<br />
+- the term <code>I()</code>indicates that a variable should be
+transformed before being used as predictor in the formula<br />
+- <code>poly(x,n)</code> creates a polynomial of degree <span
+class="math inline">\(n\)</span>: <span class="math inline">\(x + x^2 +
+... + x^n\)</span><br />
+- <code>x1:x2</code> creates a two-way interaction term between
+variables x1 and x2, the linear terms of x1 and x2 would have to be
+specified separately<br />
+- <code>x1*x2</code> creates a two-way interaction term between
+variables x1 and x2 plus their linear terms<br />
+- <code>x1*x2*x3</code> creates the linear terms of the three variables,
+all possible two-way interactions between these variables and the
+three-way interaction</p>
+<p>Try out different formulas:</p>
+<pre class="r"><code># Fit a quadratic relationship with bio11:
+m1_q &lt;- glm(occ ~ bio11 + I(bio11^2), family=&quot;binomial&quot;, data= lynx_thinned)
+summary(m1_q)
+    
+# Or use the poly() function:
+summary( glm(occ ~ poly(bio11,2) , family=&quot;binomial&quot;, data= lynx_thinned) )
+
+# Fit two linear variables:
+summary( glm(occ ~ bio11 + bio8, family=&quot;binomial&quot;, data= lynx_thinned) )
+
+# Fit three linear variables:
+summary( glm(occ ~ bio11 + bio8 + bio17, family=&quot;binomial&quot;, data= lynx_thinned) )
+
+# Fit three linear variables with up to three-way interactions
+summary( glm(occ ~ bio11 * bio8 * bio17, family=&quot;binomial&quot;, data= lynx_thinned) )
+
+# Fit three linear variables with up to two-way interactions
+summary( glm(occ ~ bio11 + bio8 + bio17 + 
+               bio11:bio8 + bio11:bio17 + bio8:bio17, 
+             family=&quot;binomial&quot;, data= lynx_thinned) )</code></pre>
+<div class="alert alert-info">
+<p><em><strong>Exercise:</strong></em></p>
+<p>Compare the different models above.</p>
+<ul>
+<li>Which model is the best in terms of AIC?</li>
+<li>What is the explained deviance of the different models?</li>
+<li>HINTS: you can extract the metrics using <code>AIC(m1)</code>,
+<code>deviance(m1)</code> and <code>m1$null.deviance</code></li>
+</ul>
+</div>
+</div>
+<div id="important-considerations-during-model-fitting"
+class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> Important
+considerations during model fitting</h2>
+<p>Model fitting is at the heart of any SDM application. Important
+aspects to consider during the model fitting step are:</p>
+<ul>
+<li>How to deal with multicollinearity in the environmental data?</li>
+<li>How many variables should be included in the model (without
+overfitting) and how should we select these?</li>
+<li>Which model settings should be used?</li>
+<li>When multiple model algorithms or candidate models are fitted, how
+to select the final model or average the models?</li>
+<li>Do we need to test or correct for non-independence in the data
+(spatial or temporal autocorrelation, nested data)?</li>
+<li>Do we want to threshold the predictions, and which threshold should
+be used?</li>
+</ul>
+<p>More detailed descriptions on these aspects can be found in <span
+class="citation">Franklin (2010)</span> and in <span
+class="citation">Guisan, Thuiller, and Zimmermann (2017)</span>.</p>
+</div>
+<div id="collinearity-and-variable-selection" class="section level2"
+number="4.4">
+<h2><span class="header-section-number">4.4</span> Collinearity and
+variable selection</h2>
+<p>GLMs (and many other statistical models) have problems to fit stable
+parameters if two or more predictor variables are highly correlated,
+resulting in so-called multicollinearity issues <span
+class="citation">(Dormann et al. 2013)</span>. To avoid these problems
+here, we start by checking for multi-collinearity and by selecting an
+initical set of predictor variables. Then, we can fit our GLM including
+multiple predictors and with differently complex response shapes. This
+model can then be further simplified by removing “unimportant”
+predictors.</p>
+<div id="correlation-among-predictors" class="section level3"
+number="4.4.1">
+<h3><span class="header-section-number">4.4.1</span> Correlation among
+predictors</h3>
+<p>We first check for pairwise correlations among predictors. Generally,
+correlations below |r|&lt;0.7 are considered unproblematic (or below
+|r|&lt;0.5 as more conservative threshold).</p>
+<pre class="r"><code>library(corrplot)
+
+# We first estimate a correlation matrix from the predictors. 
+# We use Spearman rank correlation coefficient, as we do not know 
+# whether all variables are normally distributed.
+cor_mat &lt;- cor(lynx_thinned[,-c(1:3)], method=&#39;spearman&#39;)
+
+# We can visualise this correlation matrix. For better visibility, 
+# we plot the correlation coefficients as percentages.
+corrplot.mixed(cor_mat, tl.pos=&#39;lt&#39;, tl.cex=0.6, number.cex=0.5, addCoefasPercent=T)</code></pre>
+<p><img src="4_SDM_intro_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>Several predictor variables are highly correlated. One way to deal
+with this issue is to remove the “less important” variable from the
+highly correlated pairs. For this, we need to assess variable
+importance.</p>
+</div>
+<div id="variable-selection-removing-highly-correlated-variables"
+class="section level3" number="4.4.2">
+<h3><span class="header-section-number">4.4.2</span> Variable selection:
+removing highly correlated variables</h3>
+<p>If no prior knowledge is available on the importance of different
+predictors, then <span class="citation">Dormann et al. (2013)</span>
+suggest to assess univariate variable importance in terms of AIC (Akaike
+information criterion) or explained deviance. In practice, this means
+that we fit a GLM separately for each predictor, assess the importance
+and then rank the variables according to their univariate importance.
+Earlier, we already fitted GLMs with linear and quadratic terms and
+compared AIC. Which one was better?</p>
+<p>However, it’s getting a bit more complicated when we want to compare
+all variables. First, we need to identify all pairs of variables that
+have correlation |r|&gt;0.7 and remove the less important variable.
+<span class="citation">Dormann et al. (2013)</span> call this the
+<em>select07</em> method.</p>
+<p>A <code>select07()</code> function is implemented in the package
+<code>mecofun</code> along with some other useful functions for
+teaching. We first have to install the package from the Univ. Potsdam
+gitlab:</p>
+<pre class="r"><code>library(devtools)
+devtools::install_git(&quot;https://gitup.uni-potsdam.de/macroecology/mecofun.git&quot;)</code></pre>
+<p>Now, you can load the package and try out the function. Also, check
+out the help pages for <code>?select07</code>.</p>
+<pre class="r"><code>library(mecofun)
+
+# Run select07()
+var_sel &lt;- select07(X=lynx_thinned[,-c(1:3)], 
+                    y=lynx_thinned$occ, 
+                    threshold=0.7)
+
+# Check out the structure of the resulting object:
+str(var_sel)</code></pre>
+<pre><code>## List of 3
+##  $ AIC     : Named num [1:20] 281 282 287 314 315 ...
+##   ..- attr(*, &quot;names&quot;)= chr [1:20] &quot;bio11&quot; &quot;bio06&quot; &quot;bio01&quot; &quot;bio03&quot; ...
+##  $ cor_mat : num [1:20, 1:20] 1 0.901 0.729 0.747 -0.309 ...
+##   ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. ..$ : chr [1:20] &quot;ID&quot; &quot;bio01&quot; &quot;bio02&quot; &quot;bio03&quot; ...
+##   .. ..$ : chr [1:20] &quot;ID&quot; &quot;bio01&quot; &quot;bio02&quot; &quot;bio03&quot; ...
+##  $ pred_sel: chr [1:8] &quot;bio11&quot; &quot;bio10&quot; &quot;bio07&quot; &quot;bio15&quot; ...</code></pre>
+<pre class="r"><code># We extract the names of the weakly correlated predictors ordered by the univariate variable importance in terms of AIC:
+pred_sel &lt;- var_sel$pred_sel</code></pre>
+<p>So, we have now reduced our set of 19 bioclimatic variables to 8
+predictors that are only weakly correlated. Now, we need to decide
+whether all of these should be included in the final model, or if we
+select only a few, for example the two most important variables in terms
+of univariate AIC. As a rule of thumb, we should have ten presence
+points per parameter fitted in the model <span class="citation">(Guisan,
+Thuiller, and Zimmermann 2017)</span>.</p>
+<pre class="r"><code># How many presence points do we have?
+sum(lynx_thinned$occ)</code></pre>
+<pre><code>## [1] 145</code></pre>
+<p>According to the rule of thumb, we can include up to 13-14
+parameters, meaning we can include linear and quadratic terms for almost
+all of the weakly correlated variables. But for simplicity, let’s start
+with 2 variables. The most important in terms of AIC were bio11 and
+bio10.</p>
+</div>
+</div>
+<div id="model-selection" class="section level2" number="4.5">
+<h2><span class="header-section-number">4.5</span> Model selection</h2>
+<p>Now that we have selected a set of weakly correlated variables, we
+can fit the full model and then simplify it. The latter is typically
+called model selection. Here, I only use the two most important
+variables and include linear and quadratic terms in the full model.</p>
+<pre class="r"><code># Fit the full model:
+m1 &lt;- glm( occ ~ bio11 + I(bio11^2) + bio10 + I(bio10^2), 
+               family=&#39;binomial&#39;, data=lynx_thinned)
+
+# Inspect the model:
+summary(m1)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = occ ~ bio11 + I(bio11^2) + bio10 + I(bio10^2), 
+##     family = &quot;binomial&quot;, data = lynx_thinned)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.3959  -0.5871  -0.0365   0.5737   4.0630  
+## 
+## Coefficients:
+##               Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -11.853488   3.090980  -3.835 0.000126 ***
+## bio11        -0.363686   0.077203  -4.711 2.47e-06 ***
+## I(bio11^2)   -0.002478   0.008081  -0.307 0.759147    
+## bio10         1.459081   0.393855   3.705 0.000212 ***
+## I(bio10^2)   -0.048595   0.012661  -3.838 0.000124 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 444.4  on 322  degrees of freedom
+## Residual deviance: 256.1  on 318  degrees of freedom
+## AIC: 266.1
+## 
+## Number of Fisher Scoring iterations: 6</code></pre>
+<p>How much deviance is explained by our model? The function
+<code>expl_deviance()</code> is also contained in the
+<code>mecofun</code> package. As explained earlier, we can calculate
+explained deviance by quantifying how closely the model predictions fit
+the data in relation to the null model predictions.</p>
+<pre class="r"><code># Explained deviance:
+expl_deviance(obs = lynx_thinned$occ,
+              pred = m1$fitted)</code></pre>
+<pre><code>## [1] 0.423722</code></pre>
+<p>We can simplify the model further by using stepwise variable
+selection. The function <code>step()</code> uses the AIC to compare
+different subsets of the model. Specifically, it will iteratively drop
+variables and add variables until the AIC cannot be improved further
+(meaning it will not decrease further).</p>
+<pre class="r"><code>m_step &lt;- step(m1) </code></pre>
+<pre class="r"><code># Inspect the model:
+summary(m_step)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = occ ~ bio11 + bio10 + I(bio10^2), family = &quot;binomial&quot;, 
+##     data = lynx_thinned)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.4470  -0.5948  -0.0410   0.5730   3.9948  
+## 
+## Coefficients:
+##              Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -12.02724    3.05541  -3.936 8.27e-05 ***
+## bio11        -0.34456    0.04350  -7.921 2.35e-15 ***
+## bio10         1.47632    0.39156   3.770 0.000163 ***
+## I(bio10^2)   -0.04900    0.01263  -3.878 0.000105 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 444.40  on 322  degrees of freedom
+## Residual deviance: 256.19  on 319  degrees of freedom
+## AIC: 264.19
+## 
+## Number of Fisher Scoring iterations: 6</code></pre>
+<pre class="r"><code># Explained deviance:
+expl_deviance(obs = lynx_thinned$occ,
+              pred = m_step$fitted)</code></pre>
+<pre><code>## [1] 0.4235096</code></pre>
+<p>The final model only selected the linear terms for bio11 and bio8.
+The explained deviance is a tiny bit lower than for the quadratic model,
+but the linear model is more parsimonious.</p>
+<p>Finally, don’t forget to save the data.</p>
+<pre class="r"><code>save(bg, clim_1deg, lynx_thinned, pred_sel, file=&#39;data/lynx_thinned.RData&#39;)</code></pre>
+<div class="alert alert-info">
+<p><em><strong>Exercise:</strong></em></p>
+<p>Fit the full model containing all weakly correlated variables.</p>
+<ul>
+<li>Look up the eight weakly correlated variables in the object
+<code>pred_sel</code>.</li>
+<li>Define a full model with these eight variables including their
+linear and quadratic terms.</li>
+<li>Run the full model.</li>
+<li>Simplify the model using stepwise variable selection
+<code>step()</code></li>
+<li>Compare the full model and the reduced model in terms of AIC and
+explained deviance.</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1 class="unnumbered">References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Austin1980" class="csl-entry">
+Austin, M. P. 1980. <span>“Searching for a Model for Use in Vegetation
+Analysis.”</span> <em>Vegetatio</em> 42 (October): 11–21.
+</div>
+<div id="ref-Dormann2013" class="csl-entry">
+Dormann, C. F., J. Elith, S. Bacher, C. Buchmann, G. Carl, G. Carre, J.
+R. Garcia Marquez, et al. 2013. <span>“Collinearity: A Review of Methods
+to Deal with It and a Simulation Study Evaluating Their
+Performance.”</span> <em>Ecography</em> 36: 27–46.
+</div>
+<div id="ref-Elith2009" class="csl-entry">
+Elith, J., and J. R. Leathwick. 2009. <span>“Species Distribution
+Models: Ecological Explanation and Prediction Across Space and
+Time.”</span> <em>Annual Review of Ecology, Evolution, and
+Systematics</em> 40: 677–97.
+</div>
+<div id="ref-elith2008" class="csl-entry">
+Elith, J., J. R. Leathwick, and T. Hastie. 2008. <span>“A Working Guide
+to Boosted Regression Trees.”</span> <em>Journal of Animal Ecology</em>
+77: 802–13.
+</div>
+<div id="ref-Elith2011" class="csl-entry">
+Elith, J., S. J. Phillips, T. Hastie, M. Dudik, Y. E. Chee, and C. J.
+Yates. 2011. <span>“A Statistical Explanation of MaxEnt for
+Ecologists.”</span> <em>Diversity and Distributions</em> 17: 43–57.
+</div>
+<div id="ref-Franklin2010" class="csl-entry">
+Franklin, J. 2010. <em>Mapping Species Distributions: Spatial Inference
+and Prediction</em>. Cambride University Press.
+</div>
+<div id="ref-guisan2005" class="csl-entry">
+Guisan, A., and W. Thuiller. 2005. <span>“Predicting Species
+Distribution: Offering More Than Simple Habitat Models.”</span>
+<em>Ecology Letters</em> 8: 993–1009.
+</div>
+<div id="ref-Guisan2017" class="csl-entry">
+Guisan, A., W. Thuiller, and N. E. Zimmermann. 2017. <em>Habitat
+Suitability and Distribution Models with Applications in r</em>.
+Cambride University Press.
+</div>
+<div id="ref-Guisan2000" class="csl-entry">
+Guisan, A., and N. E. Zimmermann. 2000. <span>“Predictive Habitat
+Distribution Models in Ecology.”</span> <em>Ecological Modelling</em>
+135: 147–86.
+</div>
+<div id="ref-Hosmer2013" class="csl-entry">
+Hosmer, D. W., and S. Lemeshow. 2013. <em>Applied Logistic
+Regression</em>. 3rd ed. John Wiley &amp; Sons, Inc.
+</div>
+<div id="ref-IPBES2016" class="csl-entry">
+IPBES. 2016. <em>The Methodological Assessment Report on Scenarios and
+Models of Biodiversity and Ecosystem Services</em>. Edited by S.
+Ferrier, K. N. Ninan, P. Leadley, R. Alkemade, L. A. Acosta, H. R.
+Akcakaya, L. Brotons, et al. Secretariat of the Intergovernmental
+Science-Policy Platform on Biodiversity; Ecosystem Services, Bonn,
+Germany.
+</div>
+<div id="ref-Merow2013" class="csl-entry">
+Merow, C., M. J. Smith, and J. A. Silander Jr. 2013. <span>“A Practical
+Guide to MaxEnt for Modeling Species’ Distributions: What It Does, and
+Why Inputs and Settings Matter.”</span> <em>Ecography</em> 36: 1058–69.
+</div>
+<div id="ref-Peterson2011a" class="csl-entry">
+Peterson, A. T., J. Soberon, R. G. Pearson, R. P. Anderson, E.
+Martinez-Meyer, M. Nakamura, and M. B. Araujo. 2011. <em>Ecological
+Niches and Geographic Distributions</em>. Princeton University Press.
+</div>
+<div id="ref-phillips2006" class="csl-entry">
+Phillips, S. J., R. P. Anderson, and R. E. Schapire. 2006.
+<span>“Maximum Entropy Modeling of Species Geographic
+Distributions.”</span> <em>Ecological Modelling</em> 190: 231–59.
+</div>
+<div id="ref-Thuiller2009" class="csl-entry">
+Thuiller, W., B. Lafourcade, R. Engler, and M. B. Araujo. 2009.
+<span>“BIOMOD - a Platform for Ensemble Forecasting of Species
+Distributions.”</span> <em>Ecography</em> 32: 369–73.
+</div>
+<div id="ref-Zurell2020a" class="csl-entry">
+Zurell, D., J. Franklin, C. König, P. J. Bouchet, C. F. Dormann, J.
+Elith, G. Fandos, et al. 2020. <span>“A Standard Protocol for Reporting
+Species Distribution Models.”</span> <em>Ecography</em> 43 (9): 1261–77.
+<a
+href="https://doi.org/10.1111/ecog.04960">https://doi.org/10.1111/ecog.04960</a>.
+</div>
+</div>
+</div>
+
+<!DOCTYPE html>
+<html>
+
+<br>
+<hr />
+<div id="footer">
+<p>Damaris Zurell 2023 <a href="http://creativecommons.org/licenses/by/4.0/" >(CC BY 4.0)</a>.  </p>
+</div>
+
+</html>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

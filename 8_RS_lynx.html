@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Eurasian lynx reintroduction</title>
+
+<script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Ecosystem dynamics and biodiversity</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Pracs: Spatial data
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="0_setup.html">0. Getting started</a>
+    </li>
+    <li>
+      <a href="1_SpatialData.html">1. Spatial data in R</a>
+    </li>
+    <li>
+      <a href="2_BiodivData.html">2. Biodiversity data in R</a>
+    </li>
+    <li>
+      <a href="3_EnvData.html">3. Environmental data in R</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Pracs: Species distribution models
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="4_SDM_intro.html">4. SDMs: simple model fitting</a>
+    </li>
+    <li>
+      <a href="5_SDM_eval.html">5. SDMs: assessment and prediction</a>
+    </li>
+    <li>
+      <a href="6_SDM_algorithms.html">6. SDMs: algorithms and ensembles</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Pracs: population modelling
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="7_RS_intro.html">7. Getting started with RangeShiftR</a>
+    </li>
+    <li>
+      <a href="8_RS_lynx.html">8. RangeShiftR: Eurasian lynx reintroduction</a>
+    </li>
+    <li>
+      <a href="9_RS_grouse.html">9. RangeShiftR: Black grouse range dynamics</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Pracs: ecosystem modelling
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="10_Mad_intro.html">10. Running MadingleyR</a>
+    </li>
+    <li>
+      <a href="11_Mad_carnivores.html">11. MadingleyR: Role of large carnivores</a>
+    </li>
+    <li>
+      <a href="12_Mad_landuse.html">12. MadingleyR: land use change effects</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://www.uni-potsdam.de/en/ibb-macroecology/index">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://twitter.com/ZurellLab">
+    <span class="fa fa-twitter"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Eurasian lynx reintroduction</h1>
+
+</div>
+
+
+<div class="alert alert-info">
+<p><strong>RStudio project</strong></p>
+<p>Open the RStudio project that we created in the first session. I
+recommend to use this RStudio project for the entire course and within
+the RStudio project create separate R scripts for each session.</p>
+<ul>
+<li>Create a new empty R script by going to the tab “File”, select “New
+File” and then “R script”</li>
+<li>In the new R script, type
+<code># Session 8: Eurasian lynx reintroduction in RangeShiftR</code>
+and save the file in your folder “scripts” within your project folder,
+e.g. as “8_RS_lynx.R”</li>
+</ul>
+</div>
+<p><img src="figures/lynx.png" width="40%" /></p>
+<p>This practical illustrates how spatially-explicit individual-based
+models like <code>RangeShiftR</code> can aid effective decision making
+for species reintroductions. As example, we re-implement a case study on
+the reintroduction of Eurasian lynx (<em>Lynx lynx</em>) to Scotland
+<span class="citation">(Ovenden et al. 2019)</span>. The original study
+was also based on <em>RangeShifter</em>, which makes reimplementation
+straight forward. We use the same parameters by and large but on a
+slightly coarser resolution. In line with <span class="citation">Ovenden
+et al. (2019)</span>, we simulate lynx range expansion and population
+viability from different potential reintroduction sites.</p>
+<div id="lynx-model" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Lynx model</h1>
+<p>First, we set up all the parameter modules that we need to run a
+<code>RangeShiftR</code> simulation (see schematic figure in Practical
+8).</p>
+<div id="set-up-directories-and-data" class="section level2"
+number="1.1">
+<h2><span class="header-section-number">1.1</span> Set up directories
+and data</h2>
+<p>We need to set up the folder structure again with folder containing
+the models of this practical and the three sub-folders named ‘Inputs’,
+‘Outputs’ and ‘Output_Maps’. To do so, use your file explorer on your
+machine, navigate to the “models” folder within your project, and create
+a sub-folder for the current practical called “RS_Lynx”. Next, return to
+your RStudio project and store the path in a variable. This can either
+be the relative path from your R working directory or the absolute
+path.</p>
+<pre class="r"><code># Set path to model directory
+dirpath = &quot;models/RS_Lynx/&quot;</code></pre>
+<pre class="r"><code># load required packages
+library(RangeShiftR)
+library(terra)
+library(raster)
+library(rasterVis)
+library(viridis)
+library(RColorBrewer)
+library(latticeExtra)
+library(grid)
+library(gridExtra)
+library(tidyverse)
+library(ggplot2) 
+
+# Create sub-folders (if not already existing)
+if(!file.exists(paste0(dirpath,&quot;Inputs&quot;))) {
+  dir.create(paste0(dirpath,&quot;Inputs&quot;), showWarnings = TRUE) }
+if(!file.exists(paste0(dirpath,&quot;Outputs&quot;))) {
+  dir.create(paste0(dirpath,&quot;Outputs&quot;), showWarnings = TRUE) }
+if(!file.exists(paste0(dirpath,&quot;Output_Maps&quot;))) {
+  dir.create(paste0(dirpath,&quot;Output_Maps&quot;), showWarnings = TRUE) }</code></pre>
+<p>Download the input files <a
+href="data/Lynx_data.zip"><strong>here</strong></a> and put these into
+the ‘Inputs’ folder.</p>
+</div>
+<div id="landscape-settings" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Landscape
+settings</h2>
+<p>The original lynx model was run on a 100 m landscape grid. Here, we
+use a spatial resolution of 1 km to speed up computations, for
+illustrative purposes.</p>
+<div id="habitat-classification" class="section level3" number="1.2.1">
+<h3><span class="header-section-number">1.2.1</span> Habitat
+classification</h3>
+<p>We do not have exactly the same land cover maps and woodland maps
+available as was used by <span class="citation">Ovenden et al.
+(2019)</span>. Instead, we use the Land Cover Map 2015 (LCM2015) for
+Great Britain <span class="citation">(Rowland et al. 2017)</span>. With
+this, we are not able to distinguish low quality and high quality
+woodland. Also, by aggregating the land cover map to 1 km, we may have
+further discarded some information on woodland. Overall, this results in
+lower woodland cover than reported in <span class="citation">Ovenden et
+al. (2019)</span>. Nevertheless, as the goal of this practical is
+illustration rather than exact replication of the original results,
+these differences should not be of any concern to us.</p>
+<p>We first read in the (pre-processed) land cover map and take a look
+at the habitat classification.</p>
+<pre class="r"><code># Land cover map of scotland
+landsc &lt;- terra::rast(paste0(dirpath, &quot;Inputs/LCM_Scotland_2015_1000.asc&quot;))
+plot(landsc)</code></pre>
+<p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code># Plot land cover map and highlight cells with initial species distribution - option 2 with categorical legend:
+landsc.f &lt;- as.factor(raster(landsc))
+
+# add the land cover classes to the raster attribute table
+(rat &lt;- levels(landsc.f)[[1]])</code></pre>
+<pre><code>##    ID
+## 1   1
+## 2   2
+## 3   3
+## 4   4
+## 5   5
+## 6   6
+## 7   7
+## 8   8
+## 9   9
+## 10 10</code></pre>
+<pre class="r"><code>rat[[&quot;land-use&quot;]] &lt;- c(&quot;salt water&quot;, &quot;arable + horticulture&quot;, &quot;freshwater&quot;, &quot;built-up areas + gardens&quot;, &quot;inland rock&quot;, &quot;grasslands&quot;, &quot;woodland&quot;, &quot;supra-/littoral sediment&quot;, &quot;marsh, swamp&quot;, &quot;heath&quot;)
+levels(landsc.f) &lt;- rat
+
+levelplot(landsc.f, margin=F, scales=list(draw=FALSE), col.regions=brewer.pal(n = 10, name = &quot;Spectral&quot;))</code></pre>
+<p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+<p>We have already prepared a map of woodland patches from the above
+land cover map and will read this in. These woodland patches constitute
+the suitable breeding patches for the Eurasian lynx. In total, we have
+identified 39 suitable patches of varying size. Compare the resulting
+map to Fig. 1 in <span class="citation">Ovenden et al. (2019)</span> to
+get an idea about the relative differences in patch size and
+distribution.</p>
+<pre class="r"><code># Read in woodland patch files
+patches &lt;- terra::rast(paste0(dirpath,&#39;Inputs/woodland_patchIDs_1000.asc&#39;))
+
+# Plot the patches in different colours:
+plot(patches,axes=F, legend=F, col = c(&#39;grey&#39;,rep(brewer.pal(n = 10, name = &quot;Paired&quot;),4)))</code></pre>
+<p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code># In total, we have 39 patches of different size
+values(patches) %&gt;% table</code></pre>
+<pre><code>## .
+##     0     1     2     3     4     5     6     7     8     9    10    11    12 
+## 74103    47    83    48   180   191    50    85    74   189   281   512    68 
+##    13    14    15    16    17    18    19    20    21    22    23    24    25 
+##   307    64   374   113   115    52    65   272    84    50    86    58  1229 
+##    26    27    28    29    30    31    32    33    34    35    36    37    38 
+##   244   183    49   242    86    49   244   428   162   199   185   816    61 
+##    39 
+##    96</code></pre>
+</div>
+<div id="reintroduction-patches" class="section level3" number="1.2.2">
+<h3><span class="header-section-number">1.2.2</span> Reintroduction
+patches</h3>
+<p>Each woodland patch has a unique ID. Yet, the exact IDs are different
+from <span class="citation">Ovenden et al. (2019)</span>. We thus have
+to search a little to find the patch IDs that correspond to the
+reintroduction sites in the original paper.</p>
+<pre class="r"><code># Plot patches and add labels
+plot(patches,axes=F, legend=F, col = c(&#39;grey&#39;,rep(brewer.pal(n = 10, name = &quot;Paired&quot;),4)))
+patches_pol &lt;- as.polygons(patches, dissolve=T) # Makes spatial polygons
+text(patches_pol,labels=values(patches_pol)[,1])</code></pre>
+<p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>The following patch IDs roughly correspond to the reintroduction
+sites used in <span class="citation">(Ovenden et al. 2019)</span>: 29 =
+Kintyre Peninsula; 35 = Kielder Forest; 15 = Aberdeenshire. Note that
+the patches are smaller and more isolated than in the original
+study.</p>
+<!-- # ```{r echo=F, eval=F} -->
+<!-- # # Select the specific patch ID for the reintroduction site -->
+<!-- # selected_patch_ID <- 29 -->
+<!-- #  -->
+<!-- # # Prepare initialisation map -->
+<!-- # patch <- patches -->
+<!-- # patch[patch!=selected_patch_ID] <- 0 -->
+<!-- # patch <- terra::mask(patch, landsc) # mask patches raster with landscape raster -->
+<!-- # patch[patch==selected_patch_ID] <- 1 -->
+<!-- # patch[is.na(patch)] <- 0 -->
+<!-- #  -->
+<!-- # # Write initialisation map to file -->
+<!-- # terra::writeRaster(patch, paste0(dirpath,'Inputs/IntroPatch_29_1000.asc'), datatype =  'INT2S', NAflag = -999, overwrite=T) -->
+<!-- #  -->
+<!-- # # Prepare mapping -->
+<!-- # values(patch)[values(patch)<1] <- NA -->
+<!-- # values(patches)[values(patches)<1] <- NA -->
+<!-- #  -->
+<!-- # # Plot landscape and overlay with woodland patches and reintroduction sites (only works with raster* objects) -->
+<!-- # levelplot(raster(landsc), margin=F, scales=list(draw=FALSE), colorkey=F,col.regions = rev(colorRampPalette(brewer.pal(3, "Greys"))(10) )) + -->
+<!-- #   # we add the woodland patches in green -->
+<!-- #   levelplot(raster(patches), margin=F, scales=list(draw=FALSE), col.regions="green4") + -->
+<!-- #   # we add the patch outlines -->
+<!-- #   latticeExtra::layer(sp.polygons(as(as.polygons(patches, dissolve=T), 'Spatial'), fill=NA, col='red',lwd=2)) -->
+<!-- # ``` -->
+</div>
+<div id="landscape-parameters" class="section level3" number="1.2.3">
+<h3><span class="header-section-number">1.2.3</span> Landscape
+parameters</h3>
+<p>We can now define the landscape parameters. This time, we want to run
+a patch-based model and hence have to provide a (i) grid-based landscape
+map that contains the different habitat classes used to set the per-step
+mortality in the dispersal module, and (ii) the patch file used to
+define the suitable breeding patches. We have to provide the parameter
+<code>K_or_DensDep</code> for each habitat class in the landscape file.
+This parameter describes the strength of density dependence <em>1/b</em>
+<span class="citation">(Bocedi et al. 2021; Malchow et al. 2021)</span>.
+Thereby, <em>b</em> can be interpreted as the area per individual
+[ha/ind] at which an individual will feel density dependence, meaning
+the area below which it feels the population is too dense. You could
+also interpret it as the area that the individual will defend as
+territory and will not allow any conspecifics in. <span
+class="citation">Ovenden et al. (2019)</span> specified <em>1/b</em>
+with 0.000285 ind/ha, meaning that an adult individual will defend a
+territory of <em>c.</em> 3509 ha or 35 km<sup>2</sup>.</p>
+<pre class="r"><code>land &lt;- ImportedLandscape(LandscapeFile = &quot;LCM_Scotland_2015_1000.asc&quot;,
+                          PatchFile = &quot;woodland_patchIDs_1000.asc&quot;, 
+                          Resolution = 1000,
+                          Nhabitats = 10,
+                          K_or_DensDep = c(0, 0, 0, 0, 0, 0, 0.000285, 0, 0, 0)
+                          )</code></pre>
+</div>
+</div>
+<div id="demography-settings" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Demography
+settings</h2>
+<p>All demographic parameters are listed in Table 2 of <span
+class="citation">Ovenden et al. (2019)</span>. The demographic model
+comprises three stages: first-year juveniles (0–12 months), non-breeding
+sub-adults (12–24 months) and breeding adults (&gt;24months). To
+properly simulate natal dispersal, we have to set an additional
+<em>dummy</em> stage 0 (dispersing juveniles) in
+<code>RangeShiftR</code>. After dispersal, dispersing juveniles (stage
+0) will be assigned to stage 1 (first-year juveniles). This is fully
+described in the <a
+href="https://raw.githubusercontent.com/RangeShifter/RangeShifter-software-and-documentation/master/RangeShifter_v2.0_UserManual.pdf">RangeShifter
+user manual</a>.</p>
+<pre class="r"><code># Transition matrix
+(trans_mat &lt;- matrix(c(0,1,0,0,0,0, 0.53, 0,0, 0, 0, 0.63, 5,0, 0, 0.8), nrow = 4, byrow = F))  # stage 0: dispersing newborns; stage 1 : first-year juveniles; stage 2: non-breeding sub-adults; stage 3: breeding adults</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,]    0 0.00 0.00  5.0
+## [2,]    1 0.00 0.00  0.0
+## [3,]    0 0.53 0.00  0.0
+## [4,]    0 0.00 0.63  0.8</code></pre>
+<pre class="r"><code># Define the stage structure
+stg &lt;- StageStructure(Stages = 4, # four stages including dispersing juveniles
+                      TransMatrix = trans_mat,  # transition matrix
+                      MaxAge = 17,  # maximum age
+                      FecDensDep = T   # density dependence in fecundity
+)
+
+# Plot the vital rates against different density levels
+plotProbs(stg)</code></pre>
+<p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<pre class="r"><code># Define the demography module
+demo &lt;- Demography(StageStruct = stg, 
+                   ReproductionType = 1, # simple sexual model
+                   PropMales = 0.5) </code></pre>
+</div>
+<div id="dispersal-settings" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> Dispersal
+settings</h2>
+<p>According to previous literature, <span class="citation">Ovenden et
+al. (2019)</span> considered Eurasian lynx as poor dispersers with some
+sex bias in the dispersal probability. Specifically, the males were
+assigned a higher emigration probability compared to females.</p>
+<pre class="r"><code>emig &lt;- Emigration(DensDep=T, StageDep=T, SexDep = T,
+                   EmigProb = cbind(c(0,0,1,1,2,2,3,3),
+                                    c(0,1,0,1,0,1,0,1),
+                                    c(0.4, 0.9, 0, 0, 0, 0, 0, 0),  # only emigration of juveniles, males higher than females
+                                    c(10, 10, 0, 0, 0, 0, 0, 0), 
+                                    c(1, 1, 0, 0, 0, 0, 0, 0)) ) </code></pre>
+<p>The transfer phase of dispersal was modelled using a stochastic
+movement simulator (SMS). This mechanistic movement model allows
+individuals to perceive certain aspects of the landscape and select
+their movement path accordingly. Individuals move stepwise from cell to
+cell and the direction chosen at each step is determined by the land
+cover costs (specified for each habitat class), the species’ perceptual
+range (<code>PR</code>) and directional persistence
+(<code>DP</code>).@Ovenden2019 defined the perceptual range as 500 m,
+which is lower than our resolution and we this set <code>PR=1</code>.
+Movement costs and per-step mortality probability are specified
+following Table 1 in <span class="citation">Ovenden et al.
+(2019)</span>. Because of the coarser spatial resolution (1 km) and thus
+larger step length used here, we had to increase the per-step mortality
+compared to the original study.</p>
+<pre class="r"><code>transfer &lt;- SMS(PR = 1, # Perceptual range in number of cells
+                PRMethod = 2, # Harmonic mean used to quantify movement cost within perceptual range
+                MemSize = 5, # number of steps remembered when applying directional persistence.
+                DP = 5,  # directional persistence.
+                Costs = c(100000, 30, 100, 1000, 1000, 10, 1, 10, 10, 7), # movement cost per habitat class
+                StepMort = c(0.9999, 0.0002, 0.0005, 0.007, 0.00001, 0.00001, 0, 0.00001, 0.00001, 0.00001)) # per step mortality per habitat class</code></pre>
+<p>The settlement parameters are identical for both sexes except that
+males have to find a female to settle. Again, because of the coarser
+spatial resolution of 1 km and thus larger step length, we had to reduce
+the maximum number of steps.</p>
+<pre class="r"><code>settle &lt;- Settlement(StageDep = F,
+                     SexDep = T,
+                     Settle = cbind(c(0, 1), c(1.0, 1.0), c(-10, -10), c(1, 1)), # here no difference between sexes
+                     FindMate = c(F, T), # only males need to find a female
+                     DensDep = T,
+                     MaxSteps = 500
+                     )</code></pre>
+<p>With all three dispersal phases specified, we can now define the
+dispersal module. Also, we can plot the density dependent emigration
+probabilities.</p>
+<pre class="r"><code># Dispersal
+disp &lt;-  Dispersal(Emigration = emig,
+                   Transfer = transfer,
+                   Settlement = settle) 
+
+# plot parameters
+plotProbs(disp@Emigration)</code></pre>
+<p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+</div>
+<div id="initialisation-settings" class="section level2" number="1.5">
+<h2><span class="header-section-number">1.5</span> Initialisation
+settings</h2>
+<p><span class="citation">Ovenden et al. (2019)</span> implemented
+single-site reintroductions with 10 individuals per site, and multi-site
+reintroduction with 32 individuals across two sites.</p>
+<p>Initialising individuals in certain patches can be done in two
+different ways. We can either define an initial distribution map in the
+landscape module, or we can provide a text file with the individuals per
+patch in the initialisation module. Here, we will follow the latter
+approach as this allows explicitly manipulating the number of
+reintroduced individuals in multiple sites.</p>
+<div id="single-site-reintroduction" class="section level3"
+number="1.5.1">
+<h3><span class="header-section-number">1.5.1</span> Single-site
+reintroduction</h3>
+<p>We define one scenario where we reintroduce 10 individuals to the
+patch 29 on the Kintyre Pensinsula. First, we have to prepare a text
+file specifying the number of initial individuals per patch and per sex
+and stage.</p>
+<!-- ```{r echo=F, eval=F} -->
+<!-- patch_size_29 <- cellsperpatch[cellsperpatch$Var1==selected_patch_ID,2]*100 # in ha -->
+<!-- Introduced_individuals_29 <- 10 -->
+<!-- Inds_ha_cell_29 <- Introduced_individuals_29/patch_size_29 -->
+<!-- # Initialisation -->
+<!-- init_29 <- Initialise(InitType = 1,       # from loaded species distribution map -->
+<!--                    SpType = 1,         # random cells -->
+<!--                    NrCells = 10,       # in x cells -->
+<!--                    # InitDens = 1,       # at half DensDep (of the specific patch! carefull for small patches) -->
+<!--                    InitDens = 2,       # user-specified density -->
+<!--                    IndsHaCell = Inds_ha_cell_29,  # number of introduced individuals per hectare -->
+<!--                    PropStages = c(0,0, 0,1.0), # only adults are introduced -->
+<!--                    InitAge = 0)       # at min age for the respective stage -->
+<!-- ``` -->
+<pre class="r"><code># prepare dataframe for InitIndsFile
+(init_df_29 &lt;- data.frame(Year=0,Species=0,PatchID=29,Ninds=c(5,5),Sex=c(0,1),Age=3,Stage=3))</code></pre>
+<pre><code>##   Year Species PatchID Ninds Sex Age Stage
+## 1    0       0      29     5   0   3     3
+## 2    0       0      29     5   1   3     3</code></pre>
+<p>We write the list of initial individuals into a file in the
+<em>Inputs</em> folder and then specify the initialisation module.</p>
+<pre class="r"><code># write InitIndsFile to file
+write.table(init_df_29, file=paste0(dirpath,&#39;Inputs/InitInds_29.txt&#39;), sep=&#39;\t&#39;, row.names=F, quote=F)
+
+# Set initialisation
+init_29 &lt;- Initialise(InitType = 2,       # Initialise from initial individuals list file
+                      InitIndsFile = &#39;InitInds_29.txt&#39;)</code></pre>
+</div>
+<div id="multi-site-reintroduction" class="section level3"
+number="1.5.2">
+<h3><span class="header-section-number">1.5.2</span> Multi-site
+reintroduction</h3>
+<p>In the multi-site reintroduction scenarios, <span
+class="citation">Ovenden et al. (2019)</span> reintroduced 18 lynx to
+Kintyre Peninsula and 14 lynx to Aberdeenshire. Similar to above, we
+write the initial individuals list to file and then specify the
+initialisation module.</p>
+<pre class="r"><code># prepare dataframe for InitIndsFile
+(init_df_29_15 &lt;- data.frame(Year=0,Species=0,PatchID=rep(c(29,15),each=2),Ninds=rep(c(9,7),each=2),Sex=c(0,1),Age=3,Stage=3))</code></pre>
+<pre><code>##   Year Species PatchID Ninds Sex Age Stage
+## 1    0       0      29     9   0   3     3
+## 2    0       0      29     9   1   3     3
+## 3    0       0      15     7   0   3     3
+## 4    0       0      15     7   1   3     3</code></pre>
+<pre class="r"><code># write InitIndsFile to fil
+write.table(init_df_29_15, file=paste0(dirpath,&#39;Inputs/InitInds_29_15.txt&#39;), sep=&#39;\t&#39;, row.names=F, quote=F)
+
+# Set initialisation
+init_29_15 &lt;- Initialise(InitType = 2,       # from loaded species distribution map
+                      InitIndsFile = &#39;InitInds_29_15.txt&#39;)</code></pre>
+</div>
+</div>
+<div id="simulation-settings" class="section level2" number="1.6">
+<h2><span class="header-section-number">1.6</span> Simulation
+settings</h2>
+<p>This time, we set a more reasonable number of replicates with 100
+runs and simulate range expansion over 100 years. We specify that output
+should be stored for each year.</p>
+<pre class="r"><code># Simulations
+RepNb &lt;- 100
+
+sim &lt;- Simulation(Simulation = 0, # ID
+                  Replicates = RepNb, # number of replicate runs
+                  Years = 100, # number of simulated years
+                  OutIntPop = 1, # output interval
+                  OutIntOcc = 1,
+                  OutIntRange = 1)</code></pre>
+</div>
+<div id="parameter-master" class="section level2" number="1.7">
+<h2><span class="header-section-number">1.7</span> Parameter master</h2>
+<p>When defining the parameter master objects for our two scenarios, we
+take care to provide two different <code>batchnum</code> to avoid any
+overwriting of file output. For illustrative purposed, we set a seed for
+easy replicability of results.</p>
+<pre class="r"><code># RangeShifter parameter master object for single-site reintroduction
+s_29 &lt;- RSsim(batchnum = 1, land = land, demog = demo, dispersal = disp, simul = sim, init = init_29, seed = 324135)
+
+# RangeShifter parameter master object for multi-site reintroduction
+s_29_15 &lt;- RSsim(batchnum = 3, land = land, demog = demo, dispersal = disp, simul = sim, init = init_29_15, seed = 324135)</code></pre>
+</div>
+</div>
+<div id="simulating-range-expansion-and-population-persistence"
+class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Simulating range
+expansion and population persistence</h1>
+<p>All <code>RangeShiftR</code> modules are ready for running the
+simulations. <span class="citation">Ovenden et al. (2019)</span> looked
+at different output metrics: a) the number of replicates that reached
+year 100; b) the mean number of habitat patches occupied at year 100; c)
+the mean number of individuals at year 100; d) the extinction
+probability over time. We will look at the same metrics, though in
+slightly different order.</p>
+<div id="single-site-reintroduction-1" class="section level2"
+number="2.1">
+<h2><span class="header-section-number">2.1</span> Single-site
+reintroduction</h2>
+<p>We run the simulation for the single-site reintroduction
+scenario.</p>
+<pre class="r"><code># Run simulations
+RunRS(s_29, dirpath)</code></pre>
+<p>First, we inspect the mean number of individuals (abundance) over
+time and the mean number of occupied patches over time. Both are
+increasing, meaning that the reintroduction in the Kintyre Peninsula
+seems to be rather successful.</p>
+<pre class="r"><code># general output of population size + occupancy
+par(mfrow=c(1,2))
+plotAbundance(s_29,dirpath,sd=T, rep=F)
+plotOccupancy(s_29, dirpath, sd=T, rep=F)</code></pre>
+<p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<div id="occupancy-probability-and-colonisation-time"
+class="section level3" number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> Occupancy
+probability and colonisation time</h3>
+<p>To obtain a deeper understanding of the reintroduction success, we
+look at different colonisation metrics offered in the function
+<code>ColonisationStats()</code>. Specifically, we calculate
+colonisation probability for year 100 (the probability of a patch to be
+occupied after 100 years) and the time to colonisation.</p>
+<pre class="r"><code># Colonisation metrics
+col_stats_29 &lt;- ColonisationStats(s_29, dirpath, years = 100, maps = T)</code></pre>
+<p>We can extract and map occupancy probability.</p>
+<pre class="r"><code># mean occupancy probability in year 100
+head(col_stats_29$occ_prob)</code></pre>
+<pre><code>##   patch  100
+## 1     1 0.06
+## 2     2 0.12
+## 3     3 0.09
+## 4     4 0.37
+## 5     5 0.46
+## 6     6 0.26</code></pre>
+<pre class="r"><code># map occupancy probability
+mycol_occprob &lt;- colorRampPalette(c(&#39;blue&#39;,&#39;orangered&#39;,&#39;gold&#39;))
+levelplot(col_stats_29$map_occ_prob, margin=F, scales=list(draw=FALSE), at=seq(0,1,length=11), col.regions=mycol_occprob(11))</code></pre>
+<p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p>In order to get prettier maps, we need to do some code tweaking.
+Here, we provide one example for using the grey-shaded land cover map as
+background and overlaying this with the occupancy probability map. To
+keep the code clean, we define some helper functions.</p>
+<pre class="r"><code># Some useful functions
+
+# Store underlying landscape map display for later:
+# Note: Not sure if this is really suitable, as we have 10 different landscape classes
+bg &lt;- function(main=NULL){
+  levelplot(raster(landsc), margin=F, scales=list(draw=FALSE), colorkey=F,
+            col.regions = rev(colorRampPalette(brewer.pal(3, &quot;Greys&quot;))(10)), main=main)
+}
+
+
+# map occupancy probability on landscape background. For this, we first define a colorkey function
+col.key &lt;- function(mycol, at, space=&#39;top&#39;,pos=0.95, height=0.6, width=1) {
+  key &lt;- draw.colorkey(
+    list(space=space, at=at, height=height, width=width,
+         col=mycol)
+  )
+  key$framevp$y &lt;- unit(pos, &quot;npc&quot;)
+  return(key)
+}</code></pre>
+<p>Now, we use these functions to map occupancy probability after 100
+years, and to map colonisation time.</p>
+<pre class="r"><code># map occupancy probability after 100 years
+bg() + levelplot(col_stats_29$map_occ_prob, margin=F, scales=list(draw=FALSE), at=seq(0,1,length=11), col.regions=mycol_occprob(11))
+grid.draw(col.key(mycol_occprob(11),at=seq(0,1,length=11)))</code></pre>
+<p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<pre class="r"><code># map colonisation time
+mycol_coltime &lt;- colorRampPalette(c(&#39;orangered&#39;,&#39;gold&#39;,&#39;yellow&#39;,&#39;PowderBlue&#39;,&#39;LightSeaGreen&#39;))
+levelplot(col_stats_29$map_col_time, margin=F, scales=list(draw=FALSE), at=c(-9,seq(-.001,100,length=11)), col.regions=c(&#39;blue&#39;,mycol_coltime(11)))</code></pre>
+<p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-24-2.png" width="672" /></p>
+<pre class="r"><code># map colonisation time on landscape background
+bg() + levelplot(col_stats_29$map_col_time, margin=F, scales=list(draw=FALSE), at=c(-9,seq(-.001,100,length=11)), col.regions=c(&#39;blue&#39;,mycol_coltime(11)))
+grid.draw(col.key(c(&#39;blue&#39;,mycol_coltime(11)), c(-9,seq(-.001,100,length=11))))</code></pre>
+<p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-24-3.png" width="672" /></p>
+</div>
+<div id="extinction-probability" class="section level3" number="2.1.2">
+<h3><span class="header-section-number">2.1.2</span> Extinction
+probability</h3>
+<p>Extinction probability at a specific time can be defined as the
+proportion of replicate simulation runs without viable population at a
+specific point in time. We can extract this information from the
+population output file.</p>
+<pre class="r"><code># read population output file into a data frame
+pop_29 &lt;- readPop(s_29, dirpath)
+
+
+# Calculate survival probability as number of replicate with surviving individuals per year
+# Extinction probability is 1- survival probability:
+
+# Calculate  extinction probability by hand:
+pop_29 %&gt;%
+  group_by(Rep,Year) %&gt;%
+  # Sum individuals over all cells per year and replicate
+  summarise(sumPop = sum(NInd), .groups=&#39;keep&#39;) %&gt;%
+  group_by(Year) %&gt;%
+  # Average extinction probability (1 minus the proportion of replicates with surviving populations)
+  summarise(extProb = 1-sum(sumPop&gt;0, na.rm=T)/RepNb)</code></pre>
+<pre><code>## # A tibble: 101 × 2
+##     Year extProb
+##    &lt;int&gt;   &lt;dbl&gt;
+##  1     0  0     
+##  2     1  0     
+##  3     2  0     
+##  4     3  0     
+##  5     4  0     
+##  6     5  0     
+##  7     6  0     
+##  8     7  0     
+##  9     8  0     
+## 10     9  0.0100
+## # … with 91 more rows</code></pre>
+<p>Accordingly, the mean time to extinction can then be defined as the
+mean time across all replicates when the population went extinct. Again,
+this information can be extracted from the population output file.</p>
+<pre class="r"><code># Mean time to extinction:
+pop_29 %&gt;%
+  group_by(Rep,Year) %&gt;%
+  # Sum individuals over all cells per year and replicate    
+  summarise(sumPop = sum(NInd), .groups=&#39;keep&#39;) %&gt;% 
+  # Identify in which year they go extinct
+  filter(sumPop==0) %&gt;% 
+  pull(Year) %&gt;% mean</code></pre>
+<pre><code>## [1] 24</code></pre>
+<p>As the computation of these measures takes a few line of code, it is
+useful to define an own function to ease computation and keep our R
+script as short as possible. We thus define two new functions (using the
+construct <code>function()</code>) for calculating extinction
+probability and mean time to extinction.</p>
+<pre class="r"><code># Define a function for calculating extinction probability
+Calc_ExtProb &lt;- function(pop_df,s) {
+  require(dplyr)
+  
+  pop_df %&gt;%
+  group_by(Rep,Year) %&gt;%
+  # Sum individuals over all cells per year and replicate
+  summarise(sumPop = sum(NInd), .groups=&#39;keep&#39;) %&gt;%
+  group_by(Year) %&gt;%
+  # Average extinction probability (1 minus the proportion of replicates with surviving populations)
+  summarise(extProb = 1-sum(sumPop&gt;0, na.rm=T)/RepNb) %&gt;%
+  # Make sure that data frame is filled until last year of simulation
+  right_join(tibble(Year = seq_len(s@simul@Years)), by=&#39;Year&#39;) %&gt;% replace_na(list(extProb=1))
+}
+
+# Define a function for calculating mean time to extinction
+Calc_ExtTime &lt;- function(pop_df) {
+  require(dplyr)
+  
+  pop_df %&gt;%
+  group_by(Rep,Year) %&gt;%
+  # Sum individuals over all cells per year and replicate    
+  summarise(sumPop = sum(NInd), .groups=&#39;keep&#39;) %&gt;% 
+  # Identify in which year they go extinct
+  filter(sumPop==0) %&gt;% 
+  pull(Year) %&gt;% mean
+}</code></pre>
+<p>Once loaded into your R console, these functions can be used just as
+any other function from the different packages. Let’s use our new
+functions to calculate extinction probability and mean time to
+extinction for the single-site reintroduction scenario.</p>
+<pre class="r"><code># extinction probability
+extProb_29 &lt;- Calc_ExtProb(pop_29,s_29)
+
+# Plot extinction probabilities
+ggplot(data = extProb_29, mapping = aes(x = Year, y = extProb)) + 
+  geom_line() +
+  ylim(0,1)</code></pre>
+<p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<pre class="r"><code># mean time to extinction
+Calc_ExtTime(pop_29)</code></pre>
+<pre><code>## [1] 24</code></pre>
+<p>The results indicate that although the mean abundances across 100
+replicate simulations are increasing over time, there is still a certain
+risk of extinction for the reintroduced lynx. Whether the reintroduced
+population is deemed to extinction or not seems to be determined
+comparably early with a mean time to extinction of <em>c.</em> 24
+years.</p>
+</div>
+</div>
+<div id="multi-site-reintroduction-1" class="section level2"
+number="2.2">
+<h2><span class="header-section-number">2.2</span> Multi-site
+reintroduction</h2>
+<p>Next, we simulate the multi-site scenario.</p>
+<pre class="r"><code># Run simulations
+RunRS(s_29_15, dirpath)</code></pre>
+<pre class="r"><code># general output of population size + occupancy
+par(mfrow=c(1,2))
+plotAbundance(s_29_15,dirpath,sd=T, rep=F)
+plotOccupancy(s_29_15, dirpath, sd=T, rep=F)</code></pre>
+<p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+<p>Although we reintroduced a larger number of lynx, the final
+population abundances are not much higher in this scenario compared to
+the single-site reintroduction.</p>
+<div id="occupancy-probability-and-colonisation-time-1"
+class="section level3" number="2.2.1">
+<h3><span class="header-section-number">2.2.1</span> Occupancy
+probability and colonisation time</h3>
+<p>Again, we calculate additional colonisation metrics, and map
+occupancy probability and time to colonisation.</p>
+<pre class="r"><code># Colonisation metrics
+col_stats_29_15 &lt;- ColonisationStats(s_29_15, dirpath, years = 100, maps = T)</code></pre>
+<pre class="r"><code># map occupancy probability after 100 years
+bg() + levelplot(col_stats_29_15$map_occ_prob, margin=F, scales=list(draw=FALSE), at=seq(0,1,length=11), col.regions=mycol_occprob(11))
+grid.draw(col.key(mycol_occprob(11),at=seq(0,1,length=11)))</code></pre>
+<p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+<pre class="r"><code># map colonisation time 
+bg() + levelplot(col_stats_29_15$map_col_time, margin=F, scales=list(draw=FALSE), at=c(-9,seq(-.001,100,length=11)), col.regions=c(&#39;blue&#39;,mycol_coltime(11)))
+grid.draw(col.key(c(&#39;blue&#39;,mycol_coltime(11)), c(-9,seq(-.001,100,length=11))))</code></pre>
+<p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-32-2.png" width="672" /></p>
+<p>Final occupancy probability does not seem much different from the
+first scenario, but we can observe slightly earlier time to
+colonisation.</p>
+</div>
+<div id="extinction-probability-1" class="section level3"
+number="2.2.2">
+<h3><span class="header-section-number">2.2.2</span> Extinction
+probability</h3>
+<p>Last, we calculate extinction probability and mean time to
+extinction, and compare these between the single-site and multi-site
+reintroductions.</p>
+<pre class="r"><code># read population output file into a data frame
+pop_29_15 &lt;- readPop(s_29_15, dirpath)
+
+# extinction probability
+extProb_29_15 &lt;- Calc_ExtProb(pop_29_15,s_29_15)
+
+# mean time to extinction
+Calc_ExtTime(pop_29_15)</code></pre>
+<pre><code>## [1] 39.42857</code></pre>
+<pre class="r"><code># Compare extinction probabilities for single- and multi-site reintroduction
+
+# Join extinction probabilities in a single data frame
+extProb_scens &lt;- bind_rows(extProb_29 %&gt;% add_column(Scenario = &quot;10 ind. Kintyre &quot;),
+                    extProb_29_15 %&gt;% add_column(Scenario = &quot;32 ind. Kintyre + Aberdeenshire&quot;))
+
+ggplot(data = extProb_scens, mapping = aes(x = Year, y = extProb, color=Scenario)) + 
+  geom_line(size=2) +
+  ylim(0,1)</code></pre>
+<pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.</code></pre>
+<p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+<p>As result, the multi-site reintroduction reduces the extinction
+probability of lynx and also the mean time to extinction takes longer.
+Still, there is only a 75 % chance of successfull long-term
+establishment of lynx in Scotland.</p>
+<div class="alert alert-info">
+<p><strong>Task: test other reintroduction sites</strong></p>
+<p>Now, it’s your turn. Test other reintroduction sites, e.g. the
+Keilder Forest as described in <span class="citation">Ovenden et al.
+(2019)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1 class="unnumbered">References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Bocedi2021" class="csl-entry">
+Bocedi, Greta, Stephen C. F. Palmer, Anne-Kathleen Malchow, Damaris
+Zurell, Kevin Watts, and Justin M. J. Travis. 2021. <span>“RangeShifter
+2.0: An Extended and Enhanced Platform for Modelling Spatial
+Eco-Evolutionary Dynamics and Species’ Responses to Environmental
+Changes.”</span> <em>Ecography</em> 44 (10): 1453–62. https://doi.org/<a
+href="https://doi.org/10.1111/ecog.05687">https://doi.org/10.1111/ecog.05687</a>.
+</div>
+<div id="ref-Malchow2021" class="csl-entry">
+Malchow, Anne-Kathleen, Greta Bocedi, Stephen C. F. Palmer, Justin M. J.
+Travis, and Damaris Zurell. 2021. <span>“RangeShiftR: An r Package for
+Individual-Based Simulation of Spatial Eco-Evolutionary Dynamics and
+Species’ Responses to Environmental Changes.”</span> <em>Ecography</em>
+44 (10): 1443–52. https://doi.org/<a
+href="https://doi.org/10.1111/ecog.05689">https://doi.org/10.1111/ecog.05689</a>.
+</div>
+<div id="ref-Ovenden2019" class="csl-entry">
+Ovenden, T. S., S. C. F. Palmer, J. M. J. Travis, and J. R. Healey.
+2019. <span>“Improving Reintroduction Success in Large Carnivores
+Through Individual-Based Modelling: How to Reintroduce Eurasian Lynx
+(Lynx Lynx) to Scotland.”</span> <em>Biological Conservation</em> 234
+(June): 140–53. <a
+href="https://doi.org/10.1016/j.biocon.2019.03.035">https://doi.org/10.1016/j.biocon.2019.03.035</a>.
+</div>
+<div id="ref-Rowland2017" class="csl-entry">
+Rowland, C. S., R. D. Morton, L. Carrasco, G. McShane, A. W. O’Neil, and
+C. M. Wood. 2017. <span>“Land Cover Map 2015 (25m Raster, GB).”</span>
+NERC Environmental Information Data Centre. <a
+href="https://doi.org/10.5285/BB15E200-9349-403C-BDA9-B430093807C7">https://doi.org/10.5285/BB15E200-9349-403C-BDA9-B430093807C7</a>.
+</div>
+</div>
+</div>
+
+<!DOCTYPE html>
+<html>
+
+<br>
+<hr />
+<div id="footer">
+<p>Damaris Zurell 2023 <a href="http://creativecommons.org/licenses/by/4.0/" >(CC BY 4.0)</a>.  </p>
+</div>
+
+</html>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

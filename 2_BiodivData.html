@@ -13,7 +13,7 @@
 
 <title>Biodiversity data</title>
 
-<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -168,11 +168,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -201,8 +205,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -210,16 +214,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -365,10 +362,7 @@ div.tocify {
       <a href="2_BiodivData.html">2. Biodiversity data in R</a>
     </li>
     <li>
-      <a href="3_ThreatData.html">3. Threat data in R</a>
-    </li>
-    <li>
-      <a href="4_EnvData.html">4. Environmental data in R</a>
+      <a href="3_EnvData.html">3. Environmental data in R</a>
     </li>
   </ul>
 </li>
@@ -380,13 +374,13 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="5_SDM_intro.html">5. SDMs: simple model fitting</a>
+      <a href="4_SDM_intro.html">4. SDMs: simple model fitting</a>
     </li>
     <li>
-      <a href="6_SDM_eval.html">6. SDMs: assessment and prediction</a>
+      <a href="5_SDM_eval.html">5. SDMs: assessment and prediction</a>
     </li>
     <li>
-      <a href="7_SDM_algorithms.html">7. SDMs: algorithms and ensembles</a>
+      <a href="6_SDM_algorithms.html">6. SDMs: algorithms and ensembles</a>
     </li>
   </ul>
 </li>
@@ -398,13 +392,13 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="8_RS_intro.html">8. Getting started with RangeShiftR</a>
+      <a href="7_RS_intro.html">7. Getting started with RangeShiftR</a>
     </li>
     <li>
-      <a href="9_RS_lynx.html">9. RangeShiftR: Eurasian lynx reintroduction</a>
+      <a href="8_RS_lynx.html">8. RangeShiftR: Eurasian lynx reintroduction</a>
     </li>
     <li>
-      <a href="10_RS_grouse.html">10. RangeShiftR: Black grouse range dynamics</a>
+      <a href="9_RS_grouse.html">9. RangeShiftR: Black grouse range dynamics</a>
     </li>
   </ul>
 </li>
@@ -416,13 +410,13 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="11_Mad_intro.html">11. Running MadingleyR</a>
+      <a href="10_Mad_intro.html">10. Running MadingleyR</a>
     </li>
     <li>
-      <a href="12_Mad_carnivores.html">12. MadingleyR: Role of large carnivores</a>
+      <a href="11_Mad_carnivores.html">11. MadingleyR: Role of large carnivores</a>
     </li>
     <li>
-      <a href="13_Mad_landuse.html">13. MadingleyR: land use change effects</a>
+      <a href="12_Mad_landuse.html">12. MadingleyR: land use change effects</a>
     </li>
   </ul>
 </li>
@@ -472,14 +466,14 @@ folder “scripts” within your project folder, e.g. as
 <p>We are living in an age of big data where biodiversity data are
 becoming increasingly available in digital format and at a global scale
 <span class="citation">(Wüest et al. 2020)</span>. Many different types
-of biodiversity data exist, e.g. from standardised monitoring schemes,
-citizen science platforms, or expert knowledge. Each of these data types
-comes with own challenges. Here, we simply want to learn how we can
-obtain and process typical types of species data. Specifically, we will
-work with range maps of terrestrial animals and plants, and with
-occurrence data for terrestrial species in <a
-href="https://www.gbif.org/">GBIF</a> (the Global Biodiversity
-Information facility).</p>
+of biodiversity data exist relating to the distribution of species
+(e.g. from standardised monitoring schemes, citizen science platforms,
+or expert knowledge), to species conservation status, species traits,
+etc. Each of these data types comes with own challenges. Here, we simply
+want to learn how we can obtain and process typical types of species
+data. Specifically, we will work with range maps of terrestrial animals
+and plants from the IUCN (Internation Union for the Conservation of
+Nature, iucnredlist.org/) and the red list data from IUCN.</p>
 <div id="range-maps" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Range maps</h1>
 <p>We rarely have detailed biodiversity data available over large
@@ -500,22 +494,27 @@ class="uri">https://www.iucnredlist.org/resources/spatial-data-download</a>.
 You can download them for free, but you should provide some information
 on your work to obtain the data.</p>
 <p>Most of the IUCN data are provided in the form of shapefiles. In
-practical 1, we have already loaded the range map of the <a
-href="data/IUCN_Sorex_alpinus.zip">Alpine shrew</a> and learned how to
-use the package <code>raster</code> for reading in the shapefiles. You
-may remember that the shapefile is recognized as
-SpatialPolygonsDataFrame.</p>
-<pre class="r"><code>library(raster)
+practical 2, we have already loaded the range map of the <a
+href="https://damariszurell.github.io/EEC-Macro/data/IUCN_Sorex_alpinus.zip">Alpine
+shrew</a> and learned how to use the package <code>terra</code> for
+reading in the shapefiles. You may remember that the shapefile is
+recognized as <code>SpatVector</code> object.</p>
+<pre class="r"><code>library(terra)
 
 # Load the shapefile
-(shrew &lt;- shapefile(&#39;data/IUCN_Sorex_alpinus.shp&#39;))</code></pre>
-<pre><code>## class       : SpatialPolygonsDataFrame 
-## features    : 1 
-## extent      : 5.733728, 26.67935, 42.20601, 51.89984  (xmin, xmax, ymin, ymax)
-## crs         : +proj=longlat +datum=WGS84 +no_defs 
-## variables   : 27
-## names       : id_no,      binomial, presence, origin, seasonal, compiler, yrcompiled,                                              citation, source, dist_comm, island, subspecies, subpop,            legend, tax_comm, ... 
-## value       : 29660, Sorex alpinus,        1,      1,        1,     IUCN,       2008, IUCN (International Union for Conservation of Nature),     NA,        NA,     NA,         NA,     NA, Extant (resident),       NA, ...</code></pre>
+(shrew &lt;- terra::vect(&#39;data/IUCN_Sorex_alpinus.shp&#39;))</code></pre>
+<pre><code>##  class       : SpatVector 
+##  geometry    : polygons 
+##  dimensions  : 1, 27  (geometries, attributes)
+##  extent      : 5.733728, 26.67935, 42.20601, 51.89984  (xmin, xmax, ymin, ymax)
+##  source      : IUCN_Sorex_alpinus.shp
+##  coord. ref. : lon/lat WGS 84 (EPSG:4326) 
+##  names       : id_no      binomial presence origin seasonal compiler yrcompiled
+##  type        : &lt;chr&gt;         &lt;chr&gt;    &lt;int&gt;  &lt;int&gt;    &lt;int&gt;    &lt;chr&gt;      &lt;int&gt;
+##  values      : 29660 Sorex alpinus        1      1        1     IUCN       2008
+##         citation source dist_comm (and 17 more)
+##            &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;              
+##  IUCN (Internat~     NA        NA</code></pre>
 <pre class="r"><code># Plot the Central Europe
 library(maps)
 map(&#39;world&#39;,xlim=c(5,30), ylim=c(40,55))
@@ -531,96 +530,76 @@ shapefile that contains all species. Course participants can download
 the mammal shapefile from the moodle course - of course, the license
 agreements by the IUCN apply!</p>
 <pre class="r"><code># Read shapefile for all mammals using the raster package:
-mammals &lt;- shapefile(&#39;data/MAMMTERR.shp&#39;)</code></pre>
-<p>The shapefile contains a SpatialPolygonsDataFrame with the range
-polygons for all described mammal species. The attribute table contains
-information on species’ PRESENCE, ORIGIN, and SEASONALity. Please have a
-look at the metadata to understand the different values these attributes
-can be coded as.</p>
+mammals &lt;- terra::vect(&#39;data/MAMMTERR.shp&#39;)</code></pre>
+<p>The shapefile contains the range polygons for all described mammal
+species. The attribute table contains information on species’ PRESENCE,
+ORIGIN, and SEASONALity. Please have a look at the metadata to
+understand the different values these attributes can be coded as.</p>
 <pre class="r"><code>mammals</code></pre>
-<pre><code>## class       : SpatialPolygonsDataFrame 
-## features    : 43444 
-## extent      : -180.0001, 180.0025, -56.66595, 90  (xmin, xmax, ymin, ymax)
-## crs         : +proj=longlat +datum=WGS84 +no_defs 
-## variables   : 14
-## names       :           BINOMIAL, PRESENCE, ORIGIN, SEASONAL,                      COMPILER, YEAR,                               CITATION,                         SOURCE,                                                                              DIST_COMM, ISLAND,    SUBSPECIES, SUBPOP,    SHAPE_area,         SHAPE_len 
-## min values  : Abditomys latidens,        1,      1,        1,          Biodiversitas Brazil, 2008,                   Biodiversitas Brazil, African Elephant Database 2007, A free-ranging herd of D. b. michaeli occurs in a private game reserve in South Africa,   &#39;Eau, &quot;vacuum&quot; zone,     NA,  4.313328e-12, 2.52232707544e-05 
-## max values  :  Zyzomys woodwardi,        6,      6,        5, Wildlife Conservation Society, 2010, Wildlife Conservation Society and IUCN,            Wilting et al. 2010,                                                                            Zagros Mtns,   Zuna,  zanzibaricus,     NA, 6464.56233215,     6198.71426035</code></pre>
+<pre><code>##  class       : SpatVector 
+##  geometry    : polygons 
+##  dimensions  : 43444, 14  (geometries, attributes)
+##  extent      : -180.0001, 180.0025, -56.66595, 90  (xmin, xmax, ymin, ymax)
+##  source      : MAMMTERR.shp
+##  coord. ref. : lon/lat WGS 84 (EPSG:4326) 
+##  names       :        BINOMIAL PRESENCE ORIGIN SEASONAL COMPILER  YEAR
+##  type        :           &lt;chr&gt;    &lt;int&gt;  &lt;int&gt;    &lt;int&gt;    &lt;chr&gt; &lt;int&gt;
+##  values      : Amblysomus cor~        1      1        1     IUCN  2008
+##                Amblysomus hot~        1      1        1     IUCN  2008
+##                Amblysomus mar~        1      1        1     IUCN  2008
+##         CITATION SOURCE DIST_COMM ISLAND (and 4 more)
+##            &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;  &lt;chr&gt;             
+##  IUCN (Internat~     NA        NA     NA             
+##  IUCN (Internat~     NA        NA     NA             
+##  IUCN (Internat~     NA        NA     NA</code></pre>
 <pre class="r"><code># Inspect attribute table
-head(mammals@data)</code></pre>
+terra::head(mammals)</code></pre>
 <pre><code>##                     BINOMIAL PRESENCE ORIGIN SEASONAL COMPILER YEAR
-## 0         Amblysomus corriae        1      1        1     IUCN 2008
-## 1     Amblysomus hottentotus        1      1        1     IUCN 2008
-## 2         Amblysomus marleyi        1      1        1     IUCN 2008
-## 3        Amblysomus robustus        1      1        1     IUCN 2008
-## 4 Amblysomus septentrionalis        1      1        1     IUCN 2008
+## 1         Amblysomus corriae        1      1        1     IUCN 2008
+## 2     Amblysomus hottentotus        1      1        1     IUCN 2008
+## 3         Amblysomus marleyi        1      1        1     IUCN 2008
+## 4        Amblysomus robustus        1      1        1     IUCN 2008
 ## 5 Amblysomus septentrionalis        1      1        1     IUCN 2008
+## 6 Amblysomus septentrionalis        1      1        1     IUCN 2008
 ##                                                CITATION SOURCE DIST_COMM ISLAND
-## 0 IUCN (International Union for Conservation of Nature)   &lt;NA&gt;      &lt;NA&gt;   &lt;NA&gt;
 ## 1 IUCN (International Union for Conservation of Nature)   &lt;NA&gt;      &lt;NA&gt;   &lt;NA&gt;
 ## 2 IUCN (International Union for Conservation of Nature)   &lt;NA&gt;      &lt;NA&gt;   &lt;NA&gt;
 ## 3 IUCN (International Union for Conservation of Nature)   &lt;NA&gt;      &lt;NA&gt;   &lt;NA&gt;
 ## 4 IUCN (International Union for Conservation of Nature)   &lt;NA&gt;      &lt;NA&gt;   &lt;NA&gt;
 ## 5 IUCN (International Union for Conservation of Nature)   &lt;NA&gt;      &lt;NA&gt;   &lt;NA&gt;
+## 6 IUCN (International Union for Conservation of Nature)   &lt;NA&gt;      &lt;NA&gt;   &lt;NA&gt;
 ##   SUBSPECIES SUBPOP  SHAPE_area SHAPE_len
-## 0       &lt;NA&gt;   &lt;NA&gt;  4.93503476 15.575123
-## 1       &lt;NA&gt;   &lt;NA&gt; 19.94471634 28.392110
-## 2       &lt;NA&gt;   &lt;NA&gt;  0.12779360  1.902574
-## 3       &lt;NA&gt;   &lt;NA&gt;  0.09936845  1.655898
-## 4       &lt;NA&gt;   &lt;NA&gt;  0.25763915  2.078154
-## 5       &lt;NA&gt;   &lt;NA&gt;  2.70333866  7.080348</code></pre>
+## 1       &lt;NA&gt;   &lt;NA&gt;  4.93503476 15.575123
+## 2       &lt;NA&gt;   &lt;NA&gt; 19.94471634 28.392110
+## 3       &lt;NA&gt;   &lt;NA&gt;  0.12779360  1.902574
+## 4       &lt;NA&gt;   &lt;NA&gt;  0.09936845  1.655898
+## 5       &lt;NA&gt;   &lt;NA&gt;  0.25763915  2.078154
+## 6       &lt;NA&gt;   &lt;NA&gt;  2.70333866  7.080348</code></pre>
 <p>We can search for specific species or species groups in the attribute
 table in different ways:</p>
-<pre class="r"><code># Show all entries for the species &#39;Lynx lynx&#39;
-subset(mammals@data, BINOMIAL==&#39;Lynx lynx&#39;)
+<pre class="r"><code># Range map for the species &#39;Lynx lynx&#39;
+terra::subset(mammals, mammals$BINOMIAL == &quot;Lynx lynx&quot;)
 
 # Show all entries for the species with the word &#39;Lynx&#39; in their name
-grep(&#39;Lynx&#39;,mammals@data$BINOMIAL)
-mammals@data[grep(&#39;Lynx&#39;,mammals@data$BINOMIAL),]</code></pre>
+grep(&#39;Lynx&#39;,mammals$BINOMIAL, value=T)
+
+# Range map for all species with the word &#39;Lynx&#39; in their name
+mammals[grep(&#39;Lynx&#39;, mammals$BINOMIAL),]</code></pre>
 <p>We can use the attribute table subsets to select specific polygons
 that we want to look at.</p>
-<pre class="r"><code># Range map of the Eurasian lynx
-lynx_lynx &lt;- mammals[mammals@data$BINOMIAL==&#39;Lynx lynx&#39;,]
+<pre class="r"><code># Assign range map of the Eurasian lynx to separate object
+lynx_lynx &lt;- mammals[mammals$BINOMIAL==&#39;Lynx lynx&#39;,]
 
 # Map the range
-library(maps)
 map(&#39;world&#39;)
 plot(lynx_lynx, col=&#39;red&#39;, add=T)</code></pre>
 <p><img src="2_BiodivData_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-<div class="alert alert-info">
-<p><em><strong>Exercise:</strong></em></p>
+<div class="alert alert-success" role="alert">
+<p><strong>Test it yourself</strong></p>
 <ul>
 <li>Select another mammal species and plot the range map.</li>
 </ul>
 </div>
-</div>
-<div id="bien-range-maps" class="section level2" number="1.2">
-<h2><span class="header-section-number">1.2</span> BIEN range maps</h2>
-<p>The <a href="https://bien.nceas.ucsb.edu/bien/biendata/">BIEN</a>
-database (Botanical Information and Ecology Network) contains many range
-maps on plants, but unfortunately only for the Americas. These can be
-accessed using the <code>BIEN</code> package. As illustrative example,
-we load the range map for the monkey puzzle tree (or Chilean pine -
-<em>Araucaria araucana</em>).</p>
-<pre class="r"><code>library(BIEN)
-library(sp)
-
-# Load the range map for the monkey puzzle
-(monkey_puzzle &lt;- BIEN_ranges_load_species(&#39;Araucaria_araucana&#39;))</code></pre>
-<pre><code>## class       : SpatialPolygonsDataFrame 
-## features    : 1 
-## extent      : -109.9819, -55.46083, -55.73974, 62.67197  (xmin, xmax, ymin, ymax)
-## crs         : +proj=longlat +datum=WGS84 +no_defs 
-## variables   : 1
-## names       :            species 
-## value       : Araucaria_araucana</code></pre>
-<pre class="r"><code># Map
-map(&#39;world&#39;,xlim = c(-180,-20),ylim = c(-60,80))
-plot(monkey_puzzle,col=&#39;red&#39;,add=T)</code></pre>
-<p><img src="2_BiodivData_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<p>The native range of the mokey puzzle is in the Chilean Andes, so
-clearly the range maps also show areas where the species
-naturalized.</p>
 </div>
 </div>
 <div id="working-with-range-maps" class="section level1" number="2">
@@ -630,58 +609,49 @@ maps</h1>
 number="2.1">
 <h2><span class="header-section-number">2.1</span> Range size and range
 centre</h2>
-<p>The <code>raster</code> package allows us to easily calculate the
-area of the polygons, meaning the range size of our species. The
-function <code>area()</code> outputs the area in square meters (if the
-CRS is in long/lat format).</p>
-<pre class="r"><code># Range area of alpine shrew in square meters:
-area(shrew)</code></pre>
-<pre><code>## [1] 490543310097</code></pre>
+<p>The <code>terra</code> package allows us to easily calculate the area
+of the polygons, meaning the range size of our species. The function
+<code>expanse()</code> outputs the area in square meters, kilometers or
+hectars.</p>
 <pre class="r"><code># Range area of alpine shrew in square kilometers:
-area(shrew)/1000000</code></pre>
+terra::expanse(shrew, unit=&quot;km&quot;)</code></pre>
 <pre><code>## [1] 490543.3</code></pre>
-<pre class="r"><code># Range area of monkey puzzle in square meters:
-area(monkey_puzzle)</code></pre>
-<pre><code>## [1] 5.783633e+12</code></pre>
-<pre class="r"><code># Range area of monkey puzzle n square kilometers:
-area(monkey_puzzle)/1000000</code></pre>
-<pre><code>## [1] 5783633</code></pre>
+<pre class="r"><code># Range area of lynx in square kilometers:
+terra::expanse(lynx_lynx, unit=&quot;km&quot;)</code></pre>
+<pre><code>##  [1] 2.967561e+03 6.914190e+03 8.054239e+03 3.253875e+03 3.023117e+03
+##  [6] 3.845284e+03 3.936121e+03 1.591402e+04 3.451279e+04 1.478952e+03
+## [11] 1.459179e+03 8.941187e+02 2.537009e+03 1.146910e+03 1.663037e+03
+## [16] 1.614079e+04 1.123943e+03 2.150669e+03 1.998317e+01 4.216219e+02
+## [21] 1.443828e+02 1.268629e+02 9.164054e+01 8.175484e+01 7.030462e+01
+## [26] 4.550536e+01 5.887205e+01 3.454557e+01 4.305188e+01 4.402397e+01
+## [31] 4.070125e+01 4.511146e+01 2.962505e+01 1.322173e+05 1.693141e+07
+## [36] 1.310182e+04 5.163677e+03 1.436962e+04 4.393103e+04 2.388271e+03
+## [41] 1.835570e+05 4.498608e+04 1.226286e+04 4.414687e+06 1.188083e+04
+## [46] 5.946663e+04 2.545997e+00 1.393808e+04</code></pre>
 <p>We can also very easily calculate the centre of gravity or range
-centroid from the spatial polygons.</p>
-<pre class="r"><code>library(rgeos)</code></pre>
-<pre><code>## rgeos version: 0.5-9, (SVN revision 684)
-##  GEOS runtime version: 3.8.1-CAPI-1.13.3 
-##  Please note that rgeos will be retired by the end of 2023,
-## plan transition to sf functions using GEOS at your earliest convenience.
-##  Linking to sp version: 1.4-6 
-##  Polygon checking: TRUE</code></pre>
+centroid from the <code>SpatVector</code> object.</p>
 <pre class="r"><code># Range centroid:
-gCentroid(shrew)</code></pre>
-<pre><code>## class       : SpatialPoints 
-## features    : 1 
-## extent      : 16.02645, 16.02645, 46.90336, 46.90336  (xmin, xmax, ymin, ymax)
-## crs         : +proj=longlat +datum=WGS84 +no_defs</code></pre>
+terra::centroids(shrew)</code></pre>
+<pre><code>##  class       : SpatVector 
+##  geometry    : points 
+##  dimensions  : 1, 27  (geometries, attributes)
+##  extent      : 16.02645, 16.02645, 46.90336, 46.90336  (xmin, xmax, ymin, ymax)
+##  coord. ref. : lon/lat WGS 84 (EPSG:4326) 
+##  names       : id_no      binomial presence origin seasonal compiler yrcompiled
+##  type        : &lt;chr&gt;         &lt;chr&gt;    &lt;int&gt;  &lt;int&gt;    &lt;int&gt;    &lt;chr&gt;      &lt;int&gt;
+##  values      : 29660 Sorex alpinus        1      1        1     IUCN       2008
+##         citation source dist_comm (and 17 more)
+##            &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;              
+##  IUCN (Internat~     NA        NA</code></pre>
 <pre class="r"><code># Map the species range and add the centroid to the map
 map(&#39;world&#39;,xlim=c(5,30), ylim=c(40,55))
 plot(shrew, col=&#39;red&#39;, add=T)
-plot(gCentroid(shrew), col=&#39;blue&#39;,add=T,lwd=3)</code></pre>
-<p><img src="2_BiodivData_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+points(terra::centroids(shrew), col=&#39;blue&#39;,cex=3,pch=&quot;+&quot;)</code></pre>
+<p><img src="2_BiodivData_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <p>We need to be careful how to interpret these centroids. They
-represent the centre of gravity, so losely the mean coordinates of the
+represent the centre of gravity, i.e. the mean coordinates of the
 distribution (weighted by cell size) but obviously, if we have several
 patches, the centroid might not even fall within an occupied patch.</p>
-<p>In case of the Monkey Puzzle, we have suspected that the range maps
-also contain non-native areas. We can clip the range maps to a desired
-spatial extent and then only calculate the range centroid for this
-(presumed) native range.</p>
-<pre class="r"><code># Let&#39;s crop the range polygons to South America
-monkey_puzzle_SAm &lt;- gIntersection(monkey_puzzle, as(extent(-85, -30, -55, 5),&quot;SpatialPolygons&quot;))
-
-# Map the range and range centroid
-map(&#39;world&#39;,xlim = c(-100,-10),ylim = c(-60,15))
-plot(monkey_puzzle_SAm,col=&#39;red&#39;,add=T)
-plot(gCentroid(monkey_puzzle_SAm), col=&#39;blue&#39;,add=T,lwd=3)</code></pre>
-<p><img src="2_BiodivData_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <div class="alert alert-info">
 <p><em><strong>Exercise:</strong></em></p>
 <ul>
@@ -694,92 +664,68 @@ your centroid to the range map that you have plotted previously.</li>
 <div id="rasterising-range-maps" class="section level2" number="2.2">
 <h2><span class="header-section-number">2.2</span> Rasterising range
 maps</h2>
-<p>For many applications in macroecology, we need to rasterise the
-polygons. The problem is that it is unclear at which spatial resolution
-the range maps accurately represent species occurrences. <span
-class="citation">Hurlbert and Jetz (2007)</span> and <span
-class="citation">Jetz, McPherson, and Guralnick (2012)</span> define the
-minimum spatial resolution as 100-200km (1-2°), although also
+<p>For many applications in ecosystem and biodiversity research, we need
+to rasterise the polygons. The problem is that it is unclear at which
+spatial resolution the range maps accurately represent species
+occurrences. <span class="citation">Hurlbert and Jetz (2007)</span> and
+<span class="citation">Jetz, McPherson, and Guralnick (2012)</span>
+define the minimum spatial resolution as 100-200km (1-2°), although also
 resolutions of 50km (0.5°) and finer have been used <span
 class="citation">(Krosby et al. 2015; Zurell et al. 2018)</span>.</p>
-<div id="rasterising-range-maps-with-raster" class="section level3"
+<div id="rasterising-range-maps-with-terra" class="section level3"
 number="2.2.1">
 <h3><span class="header-section-number">2.2.1</span> Rasterising range
-maps with <code>raster</code></h3>
-<p>Rasterising polgyon data is made very easy in the <em>raster</em>
-package. We first have to define a raster grid of the desired
-resolution, and then transfer the polgyon data to the raster cells.</p>
-<pre class="r"><code># By default, raster() will create a 1° resolution map in the *WGS 84* coordinate system (lon/lat).
-(r_1deg &lt;- raster())</code></pre>
-<pre><code>## class      : RasterLayer 
-## dimensions : 180, 360, 64800  (nrow, ncol, ncell)
-## resolution : 1, 1  (x, y)
-## extent     : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
-## crs        : +proj=longlat +datum=WGS84 +no_defs</code></pre>
-<pre class="r"><code>(shrew_1deg &lt;- rasterize(shrew, r_1deg))</code></pre>
-<pre><code>## class      : RasterLayer 
-## dimensions : 180, 360, 64800  (nrow, ncol, ncell)
-## resolution : 1, 1  (x, y)
-## extent     : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
-## crs        : +proj=longlat +datum=WGS84 +no_defs 
-## source     : memory
-## names      : layer 
-## values     : 1, 1  (min, max)
-## attributes :
-##  ID id_no      binomial presence origin seasonal compiler yrcompiled
-##   1 29660 Sorex alpinus        1      1        1     IUCN       2008
-##                                               citation source dist_comm island
-##  IUCN (International Union for Conservation of Nature)   &lt;NA&gt;      &lt;NA&gt;   &lt;NA&gt;</code></pre>
+maps with <code>terra</code></h3>
+<p>Rasterising polygon data is made very easy in the <code>terra</code>
+package. We first have to define a <code>SpatRaster</code> object of the
+desired resolution, and then transfer the polygon data to the raster
+cells.</p>
+<pre class="r"><code># By default, terra() will create a 1° resolution map in the *WGS 84* coordinate system (lon/lat).
+(r_1deg &lt;- terra::rast())</code></pre>
+<pre><code>## class       : SpatRaster 
+## dimensions  : 180, 360, 1  (nrow, ncol, nlyr)
+## resolution  : 1, 1  (x, y)
+## extent      : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
+## coord. ref. : lon/lat WGS 84</code></pre>
+<pre class="r"><code># Now, rasterise the shrew polygon data to the 1° raster grid
+(shrew_1deg &lt;- terra::rasterize(shrew, r_1deg))</code></pre>
+<pre><code>## class       : SpatRaster 
+## dimensions  : 180, 360, 1  (nrow, ncol, nlyr)
+## resolution  : 1, 1  (x, y)
+## extent      : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
+## coord. ref. : lon/lat WGS 84 
+## source(s)   : memory
+## name        : layer 
+## min value   :     1 
+## max value   :     1</code></pre>
 <pre class="r"><code>map(&#39;world&#39;,xlim=c(5,30), ylim=c(40,55))
 plot(shrew, col=&#39;red&#39;, add=T)
 plot(shrew_1deg, add=T, alpha=0.6, legend=F)</code></pre>
-<p><img src="2_BiodivData_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="2_BiodivData_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <p>Obviously, the margins of the range polgyon and the raster map differ
 at several places.</p>
-<div class="alert alert-info">
-<p><em><strong>Exercise:</strong></em></p>
-<p>Find out what rule is being used to determine whether polygon data is
-transferred to a raster cell. Check out the help page
-<code>?rasterize</code> to answer this.</p>
+<div class="alert alert-success" role="alert">
+<p><strong>Test it yourself</strong></p>
+<p>Check out the help page <code>?rasterize</code> and find out what the
+argument <code>touches</code> is doing. Rasterise the shrew range map
+again with setting a different <code>touches</code> argument and map the
+result. What is the difference?</p>
 </div>
 <p>We look at a second example, the lynx:</p>
-<pre class="r"><code># Define an empty raster of the world at 2° spatial resolution
-(r_2deg &lt;- raster(res=2))</code></pre>
-<pre><code>## class      : RasterLayer 
-## dimensions : 90, 180, 16200  (nrow, ncol, ncell)
-## resolution : 2, 2  (x, y)
-## extent     : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
-## crs        : +proj=longlat +datum=WGS84 +no_defs</code></pre>
+<pre class="r"><code># Define an empty SpatRaster of the world at 2° spatial resolution
+(r_2deg &lt;- terra::rast(res=2))</code></pre>
+<pre><code>## class       : SpatRaster 
+## dimensions  : 90, 180, 1  (nrow, ncol, nlyr)
+## resolution  : 2, 2  (x, y)
+## extent      : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
+## coord. ref. : lon/lat WGS 84</code></pre>
 <pre class="r"><code># Rasterize the eurasian lynx data
-lynx_lynx_2deg &lt;- rasterize(lynx_lynx, r_2deg)
+lynx_lynx_2deg &lt;- terra::rasterize(lynx_lynx, r_2deg)
 
 # Map the occupied grid cells
-plot(lynx_lynx_2deg)</code></pre>
-<p><img src="2_BiodivData_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
-<p>We see that the resulting raster contains values &gt; 1. When you
-look back into the attribute table of the <code>lynx_lynx</code>
-SpatialPolygonsDataFrame, then you see that we had 48 polygons included.
-When rasterising, the <code>raster</code> package will assign the index
-of the attribute table row as the cell value. Thereby, some polygons may
-not be rasterised if they are too small for the desired spatial
-resolution. (If you have done above exercise and looked up the help
-pages of <code>?rasterize</code>, you should know the conditions when a
-cell is assigned to be within the range and when not.) Here, we need to
-make sure that all raster cell are set to a value of 1 so that we have a
-proper presence map in the end.</p>
-<pre class="r"><code>values(lynx_lynx_2deg)[!is.na(values(lynx_lynx_2deg))] &lt;- 1
-
-# Map the occupied cells
 map(&#39;world&#39;)
-plot(lynx_lynx_2deg, add=T, legend=F)</code></pre>
-<p><img src="2_BiodivData_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
-<div class="alert alert-info">
-<p><em><strong>Exercise:</strong></em></p>
-<ul>
-<li>Rasterise the range map of the mammal species you selected
-above.</li>
-</ul>
-</div>
+plot(lynx_lynx_2deg, col=&#39;red&#39;, add = TRUE, legend = FALSE)</code></pre>
+<p><img src="2_BiodivData_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 </div>
 <div id="rasterising-range-maps-with-letsr" class="section level3"
 number="2.2.2">
@@ -788,96 +734,64 @@ maps with <code>letsR</code></h3>
 <p>There are also specific macroecological packages in R that facilitate
 working with range maps and rasterising them, for example the function
 <code>lets.presab()</code> in the <code>letsR</code> package.</p>
-<pre class="r"><code>library(letsR)
+<p>As the <code>letsR</code> package does not work with
+<code>SpatRaster</code> objects yet, we have to use the older
+<code>raster</code> package to prepare the range map data.</p>
+<pre class="r"><code>library(letsR)</code></pre>
+<pre><code>## Loading required package: raster</code></pre>
+<pre><code>## Loading required package: sp</code></pre>
+<pre class="r"><code>library(raster)
 
-# The lets.presab() function expects specific column names in the Polygons data frame
-colnames(monkey_puzzle@data) &lt;- &quot;binomial&quot;
+# Let&#39;s look at the Lynx example
 
-# We set the resolution to 1 degree (the default) and restrict the spatial extent to South America
-r_monkey_puzzle &lt;- lets.presab(monkey_puzzle, resol=1, xmn = -100, xmx = -10, ymn = -57, ymx = 15)
+# Convert to SpatialPolygonsDataFrame from raster package
+lynx_lynx2 &lt;- as(lynx_lynx, &quot;Spatial&quot;)
+
+# We set the resolution to 1 degree (the default) and restrict the spatial extent to Europe
+r_lynx_1deg &lt;- lets.presab(lynx_lynx2, resol=1, presence = 1, origin = 1, seasonal = 1)
 
 # Map the range and range centroid
-map(&#39;world&#39;,xlim = c(-100,-10),ylim = c(-60,15))
-plot(monkey_puzzle_SAm,col=&#39;blue&#39;,add=T)
-plot(r_monkey_puzzle, add=T, alpha=0.6, legend=F)</code></pre>
-<p><img src="2_BiodivData_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+map(&#39;world&#39;)
+plot(r_lynx_1deg, add=T, legend=F)</code></pre>
+<p><img src="2_BiodivData_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 </div>
 <div id="bulk-rasterising-multiple-species-range-maps-with-letsr"
 class="section level3" number="2.2.3">
 <h3><span class="header-section-number">2.2.3</span> Bulk-rasterising
 multiple species range maps with <code>letsR</code></h3>
 <p>The <code>letsR</code> package also allows to bulk-download multiple
-species and rasterise them to form a richness map. As first example, we
-look at the <em>Pinus</em> genus in the Americas</p>
-<pre class="r"><code># Extract the available Pinus species names
-(pinus_names &lt;- BIEN_ranges_genus(&quot;Pinus&quot;,match_names_only = T)[,1])</code></pre>
-<pre><code>##  [1] &quot;Pinus_albicaulis&quot;     &quot;Pinus_aristata&quot;       &quot;Pinus_arizonica&quot;     
-##  [4] &quot;Pinus_armandii&quot;       &quot;Pinus_attenuata&quot;      &quot;Pinus_ayacahuite&quot;    
-##  [7] &quot;Pinus_balfouriana&quot;    &quot;Pinus_banksiana&quot;      &quot;Pinus_brutia&quot;        
-## [10] &quot;Pinus_bungeana&quot;       &quot;Pinus_canariensis&quot;    &quot;Pinus_caribaea&quot;      
-## [13] &quot;Pinus_cembroides&quot;     &quot;Pinus_clausa&quot;         &quot;Pinus_contorta&quot;      
-## [16] &quot;Pinus_coulteri&quot;       &quot;Pinus_culminicola&quot;    &quot;Pinus_densiflora&quot;    
-## [19] &quot;Pinus_devoniana&quot;      &quot;Pinus_douglasiana&quot;    &quot;Pinus_durangensis&quot;   
-## [22] &quot;Pinus_echinata&quot;       &quot;Pinus_edulis&quot;         &quot;Pinus_elliottii&quot;     
-## [25] &quot;Pinus_engelmannii&quot;    &quot;Pinus_flexilis&quot;       &quot;Pinus_georginae&quot;     
-## [28] &quot;Pinus_glabra&quot;         &quot;Pinus_greggii&quot;        &quot;Pinus_halepensis&quot;    
-## [31] &quot;Pinus_hartwegii&quot;      &quot;Pinus_herrerae&quot;       &quot;Pinus_jeffreyi&quot;      
-## [34] &quot;Pinus_koraiensis&quot;     &quot;Pinus_lambertiana&quot;    &quot;Pinus_lawsonii&quot;      
-## [37] &quot;Pinus_leiophylla&quot;     &quot;Pinus_longaeva&quot;       &quot;Pinus_luchuensis&quot;    
-## [40] &quot;Pinus_lumholtzii&quot;     &quot;Pinus_luzmariae&quot;      &quot;Pinus_maximartinezii&quot;
-## [43] &quot;Pinus_maximinoi&quot;      &quot;Pinus_monophylla&quot;     &quot;Pinus_montezumae&quot;    
-## [46] &quot;Pinus_monticola&quot;      &quot;Pinus_mugo&quot;           &quot;Pinus_muricata&quot;      
-## [49] &quot;Pinus_nelsonii&quot;       &quot;Pinus_nigra&quot;          &quot;Pinus_oocarpa&quot;       
-## [52] &quot;Pinus_palustris&quot;      &quot;Pinus_parviflora&quot;     &quot;Pinus_patula&quot;        
-## [55] &quot;Pinus_peuce&quot;          &quot;Pinus_pinaster&quot;       &quot;Pinus_pinceana&quot;      
-## [58] &quot;Pinus_pinea&quot;          &quot;Pinus_ponderosa&quot;      &quot;Pinus_praetermissa&quot;  
-## [61] &quot;Pinus_pringlei&quot;       &quot;Pinus_pseudostrobus&quot;  &quot;Pinus_pumila&quot;        
-## [64] &quot;Pinus_pungens&quot;        &quot;Pinus_quadrifolia&quot;    &quot;Pinus_radiata&quot;       
-## [67] &quot;Pinus_remota&quot;         &quot;Pinus_resinosa&quot;       &quot;Pinus_rigida&quot;        
-## [70] &quot;Pinus_roxburghii&quot;     &quot;Pinus_rzedowskii&quot;     &quot;Pinus_sabiniana&quot;     
-## [73] &quot;Pinus_serotina&quot;       &quot;Pinus_strobiformis&quot;   &quot;Pinus_strobus&quot;       
-## [76] &quot;Pinus_sylvestris&quot;     &quot;Pinus_tabuliformis&quot;   &quot;Pinus_taeda&quot;         
-## [79] &quot;Pinus_tecunumanii&quot;    &quot;Pinus_teocote&quot;        &quot;Pinus_thunbergii&quot;    
-## [82] &quot;Pinus_torreyana&quot;      &quot;Pinus_virginiana&quot;     &quot;Pinus_wallichiana&quot;</code></pre>
-<pre class="r"><code># Download the range maps for all Pinus species
-pinus &lt;- BIEN_ranges_load_species(pinus_names)
-
-# Format the column names and rasterise
-colnames(pinus@data) &lt;- &quot;binomial&quot;
-r_pinus &lt;- lets.presab(pinus, resol=1, xmn = -170, xmx = -10, ymn = -57, ymx = 60)
-
-# Plot species richness
-plot(r_pinus)</code></pre>
-<p><img src="2_BiodivData_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
-<p>In the <code>lets.presab()</code> function, we can also specify which
+species and rasterise them to form a richness map.</p>
+<p>In the <code>lets.presab()</code> function, we can specify which
 PRESENCE, ORIGIN and SEASONAL information should be used and which not
 (see IUCN metadata on moodle). Let’s look at Neotropical fruit bats
 (<strong>Artibeus</strong>) as example. Here, we set
 <code>presence=1</code> meaning that we only consider extant species,
 <code>origin=1</code> meaning only native species, and
 <code>seasonal=1</code> meaning only resident species.</p>
-<pre class="r"><code># Subset the SpatialPolygonsDataFrame
-artibeus_spp &lt;- mammals[grep(&#39;Artibeus&#39;,mammals@data$BINOMIAL),]
+<pre class="r"><code># Subset the SpatVector
+artibeus_spp &lt;- mammals[grep(&#39;Artibeus&#39;,mammals$BINOMIAL),]
+
+# Convert to SpatialPolygonsDataFrame from raster package
+artibeus_spp &lt;- as(artibeus_spp, &quot;Spatial&quot;)
 
 # Rasterize the ranges using the letsR package
 r_artibeus_spp &lt;- lets.presab(artibeus_spp, resol=2, 
-                              presence = 1, origin = 1, seasonal = 1)</code></pre>
-<pre><code>## Warning in proj4string(obj): CRS object has comment, which is lost in output; in tests, see
-## https://cran.r-project.org/web/packages/sp/vignettes/CRS_warnings.html</code></pre>
-<pre class="r"><code># Map the species richness
+                              presence = 1, origin = 1, seasonal = 1)
+
+# Map the species richness
 plot(r_artibeus_spp)</code></pre>
-<p><img src="2_BiodivData_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p><img src="2_BiodivData_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <pre class="r"><code># Map single species - here, just the first two
 par(mfrow=c(1,2))
 plot(r_artibeus_spp, name = &quot;Artibeus amplus&quot;)
 plot(r_artibeus_spp, name = &quot;Artibeus anderseni&quot;)</code></pre>
-<p><img src="2_BiodivData_files/figure-html/unnamed-chunk-16-2.png" width="672" /></p>
+<p><img src="2_BiodivData_files/figure-html/unnamed-chunk-12-2.png" width="672" /></p>
 <pre class="r"><code># Look at structure of the object and at the presence-absence matrix
 str(r_artibeus_spp, 1)</code></pre>
 <pre><code>## List of 3
 ##  $ Presence_and_Absence_Matrix: num [1:339, 1:22] -109 -109 -107 -105 -99 -83 -81 -105 -103 -99 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
-##  $ Richness_Raster            :Formal class &#39;RasterLayer&#39; [package &quot;raster&quot;] with 12 slots
+##  $ Richness_Raster            :Formal class &#39;RasterLayer&#39; [package &quot;raster&quot;] with 13 slots
 ##  $ Species_name               : chr [1:20] &quot;Artibeus amplus&quot; &quot;Artibeus anderseni&quot; &quot;Artibeus aztecus&quot; &quot;Artibeus cinereus&quot; ...
 ##  - attr(*, &quot;class&quot;)= chr &quot;PresenceAbsence&quot;</code></pre>
 <pre class="r"><code>head(r_artibeus_spp$Presence_and_Absence_Matrix)</code></pre>
@@ -933,241 +847,371 @@ str(r_artibeus_spp, 1)</code></pre>
 <div class="alert alert-info">
 <p><em><strong>Exercise:</strong></em></p>
 <ul>
-<li>Select another genus of plants or mammals, and follow the workflow
-to rasterise ranges and map species richness of the species within that
+<li>Select another group of mammals, and follow the workflow to
+rasterise ranges and map species richness of the species within that
 genus.</li>
-<li>Plot the latitudinal species richness gradient for this genus.
-Interpret in light of previously discussed patterns.</li>
 <li>Download climate data at the correct resolution, and extract the
-climate information for your species richness data. Plot the
-species-energy relationship for the genus. Interpret in light of
-previously discussed patterns.</li>
+climate information for your species richness data. Use a scatter plot
+to display the species richness against mean annual temperature.</li>
 </ul>
 </div>
 </div>
 </div>
 </div>
-<div id="occurrence-data-in-gbif" class="section level1" number="3">
-<h1><span class="header-section-number">3</span> Occurrence data in
-GBIF</h1>
-<p>GBIF stands for <em>Global Biodiversity Information Facility</em>.
-GBIF defines itself as “an international network and research
-infrastructure funded by the world’s governments and aimed at providing
-anyone, anywhere, open access to data about all types of life on Earth”.
-GBIF contains worldwide point records from observations as well as
-museum records or other contributions. The data are thus not
-standardised and often it is unclear which spatial resolution the data
-represent. To understand this, let’s look at some example under <a
-href="https://www.gbif.org/" class="uri">https://www.gbif.org/</a>.</p>
-<div id="obtaining-gbif-data" class="section level2" number="3.1">
-<h2><span class="header-section-number">3.1</span> Obtaining GBIF
-data</h2>
-<p>We will use the package <code>rgbif</code> to search and retrieve
-data from GBIF. A good tutorial to this package is offered <a
-href="https://ropensci.org/tutorials/rgbif_tutorial/">here</a>. Remember
-that we can install new packages with the function
-<code>install.packages()</code>. Alternatively, the <code>dismo</code>
-package offers the function <code>gbif()</code> to download gbif
-records. Robert Hijmans, who wrote the raster and the dismo package,
-also offers great tutorials on his website: <a
-href="http://rspatial.org" class="uri">http://rspatial.org</a>.</p>
-<pre class="r"><code>library(rgbif)
-
-# Check out the number of occurrences found in GBIF:
-occ_count()</code></pre>
-<pre><code>## [1] 2185900387</code></pre>
-<pre class="r"><code># number of observations:
-occ_count(basisOfRecord=&#39;OBSERVATION&#39;)</code></pre>
-<pre><code>## [1] 20079081</code></pre>
-<pre class="r"><code># number of occurrences reported for Germany:
-occ_count(country=isocodes[grep(&quot;Germany&quot;, isocodes$name), &quot;code&quot;])</code></pre>
-<pre><code>## [1] 49861244</code></pre>
-<pre class="r"><code># number of observations reported for Germany:
-occ_count(country=isocodes[grep(&quot;Germany&quot;, isocodes$name), &quot;code&quot;],basisOfRecord=&#39;OBSERVATION&#39;)</code></pre>
-<pre><code>## [1] 290584</code></pre>
-<p>As example, I picked the Alpine shrew (<em>Sorex alpinus</em>) for
-today, a small mammal species occurring in Central and Suuth-Eastern
-European mountain ranges. Its conservation status is near threatened (<a
-href="https://www.iucnredlist.org/species/29660/9514588">Link to IUCN
-redlist</a>).</p>
-<p><img src="figures/shrew.png" title="**Figure 1. The Alpine shrew (*Sorex alpinus*). Picture by Dr. Richard Kraft, downloaded from https://kleinsaeuger.at/sorex-alpinus.html.**" alt="**Figure 1. The Alpine shrew (*Sorex alpinus*). Picture by Dr. Richard Kraft, downloaded from https://kleinsaeuger.at/sorex-alpinus.html.**" width="50%" /></p>
-<p>We first check whether any synonyms exist and how many records exist
-for the species. Download will be slow for high numbers of records.</p>
-<pre class="r"><code># Check for synonyms
-name_suggest(q=&#39;Sorex alpinus&#39;, rank=&#39;species&#39;)</code></pre>
-<pre><code>## Records returned [1] 
-## No. unique hierarchies [0] 
-## Args [q=Sorex alpinus, limit=100, rank=species, fields1=key,
-##      fields2=canonicalName, fields3=rank] 
-## # A tibble: 1 × 3
-##       key canonicalName rank   
-##     &lt;int&gt; &lt;chr&gt;         &lt;chr&gt;  
-## 1 2435986 Sorex alpinus SPECIES</code></pre>
-<pre class="r"><code># Check number of records - here filtered to those with coordinate information
-occ_search(scientificName = &quot;Sorex alpinus&quot;, hasCoordinate=T, limit = 10)</code></pre>
-<pre><code>## Records found [1210] 
-## Records returned [10] 
-## No. unique hierarchies [1] 
-## No. media records [10] 
-## No. facets [0] 
-## Args [hasCoordinate=TRUE, limit=10, offset=0, scientificName=Sorex alpinus,
-##      fields=all] 
-## # A tibble: 10 × 92
-##    key        scientificName  decimalLatitude decimalLongitude issues datasetKey
-##    &lt;chr&gt;      &lt;chr&gt;                     &lt;dbl&gt;            &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;     
-##  1 3747051379 Sorex alpinus …            47.6            10.0  &quot;cdro… 50c9509d-…
-##  2 3719300937 Sorex alpinus …            47.7            13.2  &quot;cdro… 8a863029-…
-##  3 3730008973 Sorex alpinus …            47.2            12.2  &quot;osii… 8a863029-…
-##  4 3117844078 Sorex alpinus …            46.2            11.3  &quot;cdro… 50c9509d-…
-##  5 3124800976 Sorex alpinus …            47.8            13.7  &quot;cdro… 50c9509d-…
-##  6 3307202767 Sorex alpinus …            47.1             9.32 &quot;cdro… 50c9509d-…
-##  7 3321365464 Sorex alpinus …            47.1             9.38 &quot;&quot;     aa5a1c3c-…
-##  8 3729228483 Sorex alpinus …            47.6            13.3  &quot;cdro… 8a863029-…
-##  9 3321353464 Sorex alpinus …            47.1             9.32 &quot;&quot;     aa5a1c3c-…
-## 10 3321367470 Sorex alpinus …            46.4             8.51 &quot;&quot;     aa5a1c3c-…
-## # … with 86 more variables: publishingOrgKey &lt;chr&gt;, installationKey &lt;chr&gt;,
-## #   publishingCountry &lt;chr&gt;, protocol &lt;chr&gt;, lastCrawled &lt;chr&gt;,
-## #   lastParsed &lt;chr&gt;, crawlId &lt;int&gt;, hostingOrganizationKey &lt;chr&gt;,
-## #   basisOfRecord &lt;chr&gt;, occurrenceStatus &lt;chr&gt;, taxonKey &lt;int&gt;,
-## #   kingdomKey &lt;int&gt;, phylumKey &lt;int&gt;, classKey &lt;int&gt;, orderKey &lt;int&gt;,
-## #   familyKey &lt;int&gt;, genusKey &lt;int&gt;, speciesKey &lt;int&gt;, acceptedTaxonKey &lt;int&gt;,
-## #   acceptedScientificName &lt;chr&gt;, kingdom &lt;chr&gt;, phylum &lt;chr&gt;, order &lt;chr&gt;, …</code></pre>
-<div class="alert alert-info">
-<p><strong><em>Exercise:</em></strong></p>
-<p>What does the argument <code>hasCoordinate=T</code> do? Look up the
-help page and explain.</p>
+<div id="red-list-data" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Red list data</h1>
+<p>The IUCN Red List of threatened species is a useful resource when
+analysing diversity changes, species range changes and population
+changes: www.iucnredlist.org <span class="citation">(IUCN 2019)</span>.
+It provides information on the global conservation status of species,
+specifically of animals, fungi and plant species. The IUCN has defined a
+set of criteria to evaluate the extinction risk of species. According to
+these criteria, species are classified into nine different categories
+although strictly only five categories describe the conservation status
+- from least concern to critically endangered [Fig. 1; <span
+class="citation">IUCN (2012)</span>].</p>
+<div class="figure">
+<img src="figures/redlist.png" alt="**Figure 1. The IUCN red list categories. Adapted from [@IUCN2012].**" width="70%" />
+<p class="caption">
+<strong>Figure 1. The IUCN red list categories. Adapted from <span
+class="citation">(IUCN 2012)</span>.</strong>
+</p>
 </div>
-<p>One of the most interesting items from the outputs is the “Records
-found” at the very top of the output. Please be aware that
-<code>occ_search()</code> will not allow to download more than 100’000
-records. If the GBIF data contain more, then you can set additional
-filters (e.g. set time period with argument <code>year</code> or
-geographic extent with arguments <code>decimalLatitude</code> and
-<code>decimalLongitude</code>) or split the area into spatial tiles (by
-setting geographic extent) and download the tiles separately.</p>
-<p>GBIF data also contain a lot of extra information about observer,
-basis of record etc. Take a look at the arguments you can set in
-<code>?occ_search</code> to get an overview. For example, we can limit
-the data to those observations that were done by humans:</p>
-<pre class="r"><code>occ_search(scientificName = &quot;Sorex alpinus&quot;, hasCoordinate=T, basisOfRecord=&#39;HUMAN_OBSERVATION&#39;, limit = 10)</code></pre>
-<pre><code>## Records found [593] 
-## Records returned [10] 
-## No. unique hierarchies [1] 
-## No. media records [10] 
-## No. facets [0] 
-## Args [hasCoordinate=TRUE, limit=10, offset=0, scientificName=Sorex alpinus,
-##      basisOfRecord=HUMAN_OBSERVATION, fields=all] 
-## # A tibble: 10 × 92
-##    key        scientificName  decimalLatitude decimalLongitude issues datasetKey
-##    &lt;chr&gt;      &lt;chr&gt;                     &lt;dbl&gt;            &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;     
-##  1 3747051379 Sorex alpinus …            47.6            10.0  &quot;cdro… 50c9509d-…
-##  2 3719300937 Sorex alpinus …            47.7            13.2  &quot;cdro… 8a863029-…
-##  3 3730008973 Sorex alpinus …            47.2            12.2  &quot;osii… 8a863029-…
-##  4 3117844078 Sorex alpinus …            46.2            11.3  &quot;cdro… 50c9509d-…
-##  5 3124800976 Sorex alpinus …            47.8            13.7  &quot;cdro… 50c9509d-…
-##  6 3307202767 Sorex alpinus …            47.1             9.32 &quot;cdro… 50c9509d-…
-##  7 3729228483 Sorex alpinus …            47.6            13.3  &quot;cdro… 8a863029-…
-##  8 3321353464 Sorex alpinus …            47.1             9.32 &quot;&quot;     aa5a1c3c-…
-##  9 3321367470 Sorex alpinus …            46.4             8.51 &quot;&quot;     aa5a1c3c-…
-## 10 3415936638 Sorex alpinus …            47.9            15.9  &quot;cdro… 50c9509d-…
-## # … with 86 more variables: publishingOrgKey &lt;chr&gt;, installationKey &lt;chr&gt;,
-## #   publishingCountry &lt;chr&gt;, protocol &lt;chr&gt;, lastCrawled &lt;chr&gt;,
-## #   lastParsed &lt;chr&gt;, crawlId &lt;int&gt;, hostingOrganizationKey &lt;chr&gt;,
-## #   basisOfRecord &lt;chr&gt;, occurrenceStatus &lt;chr&gt;, taxonKey &lt;int&gt;,
-## #   kingdomKey &lt;int&gt;, phylumKey &lt;int&gt;, classKey &lt;int&gt;, orderKey &lt;int&gt;,
-## #   familyKey &lt;int&gt;, genusKey &lt;int&gt;, speciesKey &lt;int&gt;, acceptedTaxonKey &lt;int&gt;,
-## #   acceptedScientificName &lt;chr&gt;, kingdom &lt;chr&gt;, phylum &lt;chr&gt;, order &lt;chr&gt;, …</code></pre>
-<p>Now, let’s download the records and plot them. We had a bit less than
-600 records for the shrew, and use this as <code>limit</code>. Of
-course, the map will only help us judging the data quality if we have a
-rough idea where the species should occur. So, look up the species on
-the web first!</p>
-<pre class="r"><code>gbif_shrew &lt;- occ_search(scientificName = &quot;Sorex alpinus&quot;, hasCoordinate=T, basisOfRecord=&#39;HUMAN_OBSERVATION&#39;, limit = 600) 
-
-# We are just interested in the data frame containing the records
-gbif_shrew &lt;- gbif_shrew$data
-
-library(maptools)
-data(wrld_simpl)
-plot(wrld_simpl,xlim=c(5,50), ylim=c(40,55))
-points(gbif_shrew$decimalLongitude, gbif_shrew$decimalLatitude, col=&#39;red&#39;,  pch=19)</code></pre>
-<p><img src="2_BiodivData_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
-</div>
-<div id="cleaning-and-cross-checking-gbif-data" class="section level2"
-number="3.2">
-<h2><span class="header-section-number">3.2</span> Cleaning and
-cross-checking GBIF data</h2>
-<p>You should always critically assess the quality of your data. This
-also holds true for GBIF data. Look at the map again, do all records
-look plausible?</p>
-<p>Not all coordinates seem to be correct, and we thus need to
-cross-check these. Robert Hijmans provides some code in his
-<code>dismo</code> <a href="http://rspatial.org">tutorials</a>. We will
-here use the new package <code>CoordinateCleaner</code> (<span
-class="citation">Zizka et al. (2019)</span>; see tutorials <a
-href="https://ropensci.github.io/CoordinateCleaner/">here</a>). The
-function <code>clean_coordinates()</code> allows cleaning geographic
-coordinates using different cross-checks. Here, we first compare whether
-the coordinates for each entry match the country code provided (test
-<code>centroids</code>) for each entry and are no outliers (test
-<code>outliers</code>). Also, we test for vicinity to a biodiversity
-institution like botanical or zoological gardens (test
-<code>ìnstitutions</code> and radius <code>inst_rad</code>), and for
-duplicates (test <code>duplicates</code>). There are many more tests
-that you can check in the help pages
-<code>?clean_coordinates</code>.</p>
-<pre class="r"><code>library(CoordinateCleaner)
-
-# We use only those data entries with coordinate information - Note that you don&#39;t need this if you have used the hasCoordinate=T in the occ_search() function:
-gbif_shrew &lt;- subset(gbif_shrew, !is.na(decimalLatitude))
-
-# We now clean the coordinates and check for outliers - see ?clean_coordinates for more options
-cl_gbif_shrew &lt;- clean_coordinates(gbif_shrew, lon=&quot;decimalLongitude&quot;, lat=&quot;decimalLatitude&quot;, countries=&quot;countryCode&quot;, tests=c(&quot;centroids&quot;, &quot;outliers&quot;, &quot;duplicates&quot;, &quot;institutions&quot;), inst_rad = 1000)</code></pre>
-<pre><code>## Testing coordinate validity</code></pre>
-<pre><code>## Flagged 0 records.</code></pre>
-<pre><code>## Testing country centroids</code></pre>
-<pre><code>## Flagged 0 records.</code></pre>
-<pre><code>## Testing geographic outliers</code></pre>
-<pre><code>## Flagged 16 records.</code></pre>
-<pre><code>## Testing biodiversity institutions</code></pre>
-<pre><code>## Flagged 0 records.</code></pre>
-<pre><code>## Testing duplicates</code></pre>
-<pre><code>## Flagged 195 records.</code></pre>
-<pre><code>## Flagged 211 of 593 records, EQ = 0.36.</code></pre>
-<pre class="r"><code>plot(wrld_simpl,xlim=c(5,50), ylim=c(40,55))
-points(gbif_shrew$decimalLongitude, gbif_shrew$decimalLatitude, col=&#39;red&#39;,  pch=19)
-points(gbif_shrew$decimalLongitude[cl_gbif_shrew$.summary], gbif_shrew$decimalLatitude[cl_gbif_shrew$.summary], col=&#39;blue&#39;,  pch=18)</code></pre>
-<p><img src="2_BiodivData_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
-<pre class="r"><code>gbif_shrew &lt;- gbif_shrew[cl_gbif_shrew$.summary,]</code></pre>
-<div class="alert alert-info">
-<p><em><strong>Exercise:</strong></em></p>
-<p>Look up the options in <code>clean_coordinates()</code> and think
-about why I chose the specific tests and options.</p>
-</div>
-<p>Have a look at <span class="citation">Zizka et al. (2019)</span> and
-the examples by Robert Hijmans (<a
-href="https://rspatial.org/raster/sdm/2_sdm_occdata.html">http://rspatial.org</a>)
-for finding out about other typical problems with GBIF and how to deal
-with these.</p>
-<p>Finally, save your data, for example by writing the final data frame
-to file or by saving the R object(s).</p>
-<pre class="r"><code>save(gbif_shrew,file=&#39;data/gbif_shrew.RData&#39;)</code></pre>
-<div class="alert alert-info">
-<p><em><strong>Exercise:</strong></em></p>
-<p>Pick a species of your choice, look it up on the web (www.gbif.org),
-and then download and clean the GBIF data using
-<code>occ_search()</code> and <code>clean_coordinates()</code>.</p>
+<p>The IUCN distinguishes five criteria that are used to classify
+species into one of the three threatened categories (Fig. 1; <span
+class="citation">IUCN (2012)</span>):</p>
 <ul>
-<li>Be careful with very large data sets as download will take long.
-Try, for example, the Iberian lynx, the Gorilla, the Caucasian
-Salamander, or any other species with max. 500-1000 records.</li>
-<li>Summarise the data: how many occurrence records are there in total,
-how many with coordinates, how many human observations, which time span
-do the records cover&gt;?</li>
-<li>Map the data</li>
-<li>Clean the data: how many geographic outliers did you find, how many
-duplicates?</li>
+<li>A. Population size reduction</li>
+<li>B. Extent of occurrence (B1) or Area of occupancy (B2)</li>
+<li>C. Small population size and decline</li>
+<li>D. Very small or restricted population</li>
+<li>E. Quantitative analysis (probability of extinction within next 100
+years)</li>
 </ul>
+<p>All of this information (the red list category, the relevant
+assessment criteria, the population trends, etc.) are provided by the
+IUCN. We can look at all these information online, e.g. for the <a
+href="https://www.iucnredlist.org/species/12519/121707666">Eurasian
+lynx</a>.</p>
+<p>Of course, if you want to analyse your species data in light of these
+IUCN assessments, it can become very tedious to look up all information
+by hand. The IUCN red list team provides an API for this purpose, and
+the R package <code>rredlist</code> is a client to access this <a
+href="http://apiv3.iucnredlist.org/api/v3/docs">IUCN red list API</a>.
+It requires an <a href="http://apiv3.iucnredlist.org/api/v3/docs">API
+key / a token</a> to use the API. You have to indicate your research
+objectives for using the API.</p>
+<div id="mammal-data" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Mammal data</h2>
+<p>We will work with European mammals. The distribution data come from
+the IUCN range maps above that we rasterised to European extent. Course
+participants can download the data from the moodle page (store in your
+<em>data</em> folder). For completeness, I show the code below for
+compiling the data.</p>
+<pre class="r"><code># rough European extent
+extent_eur &lt;- c(-15,45,35,72)
+
+# Crop SpatRaster to European extent
+mammals_eur &lt;- terra::crop(mammals, extent_eur)
+
+# Convert to old raster format:
+mammals_eur.sp &lt;- as(mammals_eur, &quot;Spatial&quot;)
+
+# Rasterise mammal range maps for European extent
+r_mammals_eur &lt;- lets.presab(mammals_eur.sp, resol=1, presence = 1, origin = 1, seasonal = 1)
+
+# Save the PresenceAbsence object
+save(extent_eur, r_mammals_eur,file=&#39;data/r_mammals_eur.RData&#39;)</code></pre>
+<p>Load the <code>PresenceAbsence</code> object:</p>
+<pre class="r"><code>load(&#39;data/r_mammals_eur.RData&#39;)
+
+# Remember how the PresenceAbsence objects look like:
+str(r_mammals_eur,2)</code></pre>
+<pre><code>## List of 3
+##  $ Presence_and_Absence_Matrix: num [1:1491, 1:293] -14.5 -13.5 -12.5 -11.5 -10.5 -9.5 -8.5 -7.5 -6.5 -5.5 ...
+##   ..- attr(*, &quot;dimnames&quot;)=List of 2
+##  $ Richness_Raster            :Formal class &#39;RasterLayer&#39; [package &quot;raster&quot;] with 13 slots</code></pre>
+<pre><code>## Warning: Not a validObject(): no slot of name &quot;srs&quot; for this object of class
+## &quot;RasterLayer&quot;</code></pre>
+<pre><code>##  $ Species_name               : chr [1:291] &quot;Acomys cilicicus&quot; &quot;Acomys minous&quot; &quot;Alces alces&quot; &quot;Allactaga elater&quot; ...
+##  - attr(*, &quot;class&quot;)= chr &quot;PresenceAbsence&quot;</code></pre>
+<pre class="r"><code># Plot the richness raster:
+plot(raster::crop(r_mammals_eur$Richness_Raster,extent_eur))</code></pre>
+<p><img src="2_BiodivData_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>For merging the mammal distribution with the red list data, we will
+need the species names:</p>
+<pre class="r"><code># Extract the species names from the PresenceAbsence object
+names_mammals_eur &lt;- colnames(r_mammals_eur$Presence_and_Absence_Matrix)[-c(1:2)]</code></pre>
+</div>
+<div id="iucn-red-list-data" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> IUCN Red list
+data</h2>
+<p>Course participants can download the data
+(<em>mammals_eur_redlist_status.csv</em> and
+<em>mammals_eur_redlist_threats.csv</em>) in the secured moodle folder
+(but please be aware that the <a
+href="https://www.iucnredlist.org/terms/terms-of-use">IUCN terms of
+use</a> apply!). External readers are advised to generate an API
+token:</p>
+<pre class="r"><code>library(rredlist)
+
+# Generate your personal API token
+rl_use_iucn()</code></pre>
+<div id="iucn-red-list-status" class="section level3" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> IUCN red list
+status</h3>
+<p>If you have your own IUCN API key, you can easily download the
+information on species’ red list categories:</p>
+<pre class="r"><code># Download red list category for single species using your personal API token &quot;MY_IUCN_REDLIST_KEY&quot;
+(rl_search(&#39;Lynx lynx&#39;, key= MY_IUCN_REDLIST_KEY))</code></pre>
+<pre><code>## $name
+## [1] &quot;Lynx lynx&quot;
+## 
+## $result
+##   taxonid scientific_name  kingdom   phylum    class     order  family genus
+## 1   12519       Lynx lynx ANIMALIA CHORDATA MAMMALIA CARNIVORA FELIDAE  Lynx
+##   main_common_name        authority published_year assessment_date category
+## 1    Eurasian Lynx (Linnaeus, 1758)           2015      2014-04-20       LC
+##   criteria population_trend marine_system freshwater_system terrestrial_system
+## 1       NA           Stable         FALSE             FALSE               TRUE
+##                                                                                                 assessor
+## 1 Breitenmoser, U., Breitenmoser-Würsten, C., Lanz, T., von Arx, M., Antonevich, A., Bao, W. &amp; Avgan, B.
+##                              reviewer aoo_km2  eoo_km2 elevation_upper
+## 1 Nowell, K., Hunter, L. &amp; Mallon, D.      NA 42765298            5500
+##   elevation_lower depth_upper depth_lower errata_flag
+## 1               0          NA          NA        TRUE
+##                                                                                                                               errata_reason
+## 1 An errata version of the original assessment has been published to correct the typo &quot;Mmountain Hares&quot; which should read &quot;Mountain Hares&quot;.
+##   amended_flag amended_reason
+## 1           NA             NA</code></pre>
+<pre class="r"><code># Download red list categories for all species
+redlist_status &lt;- do.call(rbind,lapply(names_mammals_eur,FUN=function(sp){
+  rl_search(sp, key= MY_IUCN_REDLIST_KEY)$result
+  }
+  ))</code></pre>
+<p>Course participants can download the data from moodle and read it
+in:</p>
+<pre class="r"><code>redlist_status &lt;- read.table(&#39;data/mammals_eur_redlist_status.csv&#39;, header=T, sep=&#39;;&#39;)</code></pre>
+<p>Here is an example of the kind of information in the table. Compare
+this to the information given on the IUCN website, e.g. for the <a
+href="https://www.iucnredlist.org/species/12519/121707666">Eurasian
+Lynx</a>.</p>
+<pre class="r"><code>redlist_status[1:10,10:20]</code></pre>
+<pre><code>##               authority published_year assessment_date category criteria
+## 1   Spitzenberger, 1978           2019      2017-05-22       DD     &lt;NA&gt;
+## 2            Bate, 1906           2019      2017-05-22       DD     &lt;NA&gt;
+## 3      (Linnaeus, 1758)           2016      2015-09-27       LC     &lt;NA&gt;
+## 4  (Lichtenstein, 1825)           2016      2016-09-08       LC     &lt;NA&gt;
+## 5          Thomas, 1881           2019      2019-07-09       LC     &lt;NA&gt;
+## 6          (Kerr, 1792)           2016      2016-09-08       LC     &lt;NA&gt;
+## 7          Thomas, 1897           2016      2016-09-09       LC     &lt;NA&gt;
+## 8        (Pallas, 1777)           2021      2020-08-26       VU       C1
+## 9        (Pallas, 1771)           2016      2016-09-08       LC     &lt;NA&gt;
+## 10       Heinrich, 1952           2016      2016-09-09       LC     &lt;NA&gt;
+##    population_trend marine_system freshwater_system terrestrial_system
+## 1           Unknown         FALSE             FALSE               TRUE
+## 2           Unknown         FALSE             FALSE               TRUE
+## 3        Increasing         FALSE             FALSE               TRUE
+## 4        Decreasing         FALSE             FALSE               TRUE
+## 5        Decreasing         FALSE             FALSE               TRUE
+## 6        Decreasing         FALSE             FALSE               TRUE
+## 7        Decreasing         FALSE             FALSE               TRUE
+## 8        Decreasing         FALSE             FALSE               TRUE
+## 9            Stable         FALSE             FALSE               TRUE
+## 10          Unknown         FALSE             FALSE               TRUE
+##                                                                                                                  assessor
+## 1                                                                                              Gerrie, R. &amp; Kennerley, R.
+## 2                                                                                              Gerrie, R. &amp; Kennerley, R.
+## 3                                                                                                         Hundertmark, K.
+## 4                Shenbrot, G., Tsytsulina, K., Batsaikhan, N., Avirmed, D., Tinnin, D., Sukhchuluun, G &amp; Lkhagvasuren, D.
+## 5                                                                                               Dando, T. &amp; Kennerley, R.
+## 6                                                             Tsytsulina, K., Formozov, N., Zagorodnyuk, I. &amp; Sheftel, B.
+## 7                                                                                      Eken, G., Bozdogan, M. &amp; Molur, S.
+## 8  Cassinello, J., Bounaceur, F., Brito, J.C., Bussière, E., Cuzin, F., Gil-Sánchez, J., Herrera-Sánchez, F. &amp; Wacher, T.
+## 9                Kaneko, Y., Kryštufek, B., Zagarondnyuk, I., Vohralík, V., Batsaikhan, N., Avirmed, D. &amp; Sukhchuluun, G.
+## 10                                                                                                             Meinig, H.
+##                      reviewer
+## 1                   Amori, G.
+## 2                   Amori, G.
+## 3  Brook, S.M. &amp; McShea, W.J.
+## 4                   Amori, G.
+## 5                   Amori, G.
+## 6                   Amori, G.
+## 7                   Amori, G.
+## 8    Herrero, J. &amp; Michel, S.
+## 9                   Amori, G.
+## 10                  Amori, G.</code></pre>
+<p>We can now look at how many mammal species are listed in the
+different red list categories or how many species have declining, stable
+or increasing population trends:</p>
+<pre class="r"><code># Conservation status
+table(redlist_status$category)</code></pre>
+<pre><code>## 
+##  CR  DD  EN  LC  NT  VU 
+##   7  12  10 213  18  21</code></pre>
+<pre class="r"><code># Population trends
+table(redlist_status$population_trend)</code></pre>
+<pre><code>## 
+## Decreasing Increasing     Stable    Unknown 
+##         76          8        102         95</code></pre>
+<p>We can also extract all species that are classified as
+vulnerable:</p>
+<pre class="r"><code>(subset(redlist_status,category==&#39;VU&#39;)$scientific_name)</code></pre>
+<pre><code>##  [1] &quot;Ammotragus lervia&quot;        &quot;Arvicola sapidus&quot;        
+##  [3] &quot;Dinaromys bogdanovi&quot;      &quot;Gazella cuvieri&quot;         
+##  [5] &quot;Gazella dorcas&quot;           &quot;Gazella subgutturosa&quot;    
+##  [7] &quot;Lepus castroviejoi&quot;       &quot;Lepus corsicanus&quot;        
+##  [9] &quot;Mesocricetus auratus&quot;     &quot;Miniopterus schreibersii&quot;
+## [11] &quot;Myomimus roachi&quot;          &quot;Myotis capaccinii&quot;       
+## [13] &quot;Nyctalus lasiopterus&quot;     &quot;Panthera pardus&quot;         
+## [15] &quot;Plecotus sardus&quot;          &quot;Rangifer tarandus&quot;       
+## [17] &quot;Rhinolophus mehelyi&quot;      &quot;Spalax graecus&quot;          
+## [19] &quot;Spalax zemni&quot;             &quot;Ursus maritimus&quot;         
+## [21] &quot;Vormela peregusna&quot;</code></pre>
+<div class="alert alert-info">
+<p><strong>Exercise:</strong></p>
+<p>Explore the red list status table. For example,</p>
+<ul>
+<li>Identify all species classified as endangered or critically
+endangered.</li>
+<li>What is the red list status of the species with decreasing
+population trend?</li>
+</ul>
+</div>
+</div>
+<div id="iucn-red-list-threats" class="section level3" number="3.2.2">
+<h3><span class="header-section-number">3.2.2</span> IUCN red list
+threats</h3>
+<p>The IUCN also assesses the main threats per species as you saw in the
+<a href="https://www.iucnredlist.org/species/12519/121707666">Eurasian
+lynx</a> example. The Threat Classification Scheme can be found <a
+href="https://www.iucnredlist.org/resources/threat-classification-scheme">here</a>.</p>
+<p>If you have your own IUCN API key, you can easily download the
+information on species’ red list threats:</p>
+<pre class="r"><code># Download red list threats for single species
+rl_threats(&#39;Lynx lynx&#39;, key= MY_IUCN_REDLIST_KEY)</code></pre>
+<pre><code>## $name
+## [1] &quot;Lynx lynx&quot;
+## 
+## $result
+##     code                                                         title  timing
+## 1    2.1                           Annual &amp; perennial non-timber crops Ongoing
+## 2  2.1.2                                          Small-holder farming Ongoing
+## 3  2.1.3                                         Agro-industry farming Ongoing
+## 4    2.2                                       Wood &amp; pulp plantations Ongoing
+## 5  2.2.1                                      Small-holder plantations Ongoing
+## 6  2.2.2                                     Agro-industry plantations Ongoing
+## 7    2.3                                  Livestock farming &amp; ranching Ongoing
+## 8  2.3.1                                               Nomadic grazing Ongoing
+## 9  2.3.2                     Small-holder grazing, ranching or farming Ongoing
+## 10 2.3.3                    Agro-industry grazing, ranching or farming Ongoing
+## 11   3.2                                            Mining &amp; quarrying Ongoing
+## 12   4.1                                             Roads &amp; railroads Ongoing
+## 13   5.1                        Hunting &amp; trapping terrestrial animals Ongoing
+## 14 5.1.1                       Intentional use (species is the target) Ongoing
+## 15 5.1.2             Unintentional effects (species is not the target) Ongoing
+## 16 5.1.3                                           Persecution/control Ongoing
+## 17   5.3                                     Logging &amp; wood harvesting Ongoing
+## 18 5.3.5                                 Motivation Unknown/Unrecorded Ongoing
+## 19   8.1 Invasive non-native/alien species/diseases (Canis familiaris) Ongoing
+## 20 8.1.2                              Named species (Canis familiaris) Ongoing
+##              scope            severity         score         invasive
+## 1             &lt;NA&gt;                &lt;NA&gt; Low Impact: 3             &lt;NA&gt;
+## 2             &lt;NA&gt;                &lt;NA&gt; Low Impact: 3             &lt;NA&gt;
+## 3             &lt;NA&gt;                &lt;NA&gt; Low Impact: 3             &lt;NA&gt;
+## 4             &lt;NA&gt;                &lt;NA&gt; Low Impact: 3             &lt;NA&gt;
+## 5             &lt;NA&gt;                &lt;NA&gt; Low Impact: 3             &lt;NA&gt;
+## 6             &lt;NA&gt;                &lt;NA&gt; Low Impact: 3             &lt;NA&gt;
+## 7             &lt;NA&gt;                &lt;NA&gt; Low Impact: 3             &lt;NA&gt;
+## 8             &lt;NA&gt;                &lt;NA&gt; Low Impact: 3             &lt;NA&gt;
+## 9             &lt;NA&gt;                &lt;NA&gt; Low Impact: 3             &lt;NA&gt;
+## 10            &lt;NA&gt;                &lt;NA&gt; Low Impact: 3             &lt;NA&gt;
+## 11            &lt;NA&gt;                &lt;NA&gt; Low Impact: 3             &lt;NA&gt;
+## 12            &lt;NA&gt;                &lt;NA&gt; Low Impact: 3             &lt;NA&gt;
+## 13            &lt;NA&gt;                &lt;NA&gt; Low Impact: 3             &lt;NA&gt;
+## 14            &lt;NA&gt;                &lt;NA&gt; Low Impact: 3             &lt;NA&gt;
+## 15            &lt;NA&gt;                &lt;NA&gt; Low Impact: 3             &lt;NA&gt;
+## 16            &lt;NA&gt;                &lt;NA&gt; Low Impact: 3             &lt;NA&gt;
+## 17            &lt;NA&gt;                &lt;NA&gt; Low Impact: 3             &lt;NA&gt;
+## 18            &lt;NA&gt;                &lt;NA&gt; Low Impact: 3             &lt;NA&gt;
+## 19 Minority (&lt;50%) Negligible declines Low Impact: 4 Canis familiaris
+## 20 Minority (&lt;50%) Negligible declines Low Impact: 4 Canis familiaris</code></pre>
+<pre class="r"><code># Download red list threats for all species
+redlist_threats &lt;- do.call(rbind,
+                           lapply(seq_len(length(names_mammals_eur)),FUN=function(i){
+                             xi &lt;- rl_threats(names_mammals_eur[i], key= MY_IUCN_REDLIST_KEY); 
+                             if(length(xi$result)) {
+                               data.frame(species=names_mammals_eur[i],xi$result) 
+                               }
+                             }
+                             ))</code></pre>
+<p>Course participants can download the data from moodle and read it
+in:</p>
+<pre class="r"><code>redlist_threats &lt;- read.table(&#39;data/mammals_eur_redlist_threats.csv&#39;, header=T, sep=&#39;;&#39;)</code></pre>
+<p>The threats are ordered hierarchically from broad threat type to very
+detailed threat, e.g.:</p>
+<ul>
+<li><em>2 Agriculture &amp; aquaculture</em> &gt; <em>2.2 Wood &amp;
+pulp plantations </em> &gt; <em>2.2.1 Small-holder plantations</em></li>
+<li><em>5 Biological resource use</em> &gt; <em>5.4 Fishing &amp;
+harvesting aquatic resources</em> &gt; <em>5.4.3 Unintentional effects:
+subsistence/small scale (species being assessed is not the
+target)[harvest]</em></li>
+</ul>
+<p>Here is an example of the kind of information in the table. For more
+details, please have a look at the IUCN website, e.g. the <a
+href="https://www.iucnredlist.org/species/12519/121707666">Eurasian
+lynx</a> example, and at the <a
+href="https://www.iucnredlist.org/resources/threat-classification-scheme">Threat
+Classification Scheme</a>.</p>
+<pre class="r"><code>redlist_threats[sample(nrow(redlist_threats),10),-c(1:2)]</code></pre>
+<pre><code>##                                                              title  timing
+## 396  Invasive non-native/alien species/diseases (Canis familiaris) Ongoing
+## 704                                        Fire &amp; fire suppression Ongoing
+## 961                                                Nomadic grazing Ongoing
+## 1047                           Annual &amp; perennial non-timber crops Ongoing
+## 374                         Hunting &amp; trapping terrestrial animals Ongoing
+## 1124                                       Fire &amp; fire suppression Ongoing
+## 1098                                       Type Unknown/Unrecorded Ongoing
+## 1024                                  Livestock farming &amp; ranching Ongoing
+## 1080                        Hunting &amp; trapping terrestrial animals Ongoing
+## 234                      Abstraction of ground water (unknown use) Ongoing
+##                  scope                         severity         score
+## 396               &lt;NA&gt;                             &lt;NA&gt; Low Impact: 3
+## 704               &lt;NA&gt;                             &lt;NA&gt; Low Impact: 3
+## 961  Majority (50-90%)                          Unknown       Unknown
+## 1047   Minority (&lt;50%)                             &lt;NA&gt; Low Impact: 4
+## 374               &lt;NA&gt;                             &lt;NA&gt; Low Impact: 3
+## 1124   Minority (&lt;50%) Causing/Could cause fluctuations Low Impact: 5
+## 1098              &lt;NA&gt;                             &lt;NA&gt;          &lt;NA&gt;
+## 1024              &lt;NA&gt;                             &lt;NA&gt;          &lt;NA&gt;
+## 1080              &lt;NA&gt;                             &lt;NA&gt; Low Impact: 3
+## 234               &lt;NA&gt;                             &lt;NA&gt; Low Impact: 3
+##              invasive
+## 396  Canis familiaris
+## 704              &lt;NA&gt;
+## 961              &lt;NA&gt;
+## 1047             &lt;NA&gt;
+## 374              &lt;NA&gt;
+## 1124             &lt;NA&gt;
+## 1098             &lt;NA&gt;
+## 1024             &lt;NA&gt;
+## 1080             &lt;NA&gt;
+## 234              &lt;NA&gt;</code></pre>
+<p>We can extract many useful information from this table, for example,
+when specific threats occurred.</p>
+<pre class="r"><code>table(redlist_threats$timing)</code></pre>
+<pre><code>## 
+##                   Future                  Ongoing Past, Unlikely to Return 
+##                       35                     1106                       28</code></pre>
+<div class="alert alert-info">
+<p><strong>Exercise:</strong></p>
+<p>Explore the threats table. For example,</p>
+<ul>
+<li>Pick a species and identify which threats are causing rapid declines
+and slow declines.</li>
+</ul>
+</div>
 </div>
 </div>
 </div>
@@ -1178,6 +1222,15 @@ duplicates?</li>
 Hurlbert, A. H., and W. Jetz. 2007. <span>“Species Richness, Hotspots,
 and the Scale Dependence of Range Maps in Ecology and
 Conservation.”</span> <em>PNAS</em> 104: 13384–89.
+</div>
+<div id="ref-IUCN2012" class="csl-entry">
+IUCN. 2012. <em>IUCN Red List Categories and Criteria: Version 3.1.</em>
+Gland, Switzerland; Cambridge, UK: IUCN.
+</div>
+<div id="ref-IUCN2019" class="csl-entry">
+———. 2019. <em>The <span>IUCN</span> Red List of Threatened Species.
+Version 2019-2.</em> http://www.iucnredlist.org. Downloaded on 27
+October 2019.
 </div>
 <div id="ref-Jetz2012a" class="csl-entry">
 Jetz, W., J. M. McPherson, and R. P. Guralnick. 2012. <span>“Integrating
@@ -1197,14 +1250,6 @@ Data <span></span> Where to Go from Here?”</span> <em>Journal of
 Biogeography</em> 47 (1): 1–12. <a
 href="https://doi.org/10.1111/jbi.13633">https://doi.org/10.1111/jbi.13633</a>.
 </div>
-<div id="ref-Zizka2019" class="csl-entry">
-Zizka, A., D. Silvestro, T. Andermann, J. Azevedo, C. Duarte Ritter, D.
-Edler, H. Farooq, et al. 2019. <span>“<span>CoordinateCleaner</span> :
-Standardized Cleaning of Occurrence Records from Biological Collection
-Databases.”</span> <em>Methods in Ecology and Evolution</em> 10 (5):
-744–51. <a
-href="https://doi.org/10.1111/2041-210x.13152">https://doi.org/10.1111/2041-210x.13152</a>.
-</div>
 <div id="ref-Zurell2018c" class="csl-entry">
 Zurell, D., C. H. Graham, L. Gallien, W. Thuiller, and N. E. Zimmermann.
 2018. <span>“Long-Distance Migratory Birds Threatened by Multiple
@@ -1221,7 +1266,7 @@ href="https://doi.org/10.1038/s41558-018-0312-9">https://doi.org/10.1038/s41558-
 <br>
 <hr />
 <div id="footer">
-<p>Damaris Zurell 2022 <a href="http://creativecommons.org/licenses/by/4.0/" >(CC BY 4.0)</a>.  </p>
+<p>Damaris Zurell 2023 <a href="http://creativecommons.org/licenses/by/4.0/" >(CC BY 4.0)</a>.  </p>
 </div>
 
 </html>
