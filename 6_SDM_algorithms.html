@@ -728,7 +728,7 @@ variable the drop in mean accuracy when this variables is
 permutated.</p>
 <pre class="r"><code>library(randomForest)
 
-# Fit RF
+# Fit RF (a question/warning pops up whether we really want to do regression: YES, we want to. With binary data, you could also use classification by setting the argument y=as.factor(lynx_train$occ) but from experience regression produces slightly better results)
 m_rf &lt;- randomForest( x=lynx_train[,my_preds], y=lynx_train$occ, 
     ntree=1000, importance =T)
     
