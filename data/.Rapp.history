@@ -1,0 +1,10 @@
+load("/Users/zurell/data/Lehre/UP_Lehre/CLEWS/EcosystemDynamics/edb-course/data/r_mammals_eur.RData")
+ls
+ls()
+extent_eur
+r_mammals_eur
+str(r_mammals_eur,1)
+str(r_mammals_eur,2)
+load("/Users/zurell/data/Lehre/UP_Lehre/CLEWS/EcosystemDynamics/edb-course/data/r_mammals_eur_1deg.RData")
+ls()
+str(r_mammals_eur,1)

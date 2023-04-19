@@ -909,7 +909,7 @@ participants can download the data from the moodle page (store in your
 <em>data</em> folder). For completeness, I show the code below for
 compiling the data.</p>
 <pre class="r"><code># rough European extent
-extent_eur &lt;- c(-15,45,35,72)
+extent_eur &lt;- c(-15,45,35,71)
 
 # Crop SpatRaster to European extent
 mammals_eur &lt;- terra::crop(mammals, extent_eur)
@@ -921,19 +921,17 @@ mammals_eur.sp &lt;- as(mammals_eur, &quot;Spatial&quot;)
 r_mammals_eur &lt;- lets.presab(mammals_eur.sp, resol=1, presence = 1, origin = 1, seasonal = 1)
 
 # Save the PresenceAbsence object
-save(extent_eur, r_mammals_eur,file=&#39;data/r_mammals_eur.RData&#39;)</code></pre>
+save(extent_eur, r_mammals_eur,file=&#39;data/r_mammals_eur_1deg.RData&#39;)</code></pre>
 <p>Load the <code>PresenceAbsence</code> object:</p>
-<pre class="r"><code>load(&#39;data/r_mammals_eur.RData&#39;)
+<pre class="r"><code>load(&#39;data/r_mammals_eur_1deg.RData&#39;)
 
 # Remember how the PresenceAbsence objects look like:
 str(r_mammals_eur,2)</code></pre>
 <pre><code>## List of 3
 ##  $ Presence_and_Absence_Matrix: num [1:1491, 1:293] -14.5 -13.5 -12.5 -11.5 -10.5 -9.5 -8.5 -7.5 -6.5 -5.5 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
-##  $ Richness_Raster            :Formal class &#39;RasterLayer&#39; [package &quot;raster&quot;] with 13 slots</code></pre>
-<pre><code>## Warning: Not a validObject(): no slot of name &quot;srs&quot; for this object of class
-## &quot;RasterLayer&quot;</code></pre>
-<pre><code>##  $ Species_name               : chr [1:291] &quot;Acomys cilicicus&quot; &quot;Acomys minous&quot; &quot;Alces alces&quot; &quot;Allactaga elater&quot; ...
+##  $ Richness_Raster            :Formal class &#39;RasterLayer&#39; [package &quot;raster&quot;] with 13 slots
+##  $ Species_name               : chr [1:291] &quot;Acomys cilicicus&quot; &quot;Acomys minous&quot; &quot;Alces alces&quot; &quot;Allactaga elater&quot; ...
 ##  - attr(*, &quot;class&quot;)= chr &quot;PresenceAbsence&quot;</code></pre>
 <pre class="r"><code># Plot the richness raster:
 plot(raster::crop(r_mammals_eur$Richness_Raster,extent_eur))</code></pre>
@@ -1165,39 +1163,28 @@ lynx</a> example, and at the <a
 href="https://www.iucnredlist.org/resources/threat-classification-scheme">Threat
 Classification Scheme</a>.</p>
 <pre class="r"><code>redlist_threats[sample(nrow(redlist_threats),10),-c(1:2)]</code></pre>
-<pre><code>##                                                              title  timing
-## 396  Invasive non-native/alien species/diseases (Canis familiaris) Ongoing
-## 704                                        Fire &amp; fire suppression Ongoing
-## 961                                                Nomadic grazing Ongoing
-## 1047                           Annual &amp; perennial non-timber crops Ongoing
-## 374                         Hunting &amp; trapping terrestrial animals Ongoing
-## 1124                                       Fire &amp; fire suppression Ongoing
-## 1098                                       Type Unknown/Unrecorded Ongoing
-## 1024                                  Livestock farming &amp; ranching Ongoing
-## 1080                        Hunting &amp; trapping terrestrial animals Ongoing
-## 234                      Abstraction of ground water (unknown use) Ongoing
-##                  scope                         severity         score
-## 396               &lt;NA&gt;                             &lt;NA&gt; Low Impact: 3
-## 704               &lt;NA&gt;                             &lt;NA&gt; Low Impact: 3
-## 961  Majority (50-90%)                          Unknown       Unknown
-## 1047   Minority (&lt;50%)                             &lt;NA&gt; Low Impact: 4
-## 374               &lt;NA&gt;                             &lt;NA&gt; Low Impact: 3
-## 1124   Minority (&lt;50%) Causing/Could cause fluctuations Low Impact: 5
-## 1098              &lt;NA&gt;                             &lt;NA&gt;          &lt;NA&gt;
-## 1024              &lt;NA&gt;                             &lt;NA&gt;          &lt;NA&gt;
-## 1080              &lt;NA&gt;                             &lt;NA&gt; Low Impact: 3
-## 234               &lt;NA&gt;                             &lt;NA&gt; Low Impact: 3
-##              invasive
-## 396  Canis familiaris
-## 704              &lt;NA&gt;
-## 961              &lt;NA&gt;
-## 1047             &lt;NA&gt;
-## 374              &lt;NA&gt;
-## 1124             &lt;NA&gt;
-## 1098             &lt;NA&gt;
-## 1024             &lt;NA&gt;
-## 1080             &lt;NA&gt;
-## 234              &lt;NA&gt;</code></pre>
+<pre><code>##                                          title                   timing
+## 889                            Nomadic grazing                  Ongoing
+## 216  Small-holder grazing, ranching or farming Past, Unlikely to Return
+## 1035              Livestock farming &amp; ranching                  Ongoing
+## 208              Habitat shifting &amp; alteration                  Ongoing
+## 650                  Logging &amp; wood harvesting                  Ongoing
+## 863                  Herbicides and pesticides                  Ongoing
+## 539                  Logging &amp; wood harvesting                  Ongoing
+## 839                  Herbicides and pesticides                  Ongoing
+## 198     Hunting &amp; trapping terrestrial animals Past, Unlikely to Return
+## 827                        Dams (size unknown)                  Ongoing
+##                  scope                         severity         score invasive
+## 889               &lt;NA&gt;                             &lt;NA&gt; Low Impact: 3     &lt;NA&gt;
+## 216               &lt;NA&gt;                             &lt;NA&gt;   Past Impact     &lt;NA&gt;
+## 1035              &lt;NA&gt;                             &lt;NA&gt; Low Impact: 3     &lt;NA&gt;
+## 208  Majority (50-90%)                          Unknown       Unknown     &lt;NA&gt;
+## 650               &lt;NA&gt;                             &lt;NA&gt; Low Impact: 3     &lt;NA&gt;
+## 863    Minority (&lt;50%)       Slow, Significant Declines Low Impact: 5     &lt;NA&gt;
+## 539               &lt;NA&gt;                             &lt;NA&gt; Low Impact: 3     &lt;NA&gt;
+## 839    Minority (&lt;50%) Causing/Could cause fluctuations Low Impact: 5     &lt;NA&gt;
+## 198       Whole (&gt;90%)              Very Rapid Declines   Past Impact     &lt;NA&gt;
+## 827               &lt;NA&gt;                             &lt;NA&gt; Low Impact: 3     &lt;NA&gt;</code></pre>
 <p>We can extract many useful information from this table, for example,
 when specific threats occurred.</p>
 <pre class="r"><code>table(redlist_threats$timing)</code></pre>
