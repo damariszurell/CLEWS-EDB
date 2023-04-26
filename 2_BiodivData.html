@@ -13,7 +13,7 @@
 
 <title>Biodiversity data</title>
 
-<script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -35,8 +35,12 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<script src="site_libs/clipboard-1.7.1/clipboard.min.js"></script>
+<link href="site_libs/primer-tooltips-1.4.0/build.css" rel="stylesheet" />
+<link href="site_libs/klippy-0.0.0.9500/css/klippy.min.css" rel="stylesheet" />
+<script src="site_libs/klippy-0.0.0.9500/js/klippy.min.js"></script>
+<link href="site_libs/font-awesome-6.4.0/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.0/css/v4-shims.min.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -448,6 +452,10 @@ div.tocify {
 </div>
 
 
+<script>
+  addClassKlippyTo("pre.r, pre.markdown");
+  addKlippy('right', 'top', 'auto', '1', 'Copy code', 'Copied!');
+</script>
 <hr />
 <div class="alert alert-info">
 <p><strong>RStudio project</strong></p>
@@ -1163,28 +1171,39 @@ lynx</a> example, and at the <a
 href="https://www.iucnredlist.org/resources/threat-classification-scheme">Threat
 Classification Scheme</a>.</p>
 <pre class="r"><code>redlist_threats[sample(nrow(redlist_threats),10),-c(1:2)]</code></pre>
-<pre><code>##                                          title                   timing
-## 889                            Nomadic grazing                  Ongoing
-## 216  Small-holder grazing, ranching or farming Past, Unlikely to Return
-## 1035              Livestock farming &amp; ranching                  Ongoing
-## 208              Habitat shifting &amp; alteration                  Ongoing
-## 650                  Logging &amp; wood harvesting                  Ongoing
-## 863                  Herbicides and pesticides                  Ongoing
-## 539                  Logging &amp; wood harvesting                  Ongoing
-## 839                  Herbicides and pesticides                  Ongoing
-## 198     Hunting &amp; trapping terrestrial animals Past, Unlikely to Return
-## 827                        Dams (size unknown)                  Ongoing
-##                  scope                         severity         score invasive
-## 889               &lt;NA&gt;                             &lt;NA&gt; Low Impact: 3     &lt;NA&gt;
-## 216               &lt;NA&gt;                             &lt;NA&gt;   Past Impact     &lt;NA&gt;
-## 1035              &lt;NA&gt;                             &lt;NA&gt; Low Impact: 3     &lt;NA&gt;
-## 208  Majority (50-90%)                          Unknown       Unknown     &lt;NA&gt;
-## 650               &lt;NA&gt;                             &lt;NA&gt; Low Impact: 3     &lt;NA&gt;
-## 863    Minority (&lt;50%)       Slow, Significant Declines Low Impact: 5     &lt;NA&gt;
-## 539               &lt;NA&gt;                             &lt;NA&gt; Low Impact: 3     &lt;NA&gt;
-## 839    Minority (&lt;50%) Causing/Could cause fluctuations Low Impact: 5     &lt;NA&gt;
-## 198       Whole (&gt;90%)              Very Rapid Declines   Past Impact     &lt;NA&gt;
-## 827               &lt;NA&gt;                             &lt;NA&gt; Low Impact: 3     &lt;NA&gt;</code></pre>
+<pre><code>##                                                              title  timing
+## 64   Invasive non-native/alien species/diseases (Canis familiaris) Ongoing
+## 885                                  Motivation Unknown/Unrecorded Ongoing
+## 146                      Small-holder grazing, ranching or farming  Future
+## 540     Unintentional effects: (subsistence/small scale) [harvest] Ongoing
+## 566                               Named species (Arvicola sapidus) Ongoing
+## 133                              Named species (Ammotragus lervia) Ongoing
+## 197                         Hunting &amp; trapping terrestrial animals Ongoing
+## 35                      Agro-industry grazing, ranching or farming Ongoing
+## 184                     Invasive non-native/alien species/diseases Ongoing
+## 1131                                 Habitat shifting &amp; alteration Ongoing
+##                scope                         severity                   score
+## 64              &lt;NA&gt;                             &lt;NA&gt;           Low Impact: 3
+## 885             &lt;NA&gt;                             &lt;NA&gt;                    &lt;NA&gt;
+## 146             &lt;NA&gt;                             &lt;NA&gt; No/Negligible Impact: 1
+## 540             &lt;NA&gt;                             &lt;NA&gt;           Low Impact: 3
+## 566             &lt;NA&gt;                             &lt;NA&gt;           Low Impact: 3
+## 133             &lt;NA&gt;                             &lt;NA&gt;           Low Impact: 3
+## 197  Minority (&lt;50%)              Negligible declines           Low Impact: 4
+## 35              &lt;NA&gt;                             &lt;NA&gt;           Low Impact: 3
+## 184             &lt;NA&gt;                             &lt;NA&gt;           Low Impact: 3
+## 1131    Whole (&gt;90%) Causing/Could cause fluctuations        Medium Impact: 7
+##               invasive
+## 64    Canis familiaris
+## 885               &lt;NA&gt;
+## 146               &lt;NA&gt;
+## 540               &lt;NA&gt;
+## 566   Arvicola sapidus
+## 133  Ammotragus lervia
+## 197               &lt;NA&gt;
+## 35                &lt;NA&gt;
+## 184               &lt;NA&gt;
+## 1131              &lt;NA&gt;</code></pre>
 <p>We can extract many useful information from this table, for example,
 when specific threats occurred.</p>
 <pre class="r"><code>table(redlist_threats$timing)</code></pre>
