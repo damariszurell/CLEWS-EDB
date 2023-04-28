@@ -1112,6 +1112,15 @@ ggplot(data = abund_sens, mapping = aes(x = Year, y = log(Abundance),  color=Sce
   geom_line(size=2) +
   geom_ribbon(aes(ymin=log(Abundance-sd), ymax=log(Abundance+sd)), linetype=2, alpha=0.1)</code></pre>
 <p><img src="9_RS_grouse_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+<div class="alert alert-info">
+<p><em><strong>Exercise:</strong></em></p>
+<ul>
+<li>Run a sensitivity analysis on another demographic parameter or a
+dispersal parameter, varying the parameter by ±5%.</li>
+<li>Make a plot to compare the resulting population dynamics (abundance
+and occupancy) to previous results from sensitivity analyses.</li>
+</ul>
+</div>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">
