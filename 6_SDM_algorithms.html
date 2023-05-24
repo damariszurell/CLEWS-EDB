@@ -1197,6 +1197,20 @@ r_ens_bin &lt;- terra::rast(env_ensemble_bin, crs=crs(bio_curr))
 # Map predicted presence from ensembles:
 spplot(r_ens_bin)   </code></pre>
 <p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<div class="alert alert-info">
+<p><em><strong>Exercise:</strong></em></p>
+<p>In the Practical 4 (Simple SDM fitting), you estimated another (full)
+model with different (or more) predictors. Use this model now and:</p>
+<ul>
+<li>run at least two more algorithms using the predictors of your
+previous GLM</li>
+<li>plot the partial response curves (not the response surface!) for
+your models</li>
+<li>use these models to construct an ensemble (using at least one
+ensemble method: mean, median, weighted mean, or committee average) and
+map the resulting predictions</li>
+</ul>
+</div>
 </div>
 </div>
 <div id="outlook" class="section level1" number="4">
@@ -1204,7 +1218,8 @@ spplot(r_ens_bin)   </code></pre>
 <p>We have now fitted multiple SDM algorithms to our species
 distribution data and made predictions in space and time. Of course,
 science doesn’t stop here and you may want to answer different questions
-using the SDM. I only provide some hints here.</p>
+using the SDM. I only provide some hints here. These are simply meant as
+food for thought.</p>
 <div class="alert alert-success">
 <p>In conservation, we often aim to prioritise the most important sites
 for reserve selection.</p>

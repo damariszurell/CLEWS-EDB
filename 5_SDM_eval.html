@@ -676,6 +676,7 @@ class="citation">(Roberts et al. 2017)</span>.</p>
 re-calibrate the model using only 4/5 of the original data and predict
 the model to the hold-out 1/5 of the data.</p>
 <pre class="r"><code>preds_cv &lt;- crossvalSDM(m_step, traindat = lynx_thinned, colname_species = &#39;occ&#39;, colname_pred = my_preds)</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
 <p>We receive a numeric vector of cross-validated prediction. Out of
 curiosity, let us compare the fitted values on the training data and the
 predictions on the cross-validation data. You should see that the
@@ -716,17 +717,17 @@ thresh_dat &lt;- data.frame(
 (thresh_cv &lt;- PresenceAbsence::optimal.thresholds(DATA= thresh_dat))</code></pre>
 <pre><code>##          Method      pred
 ## 1       Default 0.5000000
-## 2     Sens=Spec 0.4700000
-## 3  MaxSens+Spec 0.4600000
-## 4      MaxKappa 0.4600000
-## 5        MaxPCC 0.4600000
+## 2     Sens=Spec 0.4500000
+## 3  MaxSens+Spec 0.4300000
+## 4      MaxKappa 0.4300000
+## 5        MaxPCC 0.4300000
 ## 6  PredPrev=Obs 0.4800000
 ## 7       ObsPrev 0.4489164
-## 8      MeanProb 0.4506897
-## 9    MinROCdist 0.4600000
-## 10      ReqSens 0.4700000
-## 11      ReqSpec 0.4500000
-## 12         Cost 0.4600000</code></pre>
+## 8      MeanProb 0.4510153
+## 9    MinROCdist 0.4300000
+## 10      ReqSens 0.4800000
+## 11      ReqSpec 0.4300000
+## 12         Cost 0.4300000</code></pre>
 <p>We can compare observed vs. predicted presences and absences based on
 these tresholds. For this, we take our predictions from the
 cross-validation. The comparison is easiest illustrated in a confusion
@@ -739,8 +740,8 @@ thresholds data frame):</p>
 <pre class="r"><code>(cmx_maxSSS &lt;- PresenceAbsence::cmx(DATA= thresh_dat, threshold=thresh_cv[3,2]))</code></pre>
 <pre><code>##          observed
 ## predicted   1   0
-##         1 128  25
-##         0  17 153</code></pre>
+##         1 132  26
+##         0  13 152</code></pre>
 <p>From such a confusion matrix, we can calculate different evaluation
 criteria. For example,<br />
 - the proportion of correctly classified test observations
@@ -751,22 +752,22 @@ sensitivity or true positive rate<br />
 specificity or true negative rate</p>
 <pre class="r"><code># Proportion of correctly classified observations
 PresenceAbsence::pcc(cmx_maxSSS, st.dev=F)</code></pre>
-<pre><code>## [1] 0.869969</code></pre>
+<pre><code>## [1] 0.879257</code></pre>
 <pre class="r"><code># Sensitivity = true positive rate
 PresenceAbsence::sensitivity(cmx_maxSSS, st.dev=F)</code></pre>
-<pre><code>## [1] 0.8827586</code></pre>
+<pre><code>## [1] 0.9103448</code></pre>
 <pre class="r"><code># Specificity = true negative rate
 PresenceAbsence::specificity(cmx_maxSSS, st.dev=F)</code></pre>
-<pre><code>## [1] 0.8595506</code></pre>
+<pre><code>## [1] 0.8539326</code></pre>
 <p>Other measures are <em>Kappa</em> and <em>TSS</em> (the true skill
 statistic). <span class="citation">Allouche, Tsoar, and Kadmon
 (2006)</span> explain how to calculate these.</p>
 <pre class="r"><code># Kappa
 PresenceAbsence::Kappa(cmx_maxSSS, st.dev=F)</code></pre>
-<pre><code>## [1] 0.7385321</code></pre>
+<pre><code>## [1] 0.7579781</code></pre>
 <pre class="r"><code># True skill statistic
 TSS(cmx_maxSSS) </code></pre>
-<pre><code>## [1] 0.7423092</code></pre>
+<pre><code>## [1] 0.7642774</code></pre>
 <p>According to <span class="citation">Araujo et al. (2005)</span>,
 <em>Kappa</em>&gt;0.4 indicate good predictions. For TSS, we often
 assume TSS&gt;0.5 to indicate good predictions.</p>
@@ -797,7 +798,7 @@ plot(roc_cv, col = &quot;grey70&quot;, lwd = 2)</code></pre>
 <p><img src="5_SDM_eval_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <pre class="r"><code># Compute the AUC:
 AUC::auc(roc_cv)</code></pre>
-<pre><code>## [1] 0.9120496</code></pre>
+<pre><code>## [1] 0.9148392</code></pre>
 <p>It seems our model is performing pretty well on hold-out data. We can
 thus attempt making predictions in space and time.</p>
 <p>Please be aware that many packages contain functions for evaluating
@@ -809,7 +810,7 @@ measures. By default, this function uses the <em>MaxSens+Spec</em>
 threshold.</p>
 <pre class="r"><code>evalSDM(lynx_thinned$occ, preds_cv)</code></pre>
 <pre><code>##         AUC       TSS     Kappa      Sens      Spec      PCC        D2 thresh
-## 1 0.9120496 0.7423092 0.7385321 0.8827586 0.8595506 0.869969 0.3949791   0.46</code></pre>
+## 1 0.9148392 0.7642774 0.7579781 0.9103448 0.8539326 0.879257 0.3706022   0.43</code></pre>
 <div class="alert alert-info">
 <p><em><strong>Exercise:</strong></em></p>
 <p>Use the <code>m2</code> model from the previous exercise and assess
@@ -908,8 +909,9 @@ plot(r_pred_fut, axes=F)</code></pre>
 <p><img src="5_SDM_eval_files/figure-html/unnamed-chunk-19-2.png" width="672" /></p>
 <div class="alert alert-info">
 <p><em><strong>Exercise:</strong></em></p>
-<p>Use the <code>m2</code>model from the previous exercise and make
-predictions to current and future climates.</p>
+<p>In the previous exercise, you estimated another (full) model with
+different (or more) predictors. Use this model now and make predictions
+to current and future climates.</p>
 <ul>
 <li>Which model predicts a larger area under current climate?</li>
 <li>Which model predicts a larger difference between current and future
