@@ -495,6 +495,7 @@ that we have already tested the data for multicollinearity and
 identified bio11 and bio10 as weakly correlated variables with high
 univariate variable importance.</p>
 <pre class="r"><code>library(raster)
+library(terra)
 load(&#39;data/lynx_thinned.RData&#39;)
 
 my_preds &lt;- c(&#39;bio11&#39;, &#39;bio10&#39;)</code></pre>
@@ -577,7 +578,7 @@ the median conditions.</p>
 <pre class="r"><code>library(dismo)
 
 # Fit BIOCLIM model - please note that bioclim() expects a Raster* rather than SpatRaster object
-m_bc &lt;- bioclim(stack(bio_curr[[my_preds]]), # provide environmental SpatRast
+m_bc &lt;- bioclim(raster::stack(bio_curr[[my_preds]]), # provide environmental SpatRast
                 lynx_train[lynx_train$occ==1,1:2]) # provide coordinates of presence locations
 plot(m_bc)</code></pre>
 <p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
@@ -687,16 +688,14 @@ partial_response(m_glm, predictors = lynx_train[,my_preds], main=&#39;GLM&#39;)<
 <pre><code>##         AUC      TSS     Kappa     Sens  Spec       PCC      D2 thresh
 ## 1 0.9233449 0.777439 0.7698943 0.902439 0.875 0.8865979 0.44757  0.405</code></pre>
 <pre class="r"><code># Map predictions:
-bio_curr_df &lt;- data.frame(crds(bio_curr[[my_preds]]), as.points(bio_curr[[my_preds]]))</code></pre>
-<pre><code>## Error in crds(bio_curr[[my_preds]]): could not find function &quot;crds&quot;</code></pre>
-<pre class="r"><code>r_glm_bin &lt;- r_glm_pred &lt;- terra::rast(cbind(bio_curr_df[,1:2],
+bio_curr_df &lt;- data.frame(crds(bio_curr[[my_preds]]), as.points(bio_curr[[my_preds]]))
+r_glm_bin &lt;- r_glm_pred &lt;- terra::rast(cbind(bio_curr_df[,1:2],
                                   predict(m_glm, bio_curr_df, type=&#39;response&#39;)), 
-                                  type=&#39;xyz&#39;, crs=crs(bio_curr))</code></pre>
-<pre><code>## Error in h(simpleError(msg, call)): error in evaluating the argument &#39;x&#39; in selecting a method for function &#39;rast&#39;: object &#39;bio_curr_df&#39; not found</code></pre>
-<pre class="r"><code>values(r_glm_bin) &lt;- ifelse(values(r_glm_pred)&gt;=perf_glm$thresh, 1, 0)</code></pre>
-<pre><code>## Error in h(simpleError(msg, call)): error in evaluating the argument &#39;x&#39; in selecting a method for function &#39;values&#39;: object &#39;r_glm_pred&#39; not found</code></pre>
-<pre class="r"><code>plot(c(r_glm_pred, r_glm_bin),main=c(&#39;GLM prob.&#39;,&#39;GLM bin.&#39;), axes=F)  </code></pre>
-<pre><code>## Error in h(simpleError(msg, call)): error in evaluating the argument &#39;x&#39; in selecting a method for function &#39;plot&#39;: object &#39;r_glm_pred&#39; not found</code></pre>
+                                  type=&#39;xyz&#39;, crs=crs(bio_curr))
+values(r_glm_bin) &lt;- ifelse(values(r_glm_pred)&gt;=perf_glm$thresh, 1, 0)
+
+plot(c(r_glm_pred, r_glm_bin),main=c(&#39;GLM prob.&#39;,&#39;GLM bin.&#39;), axes=F)  </code></pre>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-10-3.png" width="672" /></p>
 </div>
 </div>
 <div id="machine-learning-methods" class="section level2" number="2.3">
@@ -774,12 +773,11 @@ partial_response(m_rf, predictors = lynx_train[,my_preds], main=&#39;Random Fore
 <pre class="r"><code># Map predictions:
 r_rf_bin &lt;- r_rf_pred &lt;- terra::rast(cbind(bio_curr_df[,1:2],
                                  predict(m_rf, bio_curr_df,type=&#39;response&#39;)),
-                                 type=&#39;xyz&#39;, crs=crs(bio_curr))</code></pre>
-<pre><code>## Error in h(simpleError(msg, call)): error in evaluating the argument &#39;x&#39; in selecting a method for function &#39;rast&#39;: object &#39;bio_curr_df&#39; not found</code></pre>
-<pre class="r"><code>values(r_rf_bin) &lt;- ifelse(values(r_rf_pred)&gt;=perf_rf$thresh, 1, 0)</code></pre>
-<pre><code>## Error in h(simpleError(msg, call)): error in evaluating the argument &#39;x&#39; in selecting a method for function &#39;values&#39;: object &#39;r_rf_pred&#39; not found</code></pre>
-<pre class="r"><code>plot(c(r_rf_pred, r_rf_bin),main=c(&#39;RF prob.&#39;,&#39;RF bin.&#39;), axes=F)   </code></pre>
-<pre><code>## Error in h(simpleError(msg, call)): error in evaluating the argument &#39;x&#39; in selecting a method for function &#39;plot&#39;: object &#39;r_rf_pred&#39; not found</code></pre>
+                                 type=&#39;xyz&#39;, crs=crs(bio_curr))
+values(r_rf_bin) &lt;- ifelse(values(r_rf_pred)&gt;=perf_rf$thresh, 1, 0)
+
+plot(c(r_rf_pred, r_rf_bin),main=c(&#39;RF prob.&#39;,&#39;RF bin.&#39;), axes=F)   </code></pre>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-11-4.png" width="672" /></p>
 </div>
 <div id="boosted-regression-trees-brts" class="section level3"
 number="2.3.2">
@@ -883,12 +881,11 @@ r_brt_bin &lt;- r_brt_pred &lt;- terra::rast(cbind(bio_curr_df[,1:2],
                                   predict.gbm(m_brt, bio_curr_df,
                                               n.trees=m_brt$gbm.call$best.trees, 
                                               type=&quot;response&quot;)),
-                                  type=&#39;xyz&#39;, crs=crs(bio_curr))</code></pre>
-<pre><code>## Error in h(simpleError(msg, call)): error in evaluating the argument &#39;x&#39; in selecting a method for function &#39;rast&#39;: object &#39;bio_curr_df&#39; not found</code></pre>
-<pre class="r"><code>values(r_brt_bin) &lt;- ifelse(values(r_brt_pred)&gt;=perf_brt$thresh, 1, 0)</code></pre>
-<pre><code>## Error in h(simpleError(msg, call)): error in evaluating the argument &#39;x&#39; in selecting a method for function &#39;values&#39;: object &#39;r_brt_pred&#39; not found</code></pre>
-<pre class="r"><code>plot(c(r_brt_pred, r_brt_bin),main=c(&#39;BRT prob.&#39;,&#39;BRT bin.&#39;), axes=F)  </code></pre>
-<pre><code>## Error in h(simpleError(msg, call)): error in evaluating the argument &#39;x&#39; in selecting a method for function &#39;plot&#39;: object &#39;r_brt_pred&#39; not found</code></pre>
+                                  type=&#39;xyz&#39;, crs=crs(bio_curr))
+values(r_brt_bin) &lt;- ifelse(values(r_brt_pred)&gt;=perf_brt$thresh, 1, 0)
+
+plot(c(r_brt_pred, r_brt_bin),main=c(&#39;BRT prob.&#39;,&#39;BRT bin.&#39;), axes=F)  </code></pre>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-12-4.png" width="672" /></p>
 </div>
 </div>
 <div id="comparing-all-algorithms" class="section level2" number="2.4">
@@ -1139,33 +1136,33 @@ predictions</h2>
 probabilities predicted by the different algorithms as well as the
 potential presences.</p>
 <pre class="r"><code># Prepare data frame with environmental data
-bio_curr_df &lt;- data.frame(crds(bio_curr[[my_preds]]),as.points(bio_curr[[my_preds]]))</code></pre>
-<pre><code>## Error in crds(bio_curr[[my_preds]]): could not find function &quot;crds&quot;</code></pre>
-<pre class="r"><code># We make predictions of all models:
+bio_curr_df &lt;- data.frame(crds(bio_curr[[my_preds]]),as.points(bio_curr[[my_preds]]))
+
+# We make predictions of all models:
 env_preds &lt;- data.frame(bio_curr_df[,1:2], 
   bc = predict(m_bc, bio_curr_df),
   glm = predict(m_glm, bio_curr_df, type=&#39;response&#39;),
   rf = predict(m_rf, bio_curr_df, type=&#39;response&#39;),
   brt = predict.gbm(m_brt, bio_curr_df, 
-                         n.trees=m_brt$gbm.call$best.trees, type=&quot;response&quot;))</code></pre>
-<pre><code>## Error in data.frame(bio_curr_df[, 1:2], bc = predict(m_bc, bio_curr_df), : object &#39;bio_curr_df&#39; not found</code></pre>
-<pre class="r"><code># Binarise predictions of all algorithms
+                         n.trees=m_brt$gbm.call$best.trees, type=&quot;response&quot;))
+                        
+
+# Binarise predictions of all algorithms
 env_preds_bin &lt;- data.frame(bio_curr_df[,1:2],
   sapply(names(env_preds[,-c(1:2)]), FUN=function(alg){ 
     ifelse(env_preds[,alg]&gt;=comp_perf[comp_perf$alg==alg,&#39;thresh&#39;],1,0)
-  }))</code></pre>
-<pre><code>## Error in data.frame(bio_curr_df[, 1:2], sapply(names(env_preds[, -c(1:2)]), : object &#39;bio_curr_df&#39; not found</code></pre>
-<pre class="r"><code># Make rasters from predictions:
-r_preds &lt;- terra::rast(env_preds, crs=crs(bio_curr))</code></pre>
-<pre><code>## Error in h(simpleError(msg, call)): error in evaluating the argument &#39;x&#39; in selecting a method for function &#39;rast&#39;: object &#39;env_preds&#39; not found</code></pre>
-<pre class="r"><code>r_preds_bin &lt;- terra::rast(env_preds_bin, crs=crs(bio_curr))</code></pre>
-<pre><code>## Error in h(simpleError(msg, call)): error in evaluating the argument &#39;x&#39; in selecting a method for function &#39;rast&#39;: object &#39;env_preds_bin&#39; not found</code></pre>
-<pre class="r"><code># Map predicted occurrence probabilities:
+  }))
+
+# Make rasters from predictions:
+r_preds &lt;- terra::rast(env_preds, crs=crs(bio_curr))
+r_preds_bin &lt;- terra::rast(env_preds_bin, crs=crs(bio_curr))
+
+# Map predicted occurrence probabilities:
 spplot(r_preds)</code></pre>
-<pre><code>## Error in h(simpleError(msg, call)): error in evaluating the argument &#39;obj&#39; in selecting a method for function &#39;spplot&#39;: object &#39;r_preds&#39; not found</code></pre>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 <pre class="r"><code># Map predicted presences:
 spplot(r_preds_bin)</code></pre>
-<pre><code>## Error in h(simpleError(msg, call)): error in evaluating the argument &#39;obj&#39; in selecting a method for function &#39;spplot&#39;: object &#39;r_preds_bin&#39; not found</code></pre>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-19-2.png" width="672" /></p>
 <p>Now, we map the ensemble predictions.</p>
 <pre class="r"><code># We make ensembles:    
 env_ensemble &lt;- data.frame(bio_curr_df[,1:2], 
@@ -1173,33 +1170,33 @@ env_ensemble &lt;- data.frame(bio_curr_df[,1:2],
   median_prob = apply(env_preds[,-c(1:2)], 1, median),
   wmean_prob = apply(env_preds[,-c(1:2)], 1, weighted.mean, w=comp_perf[,&#39;TSS&#39;]),
   committee_av = rowSums(env_preds_bin[,-c(1:2)])/ncol(env_preds_bin[,-c(1:2)]),
-  sd_prob = apply(env_preds[,-c(1:2)], 1, sd))</code></pre>
-<pre><code>## Error in data.frame(bio_curr_df[, 1:2], mean_prob = rowMeans(env_preds[, : object &#39;bio_curr_df&#39; not found</code></pre>
-<pre class="r"><code># Make rasters from ensemble predictions:
-r_ens &lt;- terra::rast(env_ensemble, crs=crs(bio_curr))</code></pre>
-<pre><code>## Error in h(simpleError(msg, call)): error in evaluating the argument &#39;x&#39; in selecting a method for function &#39;rast&#39;: object &#39;env_ensemble&#39; not found</code></pre>
-<pre class="r"><code># Map continuous ensemble predictions:
+  sd_prob = apply(env_preds[,-c(1:2)], 1, sd))
+
+# Make rasters from ensemble predictions:
+r_ens &lt;- terra::rast(env_ensemble, crs=crs(bio_curr))
+
+# Map continuous ensemble predictions:
 spplot(r_ens[[1:4]])</code></pre>
-<pre><code>## Error in h(simpleError(msg, call)): error in evaluating the argument &#39;obj&#39; in selecting a method for function &#39;spplot&#39;: object &#39;r_ens&#39; not found</code></pre>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
 <p>Mapping the standard deviation of model predictions shows us the
 areas of highest deviation between model algorithms.</p>
 <pre class="r"><code># Map standard deviation across model algorithms:
 plot(r_ens[[&#39;sd_prob&#39;]])</code></pre>
-<pre><code>## Error in h(simpleError(msg, call)): error in evaluating the argument &#39;x&#39; in selecting a method for function &#39;plot&#39;: object &#39;r_ens&#39; not found</code></pre>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
 <p>We can also derive binary ensemble predictions. We have already
 estimated the optimal thresholds when calculating the performance
 measures for the ensembles.</p>
 <pre class="r"><code># Binarise ensemble predictions
 env_ensemble_bin &lt;- data.frame(bio_curr_df[,1:2], 
     sapply(c(&#39;mean_prob&#39;, &#39;median_prob&#39;, &#39;wmean_prob&#39;), 
-           FUN=function(x){ifelse(env_ensemble[,x]&gt;= ens_perf[x,&#39;thresh&#39;],1,0)}))</code></pre>
-<pre><code>## Error in data.frame(bio_curr_df[, 1:2], sapply(c(&quot;mean_prob&quot;, &quot;median_prob&quot;, : object &#39;bio_curr_df&#39; not found</code></pre>
-<pre class="r"><code># Make rasters:
-r_ens_bin &lt;- terra::rast(env_ensemble_bin, crs=crs(bio_curr))</code></pre>
-<pre><code>## Error in h(simpleError(msg, call)): error in evaluating the argument &#39;x&#39; in selecting a method for function &#39;rast&#39;: object &#39;env_ensemble_bin&#39; not found</code></pre>
-<pre class="r"><code># Map predicted presence from ensembles:
+           FUN=function(x){ifelse(env_ensemble[,x]&gt;= ens_perf[x,&#39;thresh&#39;],1,0)}))
+
+# Make rasters:
+r_ens_bin &lt;- terra::rast(env_ensemble_bin, crs=crs(bio_curr))
+
+# Map predicted presence from ensembles:
 spplot(r_ens_bin)   </code></pre>
-<pre><code>## Error in h(simpleError(msg, call)): error in evaluating the argument &#39;obj&#39; in selecting a method for function &#39;spplot&#39;: object &#39;r_ens_bin&#39; not found</code></pre>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
 </div>
 </div>
 <div id="outlook" class="section level1" number="4">
