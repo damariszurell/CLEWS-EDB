@@ -710,7 +710,8 @@ to avoid problems with spatial autocorrelation in our SDMs, we should
 spatially thin these data such that they do not contain adjacent cells.
 There are different ways to do the thinning. A particularly fast one is
 the <code>gridSample()</code> function in the <code>dismo</code>
-package.</p>
+package. In this case, we use <code>gridSample()</code> to sample only
+one presence record within a 2° neighbourhood.</p>
 <pre class="r"><code>library(dismo)
 
 # We create a background map at 1° spatial resolution with European land masses - this is only for plotting purposes
