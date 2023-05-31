@@ -569,7 +569,7 @@ landsc.f &lt;- as.factor(raster(landsc))
 <pre class="r"><code>rat[[&quot;land-use&quot;]] &lt;- c(&quot;salt water&quot;, &quot;arable + horticulture&quot;, &quot;freshwater&quot;, &quot;built-up areas + gardens&quot;, &quot;inland rock&quot;, &quot;grasslands&quot;, &quot;woodland&quot;, &quot;supra-/littoral sediment&quot;, &quot;marsh, swamp&quot;, &quot;heath&quot;)
 levels(landsc.f) &lt;- rat
 
-levelplot(landsc.f, margin=F, scales=list(draw=FALSE), col.regions=brewer.pal(n = 10, name = &quot;Spectral&quot;))</code></pre>
+rasterVis::levelplot(landsc.f, margin=F, scales=list(draw=FALSE), col.regions=brewer.pal(n = 10, name = &quot;Spectral&quot;))</code></pre>
 <p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
 <p>We have already prepared a map of woodland patches from the above
 land cover map and will read this in. These woodland patches constitute
@@ -910,7 +910,7 @@ head(col_stats_29$occ_prob)</code></pre>
 ## 6     6 0.26</code></pre>
 <pre class="r"><code># map occupancy probability
 mycol_occprob &lt;- colorRampPalette(c(&#39;blue&#39;,&#39;orangered&#39;,&#39;gold&#39;))
-levelplot(col_stats_29$map_occ_prob, margin=F, scales=list(draw=FALSE), at=seq(0,1,length=11), col.regions=mycol_occprob(11))</code></pre>
+rasterVis::levelplot(col_stats_29$map_occ_prob, margin=F, scales=list(draw=FALSE), at=seq(0,1,length=11), col.regions=mycol_occprob(11))</code></pre>
 <p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
 <p>In order to get prettier maps, we need to do some code tweaking.
 Here, we provide one example for using the grey-shaded land cover map as
@@ -921,7 +921,7 @@ keep the code clean, we define some helper functions.</p>
 # Store underlying landscape map display for later:
 # Note: Not sure if this is really suitable, as we have 10 different landscape classes
 bg &lt;- function(main=NULL){
-  levelplot(raster(landsc), margin=F, scales=list(draw=FALSE), colorkey=F,
+  rasterVis::levelplot(raster(landsc), margin=F, scales=list(draw=FALSE), colorkey=F,
             col.regions = rev(colorRampPalette(brewer.pal(3, &quot;Greys&quot;))(10)), main=main)
 }
 
@@ -938,15 +938,15 @@ col.key &lt;- function(mycol, at, space=&#39;top&#39;,pos=0.95, height=0.6, widt
 <p>Now, we use these functions to map occupancy probability after 100
 years, and to map colonisation time.</p>
 <pre class="r"><code># map occupancy probability after 100 years
-bg() + levelplot(col_stats_29$map_occ_prob, margin=F, scales=list(draw=FALSE), at=seq(0,1,length=11), col.regions=mycol_occprob(11))
+bg() + rasterVis::levelplot(col_stats_29$map_occ_prob, margin=F, scales=list(draw=FALSE), at=seq(0,1,length=11), col.regions=mycol_occprob(11))
 grid.draw(col.key(mycol_occprob(11),at=seq(0,1,length=11)))</code></pre>
 <p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
 <pre class="r"><code># map colonisation time
 mycol_coltime &lt;- colorRampPalette(c(&#39;orangered&#39;,&#39;gold&#39;,&#39;yellow&#39;,&#39;PowderBlue&#39;,&#39;LightSeaGreen&#39;))
-levelplot(col_stats_29$map_col_time, margin=F, scales=list(draw=FALSE), at=c(-9,seq(-.001,100,length=11)), col.regions=c(&#39;blue&#39;,mycol_coltime(11)))</code></pre>
+rasterVis::levelplot(col_stats_29$map_col_time, margin=F, scales=list(draw=FALSE), at=c(-9,seq(-.001,100,length=11)), col.regions=c(&#39;blue&#39;,mycol_coltime(11)))</code></pre>
 <p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-24-2.png" width="672" /></p>
 <pre class="r"><code># map colonisation time on landscape background
-bg() + levelplot(col_stats_29$map_col_time, margin=F, scales=list(draw=FALSE), at=c(-9,seq(-.001,100,length=11)), col.regions=c(&#39;blue&#39;,mycol_coltime(11)))
+bg() + rasterVis::levelplot(col_stats_29$map_col_time, margin=F, scales=list(draw=FALSE), at=c(-9,seq(-.001,100,length=11)), col.regions=c(&#39;blue&#39;,mycol_coltime(11)))
 grid.draw(col.key(c(&#39;blue&#39;,mycol_coltime(11)), c(-9,seq(-.001,100,length=11))))</code></pre>
 <p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-24-3.png" width="672" /></p>
 </div>
@@ -1077,11 +1077,11 @@ occupancy probability and time to colonisation.</p>
 <pre class="r"><code># Colonisation metrics
 col_stats_29_15 &lt;- ColonisationStats(s_29_15, dirpath, years = 100, maps = T)</code></pre>
 <pre class="r"><code># map occupancy probability after 100 years
-bg() + levelplot(col_stats_29_15$map_occ_prob, margin=F, scales=list(draw=FALSE), at=seq(0,1,length=11), col.regions=mycol_occprob(11))
+bg() + rasterVis::levelplot(col_stats_29_15$map_occ_prob, margin=F, scales=list(draw=FALSE), at=seq(0,1,length=11), col.regions=mycol_occprob(11))
 grid.draw(col.key(mycol_occprob(11),at=seq(0,1,length=11)))</code></pre>
 <p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
 <pre class="r"><code># map colonisation time 
-bg() + levelplot(col_stats_29_15$map_col_time, margin=F, scales=list(draw=FALSE), at=c(-9,seq(-.001,100,length=11)), col.regions=c(&#39;blue&#39;,mycol_coltime(11)))
+bg() + rasterVis::levelplot(col_stats_29_15$map_col_time, margin=F, scales=list(draw=FALSE), at=c(-9,seq(-.001,100,length=11)), col.regions=c(&#39;blue&#39;,mycol_coltime(11)))
 grid.draw(col.key(c(&#39;blue&#39;,mycol_coltime(11)), c(-9,seq(-.001,100,length=11))))</code></pre>
 <p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-32-2.png" width="672" /></p>
 <p>Final occupancy probability does not seem much different from the
