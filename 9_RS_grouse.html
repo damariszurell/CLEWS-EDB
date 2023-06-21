@@ -1118,7 +1118,10 @@ ggplot(data = abund_sens, mapping = aes(x = Year, y = log(Abundance),  color=Sce
 <li>Run a sensitivity analysis on another demographic parameter or a
 dispersal parameter, varying the parameter by ±5%.</li>
 <li>Make a plot to compare the resulting population dynamics (abundance
-and occupancy) to previous results from sensitivity analyses.</li>
+and occupancy) to previous results from sensitivity analyses.
+<em>Hint:</em> Occupancy can also be retrieved from the output read in
+with <code>readRange()</code>, specifically from the column
+“NOccupCells”.</li>
 </ul>
 </div>
 </div>
