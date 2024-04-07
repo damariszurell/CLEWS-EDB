@@ -13,7 +13,7 @@
 
 <title>SDM assessment and prediction</title>
 
-<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -29,7 +29,7 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
@@ -39,8 +39,8 @@
 <link href="site_libs/primer-tooltips-1.4.0/build.css" rel="stylesheet" />
 <link href="site_libs/klippy-0.0.0.9500/css/klippy.min.css" rel="stylesheet" />
 <script src="site_libs/klippy-0.0.0.9500/js/klippy.min.js"></script>
-<link href="site_libs/font-awesome-6.4.0/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.4.0/css/v4-shims.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -676,7 +676,6 @@ class="citation">(Roberts et al. 2017)</span>.</p>
 re-calibrate the model using only 4/5 of the original data and predict
 the model to the hold-out 1/5 of the data.</p>
 <pre class="r"><code>preds_cv &lt;- crossvalSDM(m_step, traindat = lynx_thinned, colname_species = &#39;occ&#39;, colname_pred = my_preds)</code></pre>
-<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
 <p>We receive a numeric vector of cross-validated prediction. Out of
 curiosity, let us compare the fitted values on the training data and the
 predictions on the cross-validation data. You should see that the
@@ -717,17 +716,17 @@ thresh_dat &lt;- data.frame(
 (thresh_cv &lt;- PresenceAbsence::optimal.thresholds(DATA= thresh_dat))</code></pre>
 <pre><code>##          Method      pred
 ## 1       Default 0.5000000
-## 2     Sens=Spec 0.4500000
-## 3  MaxSens+Spec 0.4300000
-## 4      MaxKappa 0.4300000
-## 5        MaxPCC 0.4300000
-## 6  PredPrev=Obs 0.4800000
+## 2     Sens=Spec 0.4600000
+## 3  MaxSens+Spec 0.4200000
+## 4      MaxKappa 0.4200000
+## 5        MaxPCC 0.4200000
+## 6  PredPrev=Obs 0.4850000
 ## 7       ObsPrev 0.4489164
-## 8      MeanProb 0.4510153
-## 9    MinROCdist 0.4300000
-## 10      ReqSens 0.4800000
-## 11      ReqSpec 0.4300000
-## 12         Cost 0.4300000</code></pre>
+## 8      MeanProb 0.4493172
+## 9    MinROCdist 0.4200000
+## 10      ReqSens 0.4700000
+## 11      ReqSpec 0.4200000
+## 12         Cost 0.4200000</code></pre>
 <p>We can compare observed vs. predicted presences and absences based on
 these tresholds. For this, we take our predictions from the
 cross-validation. The comparison is easiest illustrated in a confusion
@@ -740,8 +739,8 @@ thresholds data frame):</p>
 <pre class="r"><code>(cmx_maxSSS &lt;- PresenceAbsence::cmx(DATA= thresh_dat, threshold=thresh_cv[3,2]))</code></pre>
 <pre><code>##          observed
 ## predicted   1   0
-##         1 132  26
-##         0  13 152</code></pre>
+##         1 130  26
+##         0  15 152</code></pre>
 <p>From such a confusion matrix, we can calculate different evaluation
 criteria. For example,<br />
 - the proportion of correctly classified test observations
@@ -752,10 +751,10 @@ sensitivity or true positive rate<br />
 specificity or true negative rate</p>
 <pre class="r"><code># Proportion of correctly classified observations
 PresenceAbsence::pcc(cmx_maxSSS, st.dev=F)</code></pre>
-<pre><code>## [1] 0.879257</code></pre>
+<pre><code>## [1] 0.873065</code></pre>
 <pre class="r"><code># Sensitivity = true positive rate
 PresenceAbsence::sensitivity(cmx_maxSSS, st.dev=F)</code></pre>
-<pre><code>## [1] 0.9103448</code></pre>
+<pre><code>## [1] 0.8965517</code></pre>
 <pre class="r"><code># Specificity = true negative rate
 PresenceAbsence::specificity(cmx_maxSSS, st.dev=F)</code></pre>
 <pre><code>## [1] 0.8539326</code></pre>
@@ -764,10 +763,10 @@ statistic). <span class="citation">Allouche, Tsoar, and Kadmon
 (2006)</span> explain how to calculate these.</p>
 <pre class="r"><code># Kappa
 PresenceAbsence::Kappa(cmx_maxSSS, st.dev=F)</code></pre>
-<pre><code>## [1] 0.7579781</code></pre>
+<pre><code>## [1] 0.7452436</code></pre>
 <pre class="r"><code># True skill statistic
 TSS(cmx_maxSSS) </code></pre>
-<pre><code>## [1] 0.7642774</code></pre>
+<pre><code>## [1] 0.7504843</code></pre>
 <p>According to <span class="citation">Araujo et al. (2005)</span>,
 <em>Kappa</em>&gt;0.4 indicate good predictions. For TSS, we often
 assume TSS&gt;0.5 to indicate good predictions.</p>
@@ -798,7 +797,7 @@ plot(roc_cv, col = &quot;grey70&quot;, lwd = 2)</code></pre>
 <p><img src="5_SDM_eval_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <pre class="r"><code># Compute the AUC:
 AUC::auc(roc_cv)</code></pre>
-<pre><code>## [1] 0.9148392</code></pre>
+<pre><code>## [1] 0.9070515</code></pre>
 <p>It seems our model is performing pretty well on hold-out data. We can
 thus attempt making predictions in space and time.</p>
 <p>Please be aware that many packages contain functions for evaluating
@@ -810,7 +809,7 @@ measures. By default, this function uses the <em>MaxSens+Spec</em>
 threshold.</p>
 <pre class="r"><code>evalSDM(lynx_thinned$occ, preds_cv)</code></pre>
 <pre><code>##         AUC       TSS     Kappa      Sens      Spec      PCC        D2 thresh
-## 1 0.9148392 0.7642774 0.7579781 0.9103448 0.8539326 0.879257 0.3706022   0.43</code></pre>
+## 1 0.9070515 0.7504843 0.7452436 0.8965517 0.8539326 0.873065 0.3812286   0.42</code></pre>
 <div class="alert alert-info">
 <p><em><strong>Exercise:</strong></em></p>
 <p>Use the <code>m2</code> model from the previous exercise and assess
@@ -907,6 +906,8 @@ plot(r_pred_curr, axes=F)</code></pre>
 r_pred_fut &lt;- terra::rast(bio_fut_df[,c(&#39;x&#39;,&#39;y&#39;,&#39;pred_glm&#39;,&#39;bin_glm&#39;)], type=&#39;xyz&#39;, crs=crs(bio_curr))
 plot(r_pred_fut, axes=F)</code></pre>
 <p><img src="5_SDM_eval_files/figure-html/unnamed-chunk-19-2.png" width="672" /></p>
+<p>Don’t forget to save your workspace!</p>
+<pre class="r"><code>save.image(&#39;data/5_SDM_eval.RData&#39;)</code></pre>
 <div class="alert alert-info">
 <p><em><strong>Exercise:</strong></em></p>
 <p>In the previous exercise, you estimated another (full) model with

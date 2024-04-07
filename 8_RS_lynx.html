@@ -13,7 +13,7 @@
 
 <title>Eurasian lynx reintroduction</title>
 
-<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -29,7 +29,7 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
@@ -39,8 +39,8 @@
 <link href="site_libs/primer-tooltips-1.4.0/build.css" rel="stylesheet" />
 <link href="site_libs/klippy-0.0.0.9500/css/klippy.min.css" rel="stylesheet" />
 <script src="site_libs/klippy-0.0.0.9500/js/klippy.min.js"></script>
-<link href="site_libs/font-awesome-6.4.0/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.4.0/css/v4-shims.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -503,11 +503,8 @@ dirpath = &quot;models/RS_Lynx/&quot;</code></pre>
 <pre class="r"><code># load required packages
 library(RangeShiftR)
 library(terra)
-library(raster)
-library(rasterVis)
 library(viridis)
 library(RColorBrewer)
-library(latticeExtra)
 library(grid)
 library(gridExtra)
 library(tidyverse)
@@ -551,25 +548,25 @@ landsc &lt;- terra::rast(paste0(dirpath, &quot;Inputs/LCM_Scotland_2015_1000.asc
 plot(landsc)</code></pre>
 <p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <pre class="r"><code># Plot land cover map and highlight cells with initial species distribution - option 2 with categorical legend:
-landsc.f &lt;- as.factor(raster(landsc))
+landsc.f &lt;- as.factor(landsc)
 
 # add the land cover classes to the raster attribute table
 (rat &lt;- levels(landsc.f)[[1]])</code></pre>
-<pre><code>##    ID
-## 1   1
-## 2   2
-## 3   3
-## 4   4
-## 5   5
-## 6   6
-## 7   7
-## 8   8
-## 9   9
-## 10 10</code></pre>
-<pre class="r"><code>rat[[&quot;land-use&quot;]] &lt;- c(&quot;salt water&quot;, &quot;arable + horticulture&quot;, &quot;freshwater&quot;, &quot;built-up areas + gardens&quot;, &quot;inland rock&quot;, &quot;grasslands&quot;, &quot;woodland&quot;, &quot;supra-/littoral sediment&quot;, &quot;marsh, swamp&quot;, &quot;heath&quot;)
+<pre><code>##    ID LCM_Scotland_2015_1000
+## 1   1                      1
+## 2   2                      2
+## 3   3                      3
+## 4   4                      4
+## 5   5                      5
+## 6   6                      6
+## 7   7                      7
+## 8   8                      8
+## 9   9                      9
+## 10 10                     10</code></pre>
+<pre class="r"><code>rat[[&quot;LCM_Scotland_2015_1000&quot;]] &lt;- c(&quot;salt water&quot;, &quot;arable + horticulture&quot;, &quot;freshwater&quot;, &quot;built-up areas + gardens&quot;, &quot;inland rock&quot;, &quot;grasslands&quot;, &quot;woodland&quot;, &quot;supra-/littoral sediment&quot;, &quot;marsh, swamp&quot;, &quot;heath&quot;)
 levels(landsc.f) &lt;- rat
 
-rasterVis::levelplot(landsc.f, margin=F, scales=list(draw=FALSE), col.regions=brewer.pal(n = 10, name = &quot;Spectral&quot;))</code></pre>
+plot(landsc.f, axes = F, col=brewer.pal(n = 10, name = &quot;Spectral&quot;))</code></pre>
 <p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
 <p>We have already prepared a map of woodland patches from the above
 land cover map and will read this in. These woodland patches constitute
@@ -910,7 +907,7 @@ head(col_stats_29$occ_prob)</code></pre>
 ## 6     6 0.26</code></pre>
 <pre class="r"><code># map occupancy probability
 mycol_occprob &lt;- colorRampPalette(c(&#39;blue&#39;,&#39;orangered&#39;,&#39;gold&#39;))
-rasterVis::levelplot(col_stats_29$map_occ_prob, margin=F, scales=list(draw=FALSE), at=seq(0,1,length=11), col.regions=mycol_occprob(11))</code></pre>
+plot(col_stats_29$map_occ_prob, axes=F, range=c(0,1), col=mycol_occprob(10), type=&quot;continuous&quot;)</code></pre>
 <p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
 <p>In order to get prettier maps, we need to do some code tweaking.
 Here, we provide one example for using the grey-shaded land cover map as
@@ -919,35 +916,22 @@ keep the code clean, we define some helper functions.</p>
 <pre class="r"><code># Some useful functions
 
 # Store underlying landscape map display for later:
-# Note: Not sure if this is really suitable, as we have 10 different landscape classes
 bg &lt;- function(main=NULL){
-  rasterVis::levelplot(raster(landsc), margin=F, scales=list(draw=FALSE), colorkey=F,
-            col.regions = rev(colorRampPalette(brewer.pal(3, &quot;Greys&quot;))(10)), main=main)
-}
-
-
-# map occupancy probability on landscape background. For this, we first define a colorkey function
-col.key &lt;- function(mycol, at, space=&#39;top&#39;,pos=0.95, height=0.6, width=1) {
-  key &lt;- draw.colorkey(
-    list(space=space, at=at, height=height, width=width,
-         col=mycol)
-  )
-  key$framevp$y &lt;- unit(pos, &quot;npc&quot;)
-  return(key)
+  plot(landsc, axes=F, breaks=seq(.5,10.5,by=1), legend=F, col = rev(colorRampPalette(brewer.pal(3, &quot;Greys&quot;))(10)), main=ifelse(is.null(main),&quot;&quot;,main))
 }</code></pre>
 <p>Now, we use these functions to map occupancy probability after 100
 years, and to map colonisation time.</p>
 <pre class="r"><code># map occupancy probability after 100 years
-bg() + rasterVis::levelplot(col_stats_29$map_occ_prob, margin=F, scales=list(draw=FALSE), at=seq(0,1,length=11), col.regions=mycol_occprob(11))
-grid.draw(col.key(mycol_occprob(11),at=seq(0,1,length=11)))</code></pre>
+bg() 
+plot(col_stats_29$map_occ_prob, axes=F, range=c(0,1), col=mycol_occprob(10), type=&quot;continuous&quot;, plg=list(x=&quot;bottom&quot;), add =T)</code></pre>
 <p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
 <pre class="r"><code># map colonisation time
 mycol_coltime &lt;- colorRampPalette(c(&#39;orangered&#39;,&#39;gold&#39;,&#39;yellow&#39;,&#39;PowderBlue&#39;,&#39;LightSeaGreen&#39;))
-rasterVis::levelplot(col_stats_29$map_col_time, margin=F, scales=list(draw=FALSE), at=c(-9,seq(-.001,100,length=11)), col.regions=c(&#39;blue&#39;,mycol_coltime(11)))</code></pre>
+plot(col_stats_29$map_col_time, axes=F, breaks=c(-9,seq(-9,100,length=11)), col=c(&#39;blue&#39;,mycol_coltime(11)), type=&quot;continuous&quot;)</code></pre>
 <p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-24-2.png" width="672" /></p>
 <pre class="r"><code># map colonisation time on landscape background
-bg() + rasterVis::levelplot(col_stats_29$map_col_time, margin=F, scales=list(draw=FALSE), at=c(-9,seq(-.001,100,length=11)), col.regions=c(&#39;blue&#39;,mycol_coltime(11)))
-grid.draw(col.key(c(&#39;blue&#39;,mycol_coltime(11)), c(-9,seq(-.001,100,length=11))))</code></pre>
+bg()
+plot(col_stats_29$map_col_time, axes=F, breaks=c(-9,seq(-9,100,length=11)), col=c(&#39;blue&#39;,mycol_coltime(11)), type=&quot;continuous&quot;, plg=list(x=&quot;bottom&quot;), add =T)</code></pre>
 <p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-24-3.png" width="672" /></p>
 </div>
 <div id="extinction-probability" class="section level3" number="2.1.2">
@@ -1076,13 +1060,14 @@ probability and colonisation time</h3>
 occupancy probability and time to colonisation.</p>
 <pre class="r"><code># Colonisation metrics
 col_stats_29_15 &lt;- ColonisationStats(s_29_15, dirpath, years = 100, maps = T)</code></pre>
+<pre><code>## Warning: [rast] the first raster was empty and was ignored</code></pre>
 <pre class="r"><code># map occupancy probability after 100 years
-bg() + rasterVis::levelplot(col_stats_29_15$map_occ_prob, margin=F, scales=list(draw=FALSE), at=seq(0,1,length=11), col.regions=mycol_occprob(11))
-grid.draw(col.key(mycol_occprob(11),at=seq(0,1,length=11)))</code></pre>
+bg() 
+plot(col_stats_29_15$map_occ_prob, axes=F, range=c(0,1), col=mycol_occprob(10), type=&quot;continuous&quot;, plg=list(x=&quot;bottom&quot;), add =T)</code></pre>
 <p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
 <pre class="r"><code># map colonisation time 
-bg() + rasterVis::levelplot(col_stats_29_15$map_col_time, margin=F, scales=list(draw=FALSE), at=c(-9,seq(-.001,100,length=11)), col.regions=c(&#39;blue&#39;,mycol_coltime(11)))
-grid.draw(col.key(c(&#39;blue&#39;,mycol_coltime(11)), c(-9,seq(-.001,100,length=11))))</code></pre>
+bg() 
+plot(col_stats_29_15$map_occ_prob, axes=F, range=c(0,1), col=mycol_occprob(10), type=&quot;continuous&quot;, plg=list(x=&quot;bottom&quot;), add =T)</code></pre>
 <p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-32-2.png" width="672" /></p>
 <p>Final occupancy probability does not seem much different from the
 first scenario, but we can observe slightly earlier time to
@@ -1123,6 +1108,8 @@ ggplot(data = extProb_scens, mapping = aes(x = Year, y = extProb, color=Scenario
 probability of lynx and also the mean time to extinction takes longer.
 Still, there is only a 75 % chance of successfull long-term
 establishment of lynx in Scotland.</p>
+<p>Don’t forget to save your workspace!</p>
+<pre class="r"><code>save.image(&#39;data/8_RS_lynx.RData&#39;)</code></pre>
 <div class="alert alert-info">
 <p><em><strong>Exercise:</strong></em></p>
 <ul>

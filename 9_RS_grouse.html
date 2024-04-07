@@ -13,7 +13,7 @@
 
 <title>Black grouse range dynamics</title>
 
-<script src="site_libs/header-attrs-2.22/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -39,8 +39,8 @@
 <link href="site_libs/primer-tooltips-1.4.0/build.css" rel="stylesheet" />
 <link href="site_libs/klippy-0.0.0.9500/css/klippy.min.css" rel="stylesheet" />
 <script src="site_libs/klippy-0.0.0.9500/js/klippy.min.js"></script>
-<link href="site_libs/font-awesome-6.4.0/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.4.0/css/v4-shims.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -507,8 +507,6 @@ dirpath = &quot;models/RS_BlackGrouse/&quot;</code></pre>
 <pre class="r"><code># load required packages
 library(RangeShiftR)
 library(terra)
-library(raster)
-library(rasterVis)
 library(viridis)
 library(tidyverse)
 library(ggplot2) 
@@ -862,7 +860,7 @@ pop_static_wide</code></pre>
 Thereby, we have to take care that the coordinates are in the same
 format as the original input map to ease mapping and allow masking to
 the Swiss borders.</p>
-<pre class="r"><code># Make raster stacks
+<pre class="r"><code># Make multi-layer SpatRaster
 
 # Transfer into correct coordinate system
 pop_static_wide$x &lt;- pop_static_wide$x + xmin(CH_mask)
@@ -934,14 +932,15 @@ pop_dynamic_wide &lt;- pop_dynamic %&gt;%
   summarise(meanInd = mean(NInd), .groups=&#39;keep&#39;) %&gt;%
   # Make separate columns for different years
   pivot_wider(names_from=Year, values_from=meanInd)</code></pre>
-<pre class="r"><code># Make SpatRaster
+<pre class="r"><code># Make multi-layer SpatRaster
 
 # Transfer into correct coordinate system
-pop_dynamic_wide$x &lt;- pop_dynamic_wide$x + xmin(CH_mask)
-pop_dynamic_wide$y &lt;- pop_dynamic_wide$y + ymin(CH_mask)
+pop_dynamic_wide_corr &lt;- pop_dynamic_wide
+pop_dynamic_wide_corr$x &lt;- pop_dynamic_wide$x + xmin(CH_mask)
+pop_dynamic_wide_corr$y &lt;- pop_dynamic_wide$y + ymin(CH_mask)
 
-# Make raster stack
-r_pop_dynamic &lt;- terra::rast(pop_dynamic_wide, crs=crs(CH_mask), type=&#39;xyz&#39;)
+# Make SpatRaster
+r_pop_dynamic &lt;- terra::rast(pop_dynamic_wide_corr, crs=crs(CH_mask), type=&#39;xyz&#39;)
 
 # Extend to original spatial extent
 r_pop_dynamic &lt;- terra::extend(r_pop_dynamic, CH_mask)
@@ -953,7 +952,7 @@ names(r_pop_dynamic) &lt;- paste0(&#39;Year.&#39;, names(r_pop_dynamic))
 values(r_pop_dynamic)[is.na(values(r_pop_dynamic))] &lt;- 0
 
 # Map
-plot(terra::mask(r_pop_dynamic, CH_mask))</code></pre>
+terra::plot(terra::mask(r_pop_dynamic, CH_mask), range=c(0,7))</code></pre>
 <p><img src="9_RS_grouse_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
 <p>Under current climate, black grouse is predicted to be present across
 the entire alpine region although the high mountain ridges were not
@@ -1112,6 +1111,8 @@ ggplot(data = abund_sens, mapping = aes(x = Year, y = log(Abundance),  color=Sce
   geom_line(size=2) +
   geom_ribbon(aes(ymin=log(Abundance-sd), ymax=log(Abundance+sd)), linetype=2, alpha=0.1)</code></pre>
 <p><img src="9_RS_grouse_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+<p>Don’t forget to save your workspace!</p>
+<pre class="r"><code>save.image(&#39;data/9_RS_grouse.RData&#39;)</code></pre>
 <div class="alert alert-info">
 <p><em><strong>Exercise:</strong></em></p>
 <ul>

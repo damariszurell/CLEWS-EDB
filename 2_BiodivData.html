@@ -13,7 +13,7 @@
 
 <title>Biodiversity data</title>
 
-<script src="site_libs/header-attrs-2.21/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -29,7 +29,7 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
@@ -39,8 +39,8 @@
 <link href="site_libs/primer-tooltips-1.4.0/build.css" rel="stylesheet" />
 <link href="site_libs/klippy-0.0.0.9500/css/klippy.min.css" rel="stylesheet" />
 <script src="site_libs/klippy-0.0.0.9500/js/klippy.min.js"></script>
-<link href="site_libs/font-awesome-6.4.0/css/all.min.css" rel="stylesheet" />
-<link href="site_libs/font-awesome-6.4.0/css/v4-shims.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -617,8 +617,8 @@ maps</h1>
 number="2.1">
 <h2><span class="header-section-number">2.1</span> Range size and range
 centre</h2>
-<p>The <code>terra</code> package allows us to easily calculate the area
-of the polygons, meaning the range size of our species. The function
+<p>The <code>terra</code> package allows to easily calculate the area of
+the polygons, meaning the range size of our species. The function
 <code>expanse()</code> outputs the area in square meters, kilometers or
 hectars.</p>
 <pre class="r"><code># Range area of alpine shrew in square kilometers:
@@ -742,21 +742,18 @@ maps with <code>letsR</code></h3>
 <p>There are also specific macroecological packages in R that facilitate
 working with range maps and rasterising them, for example the function
 <code>lets.presab()</code> in the <code>letsR</code> package.</p>
-<p>As the <code>letsR</code> package does not work with
-<code>SpatRaster</code> objects yet, we have to use the older
-<code>raster</code> package to prepare the range map data.</p>
 <pre class="r"><code>library(letsR)</code></pre>
-<pre><code>## Loading required package: raster</code></pre>
-<pre><code>## Loading required package: sp</code></pre>
-<pre class="r"><code>library(raster)
-
-# Let&#39;s look at the Lynx example
-
-# Convert to SpatialPolygonsDataFrame from raster package
-lynx_lynx2 &lt;- as(lynx_lynx, &quot;Spatial&quot;)
-
+<pre><code>## The legacy packages maptools, rgdal, and rgeos, underpinning the sp package,
+## which was just loaded, will retire in October 2023.
+## Please refer to R-spatial evolution reports for details, especially
+## https://r-spatial.org/r/2023/05/15/evolution4.html.
+## It may be desirable to make the sf package available;
+## package maintainers should consider adding sf to Suggests:.
+## The sp package is now running under evolution status 2
+##      (status 2 uses the sf package in place of rgdal)</code></pre>
+<pre class="r"><code># Let&#39;s look at the Lynx example
 # We set the resolution to 1 degree (the default) and restrict the spatial extent to Europe
-r_lynx_1deg &lt;- lets.presab(lynx_lynx2, resol=1, presence = 1, origin = 1, seasonal = 1)
+r_lynx_1deg &lt;- lets.presab(lynx_lynx, resol=1, presence = 1, origin = 1, seasonal = 1)
 
 # Map the range and range centroid
 map(&#39;world&#39;)
@@ -779,9 +776,6 @@ PRESENCE, ORIGIN and SEASONAL information should be used and which not
 <pre class="r"><code># Subset the SpatVector
 artibeus_spp &lt;- mammals[grep(&#39;Artibeus&#39;,mammals$BINOMIAL),]
 
-# Convert to SpatialPolygonsDataFrame from raster package
-artibeus_spp &lt;- as(artibeus_spp, &quot;Spatial&quot;)
-
 # Rasterize the ranges using the letsR package
 r_artibeus_spp &lt;- lets.presab(artibeus_spp, resol=2, 
                               presence = 1, origin = 1, seasonal = 1)
@@ -797,32 +791,32 @@ plot(r_artibeus_spp, name = &quot;Artibeus anderseni&quot;)</code></pre>
 <pre class="r"><code># Look at structure of the object and at the presence-absence matrix
 str(r_artibeus_spp, 1)</code></pre>
 <pre><code>## List of 3
-##  $ Presence_and_Absence_Matrix: num [1:339, 1:22] -109 -109 -107 -105 -99 -83 -81 -105 -103 -99 ...
+##  $ Presence_and_Absence_Matrix: num [1:417, 1:22] -109 -107 -109 -107 -105 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
-##  $ Richness_Raster            :Formal class &#39;RasterLayer&#39; [package &quot;raster&quot;] with 13 slots
+##  $ Richness_Raster            :S4 class &#39;SpatRaster&#39; [package &quot;terra&quot;]
 ##  $ Species_name               : chr [1:20] &quot;Artibeus amplus&quot; &quot;Artibeus anderseni&quot; &quot;Artibeus aztecus&quot; &quot;Artibeus cinereus&quot; ...
 ##  - attr(*, &quot;class&quot;)= chr &quot;PresenceAbsence&quot;</code></pre>
 <pre class="r"><code>head(r_artibeus_spp$Presence_and_Absence_Matrix)</code></pre>
 <pre><code>##      Longitude(x) Latitude(y) Artibeus amplus Artibeus anderseni
-## [1,]         -109          27               0                  0
-## [2,]         -109          25               0                  0
-## [3,]         -107          25               0                  0
-## [4,]         -105          23               0                  0
-## [5,]          -99          23               0                  0
-## [6,]          -83          23               0                  0
+## [1,]    -109.1139    26.69894               0                  0
+## [2,]    -107.1139    26.69894               0                  0
+## [3,]    -109.1139    24.69894               0                  0
+## [4,]    -107.1139    24.69894               0                  0
+## [5,]    -105.1139    24.69894               0                  0
+## [6,]    -101.1139    24.69894               0                  0
 ##      Artibeus aztecus Artibeus cinereus Artibeus concolor Artibeus fimbriatus
 ## [1,]                0                 0                 0                   0
 ## [2,]                0                 0                 0                   0
 ## [3,]                0                 0                 0                   0
 ## [4,]                1                 0                 0                   0
 ## [5,]                1                 0                 0                   0
-## [6,]                0                 0                 0                   0
+## [6,]                1                 0                 0                   0
 ##      Artibeus fraterculus Artibeus glaucus Artibeus gnomus Artibeus hirsutus
 ## [1,]                    0                0               0                 1
 ## [2,]                    0                0               0                 1
 ## [3,]                    0                0               0                 1
-## [4,]                    0                0               0                 0
-## [5,]                    0                0               0                 0
+## [4,]                    0                0               0                 1
+## [5,]                    0                0               0                 1
 ## [6,]                    0                0               0                 0
 ##      Artibeus incomitatus Artibeus inopinatus Artibeus jamaicensis
 ## [1,]                    0                   0                    0
@@ -830,21 +824,21 @@ str(r_artibeus_spp, 1)</code></pre>
 ## [3,]                    0                   0                    0
 ## [4,]                    0                   0                    1
 ## [5,]                    0                   0                    1
-## [6,]                    0                   0                    1
+## [6,]                    0                   0                    0
 ##      Artibeus lituratus Artibeus obscurus Artibeus phaeotis
-## [1,]                  0                 0                 0
-## [2,]                  0                 0                 0
+## [1,]                  1                 0                 0
+## [2,]                  1                 0                 0
 ## [3,]                  1                 0                 0
 ## [4,]                  1                 0                 1
-## [5,]                  0                 0                 0
+## [5,]                  1                 0                 1
 ## [6,]                  0                 0                 0
 ##      Artibeus planirostris Artibeus rosenbergii Artibeus toltecus
-## [1,]                     0                    0                 0
-## [2,]                     0                    0                 0
+## [1,]                     0                    0                 1
+## [2,]                     0                    0                 1
 ## [3,]                     0                    0                 1
 ## [4,]                     0                    0                 1
 ## [5,]                     0                    0                 1
-## [6,]                     0                    0                 0
+## [6,]                     0                    0                 1
 ##      Artibeus watsoni
 ## [1,]                0
 ## [2,]                0
@@ -1171,45 +1165,36 @@ lynx</a> example, and at the <a
 href="https://www.iucnredlist.org/resources/threat-classification-scheme">Threat
 Classification Scheme</a>.</p>
 <pre class="r"><code>redlist_threats[sample(nrow(redlist_threats),10),-c(1:2)]</code></pre>
-<pre><code>##                                                              title  timing
-## 64   Invasive non-native/alien species/diseases (Canis familiaris) Ongoing
-## 885                                  Motivation Unknown/Unrecorded Ongoing
-## 146                      Small-holder grazing, ranching or farming  Future
-## 540     Unintentional effects: (subsistence/small scale) [harvest] Ongoing
-## 566                               Named species (Arvicola sapidus) Ongoing
-## 133                              Named species (Ammotragus lervia) Ongoing
-## 197                         Hunting &amp; trapping terrestrial animals Ongoing
-## 35                      Agro-industry grazing, ranching or farming Ongoing
-## 184                     Invasive non-native/alien species/diseases Ongoing
-## 1131                                 Habitat shifting &amp; alteration Ongoing
-##                scope                         severity                   score
-## 64              &lt;NA&gt;                             &lt;NA&gt;           Low Impact: 3
-## 885             &lt;NA&gt;                             &lt;NA&gt;                    &lt;NA&gt;
-## 146             &lt;NA&gt;                             &lt;NA&gt; No/Negligible Impact: 1
-## 540             &lt;NA&gt;                             &lt;NA&gt;           Low Impact: 3
-## 566             &lt;NA&gt;                             &lt;NA&gt;           Low Impact: 3
-## 133             &lt;NA&gt;                             &lt;NA&gt;           Low Impact: 3
-## 197  Minority (&lt;50%)              Negligible declines           Low Impact: 4
-## 35              &lt;NA&gt;                             &lt;NA&gt;           Low Impact: 3
-## 184             &lt;NA&gt;                             &lt;NA&gt;           Low Impact: 3
-## 1131    Whole (&gt;90%) Causing/Could cause fluctuations        Medium Impact: 7
-##               invasive
-## 64    Canis familiaris
-## 885               &lt;NA&gt;
-## 146               &lt;NA&gt;
-## 540               &lt;NA&gt;
-## 566   Arvicola sapidus
-## 133  Ammotragus lervia
-## 197               &lt;NA&gt;
-## 35                &lt;NA&gt;
-## 184               &lt;NA&gt;
-## 1131              &lt;NA&gt;</code></pre>
+<pre><code>##                                           title                   timing
+## 906                     Work &amp; other activities                  Ongoing
+## 716      Hunting &amp; trapping terrestrial animals                  Ongoing
+## 1053                           Renewable energy                  Ongoing
+## 378  Invasive non-native/alien species/diseases                  Ongoing
+## 1142                    Fire &amp; fire suppression                   Future
+## 344      Hunting &amp; trapping terrestrial animals                  Ongoing
+## 384               Other ecosystem modifications                  Ongoing
+## 781                     Type Unknown/Unrecorded                  Ongoing
+## 124                         Unspecified species                  Ongoing
+## 215                Livestock farming &amp; ranching Past, Unlikely to Return
+##                scope                         severity         score invasive
+## 906             &lt;NA&gt;                             &lt;NA&gt;          &lt;NA&gt;     &lt;NA&gt;
+## 716             &lt;NA&gt;                             &lt;NA&gt; Low Impact: 3     &lt;NA&gt;
+## 1053         Unknown                             &lt;NA&gt;       Unknown     &lt;NA&gt;
+## 378             &lt;NA&gt;                             &lt;NA&gt; Low Impact: 3     &lt;NA&gt;
+## 1142 Minority (&lt;50%)                          Unknown       Unknown     &lt;NA&gt;
+## 344          Unknown                          Unknown       Unknown     &lt;NA&gt;
+## 384             &lt;NA&gt;                             &lt;NA&gt; Low Impact: 3     &lt;NA&gt;
+## 781             &lt;NA&gt;                             &lt;NA&gt; Low Impact: 3     &lt;NA&gt;
+## 124  Minority (&lt;50%) Causing/Could cause fluctuations Low Impact: 5     &lt;NA&gt;
+## 215             &lt;NA&gt;                             &lt;NA&gt;   Past Impact     &lt;NA&gt;</code></pre>
 <p>We can extract many useful information from this table, for example,
 when specific threats occurred.</p>
 <pre class="r"><code>table(redlist_threats$timing)</code></pre>
 <pre><code>## 
 ##                   Future                  Ongoing Past, Unlikely to Return 
 ##                       35                     1106                       28</code></pre>
+<p>Don’t forget to save your workspace!</p>
+<pre class="r"><code>save.image(&#39;data/2_BiodivData.RData&#39;)</code></pre>
 <div class="alert alert-info">
 <p><strong>Exercise:</strong></p>
 <p>Explore the threats table. For example,</p>
