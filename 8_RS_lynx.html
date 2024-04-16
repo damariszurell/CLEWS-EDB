@@ -1096,20 +1096,26 @@ extProb_scens &lt;- bind_rows(extProb_29 %&gt;% add_column(Scenario = &quot;10 i
                     extProb_29_15 %&gt;% add_column(Scenario = &quot;32 ind. Kintyre + Aberdeenshire&quot;))
 
 ggplot(data = extProb_scens, mapping = aes(x = Year, y = extProb, color=Scenario)) + 
-  geom_line(size=2) +
+  geom_line(linewidth=2) +
   ylim(0,1)</code></pre>
-<pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-## ℹ Please use `linewidth` instead.
-## This warning is displayed once every 8 hours.
-## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-## generated.</code></pre>
 <p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
 <p>As result, the multi-site reintroduction reduces the extinction
 probability of lynx and also the mean time to extinction takes longer.
 Still, there is only a 75 % chance of successfull long-term
 establishment of lynx in Scotland.</p>
-<p>Don’t forget to save your workspace!</p>
-<pre class="r"><code>save.image(&#39;data/8_RS_lynx.RData&#39;)</code></pre>
+</div>
+</div>
+</div>
+<div id="homework-prep" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Homework prep</h1>
+<p>For the homework, you will need several objects that you should not
+forget to save.</p>
+<pre class="r"><code># terra objects:
+# Already on file and ready to read it back in for the homework: &quot;landsc&quot;
+
+# Save other (non-terra) objects and functions from the workspace:
+save(bg, Calc_ExtProb, Calc_ExtTime, extProb_29, extProb_29_15, file=&#39;data/8_RS_lynx.RData&#39;)</code></pre>
+<p>As homework, solve all the exercises in the blue boxes.</p>
 <div class="alert alert-info">
 <p><em><strong>Exercise:</strong></em></p>
 <ul>
@@ -1119,8 +1125,6 @@ described in <span class="citation">Ovenden et al. (2019)</span>.</li>
 <li>Make a plot to compare the extinction probability with the previous
 scenarios.</li>
 </ul>
-</div>
-</div>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">

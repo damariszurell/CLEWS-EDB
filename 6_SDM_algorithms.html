@@ -13,7 +13,7 @@
 
 <title>SDM algorithms</title>
 
-<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -489,16 +489,16 @@ class="section level2" number="1.1">
 <h2><span class="header-section-number">1.1</span> Recap of last
 session: data and model building steps</h2>
 <p>I will illustrate the different algorithms using the lynx example of
-sessions 5-6. The species presense/absence data and the bioclimatic
+sessions 4-5. The species presense/absence data and the bioclimatic
 variables at these locations are available from file. Also, remember
 that we have already tested the data for multicollinearity and
 identified bio11 and bio10 as weakly correlated variables with high
 univariate variable importance.</p>
 <pre class="r"><code>library(terra)
-load(&#39;data/lynx_thinned.RData&#39;)
+load(&#39;data/4_SDM_intro.RData&#39;)
 
 my_preds &lt;- c(&#39;bio11&#39;, &#39;bio10&#39;)</code></pre>
-<p>In session 6 on model assessment, we learned that the models should
+<p>In session 5 on model assessment, we learned that the models should
 be validated on independent validation data and we have learned how to
 run a 5-fold cross-validation. The <code>crossvalSDM()</code> function
 could also be used with the algorithms introduced in this practical.
@@ -519,21 +519,8 @@ lynx_test &lt;- lynx_thinned[-train_i,]
 # We store the split information for later:
 write(train_i, file=&#39;data/indices_traindata.txt&#39;)</code></pre>
 <p>For making predictions in space, we also load the current climate
-layers that we downloaded previously.</p>
-<pre class="r"><code>bio_curr &lt;- geodata::worldclim_global(var = &#39;bio&#39;, res = 10, download = F, path = &#39;data&#39;)</code></pre>
-<p>We again crop the climate data to European extent and aggregate them
-to 1° resolution.</p>
-<pre class="r"><code># rough European extent
-extent_eur &lt;- c(-15,45,35,72)
-
-# Crop data to European extent
-bio_curr &lt;- terra::crop(bio_curr, extent_eur)
-
-# Aggregate to 1° resolution
-bio_curr &lt;- terra::aggregate(bio_curr, 6)
-
-# Change names such that they match the names in our lynx data set
-names(bio_curr) &lt;- c(paste0(&#39;bio0&#39;,1:9), paste0(&#39;bio&#39;,10:19))</code></pre>
+layers that we downloaded and processed previously.</p>
+<pre class="r"><code>bio_curr &lt;- terra::rast(&#39;data/bio_curr.tif&#39;)</code></pre>
 </div>
 </div>
 <div id="model-algorithms" class="section level1" number="2">
@@ -547,7 +534,7 @@ New 2007; Thuiller et al. 2009; Buisson et al. 2010)</span>. We will
 test several different SDM algorithms that can be broadly classified
 into profile (envelope and distance-based) methods, regression-based
 methods and non-parametric machine-learning methods <a
-href="http://rspatial.org/sdm/rst/6_sdm_methods.html"><span
+href="%5Balso%20see%20here%5D(http://rspatial.org/sdm/rst/6_sdm_methods.html)"><span
 class="citation">Guisan, Thuiller, and Zimmermann (2017)</span></a>. We
 only cover four different algorithms here; for more example have a look
 at our <a
@@ -580,7 +567,7 @@ the median conditions.</p>
 m_bc &lt;- bioclim(raster::stack(bio_curr[[my_preds]]), # provide environmental SpatRast
                 lynx_train[lynx_train$occ==1,1:2]) # provide coordinates of presence locations
 plot(m_bc)</code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>The resulting plot shows the bounding box (5-95% percentile range).
 The green circles outside the bounding box indicate occurrences that
 fall with the 2.5-97.5% percentile range, and the red crosses indicate
@@ -605,7 +592,7 @@ wireframe(z ~ bio11 + bio10, data = xyz, zlab = list(&quot;Occurrence prob.&quot
           drape = TRUE, col.regions = cls, scales = list(arrows = FALSE), 
           zlim = c(0, 1), main=&#39;BIOCLIM&#39;, xlab=&#39;bio11&#39;, ylab=&#39;bio10&#39;, 
           screen=list(z = -120, x = -70, y = 3))</code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>We nicely see the median as the peak of the surface, representing the
 median environmental conditions in presence locations. Let’s look at the
 corresponding partial response plots.</p>
@@ -614,7 +601,7 @@ corresponding partial response plots.</p>
 # Plot partial response curves:
 par(mfrow=c(1,2)) 
 partial_response(m_bc, predictors = lynx_train[,my_preds], main=&#39;BIOCLIM&#39;)</code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>Last, we validate model performance on the hold-out test data.</p>
 <pre class="r"><code># We use the default MaxSens+Spec threshold:
 (perf_bc &lt;- evalSDM(lynx_test$occ, predict(m_bc, lynx_test[,my_preds])))</code></pre>
@@ -636,7 +623,7 @@ r_bc_bin &lt;- terra::rast(r_bc_bin)
 
 # plot the maps
 plot(c(r_bc_pred, r_bc_bin),main=c(&#39;BIOCLIM prob.&#39;,&#39;BIOCLIM bin.&#39;), axes=F) </code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 </div>
 </div>
 <div id="regression-based-methods" class="section level2" number="2.2">
@@ -677,11 +664,11 @@ wireframe(z ~ bio11 + bio10, data = xyz, zlab = list(&quot;Occurrence prob.&quot
           drape = TRUE, col.regions = cls, scales = list(arrows = FALSE), 
           zlim = c(0, 1), main=&#39;GLM&#39;, xlab=&#39;bio11&#39;, ylab=&#39;bio10&#39;, 
           screen=list(z = -120, x = -70, y = 3))</code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <pre class="r"><code># Plot partial response curves:
 par(mfrow=c(1,2)) 
 partial_response(m_glm, predictors = lynx_train[,my_preds], main=&#39;GLM&#39;)</code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-10-2.png" width="672" /></p>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-9-2.png" width="672" /></p>
 <pre class="r"><code># Performance measures
 (perf_glm &lt;- evalSDM(lynx_test$occ, predict(m_glm, lynx_test[,my_preds], type=&#39;response&#39;) ))</code></pre>
 <pre><code>##         AUC      TSS     Kappa     Sens  Spec       PCC      D2 thresh
@@ -694,7 +681,7 @@ r_glm_bin &lt;- r_glm_pred &lt;- terra::rast(cbind(bio_curr_df[,1:2],
 values(r_glm_bin) &lt;- ifelse(values(r_glm_pred)&gt;=perf_glm$thresh, 1, 0)
 
 plot(c(r_glm_pred, r_glm_bin),main=c(&#39;GLM prob.&#39;,&#39;GLM bin.&#39;), axes=F)  </code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-10-3.png" width="672" /></p>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-9-3.png" width="672" /></p>
 </div>
 </div>
 <div id="machine-learning-methods" class="section level2" number="2.3">
@@ -744,7 +731,7 @@ importance(m_rf,type=1)</code></pre>
 ## bio11 107.97019
 ## bio10  53.69569</code></pre>
 <pre class="r"><code>varImpPlot(m_rf)</code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <pre class="r"><code># Look at single trees:
 head(getTree(m_rf,1,T))</code></pre>
 <pre><code>##   left daughter right daughter split var split point status   prediction
@@ -760,11 +747,11 @@ wireframe(z ~ bio11 + bio10, data = xyz, zlab = list(&quot;Occurrence prob.&quot
           drape = TRUE, col.regions = cls, scales = list(arrows = FALSE), 
           zlim = c(0, 1), main=&#39;Random Forest&#39;, xlab=&#39;bio11&#39;, ylab=&#39;bio10&#39;, 
           screen=list(z = -120, x = -70, y = 3))</code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-11-2.png" width="672" /></p>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-10-2.png" width="672" /></p>
 <pre class="r"><code># Plot partial response curves:
 par(mfrow=c(1,2)) 
 partial_response(m_rf, predictors = lynx_train[,my_preds], main=&#39;Random Forest&#39;)</code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-11-3.png" width="672" /></p>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-10-3.png" width="672" /></p>
 <pre class="r"><code># Performance measures of RF
 (perf_rf &lt;- evalSDM(lynx_test$occ, predict(m_rf, lynx_test[,my_preds],  type=&#39;response&#39;) ))</code></pre>
 <pre><code>##         AUC       TSS     Kappa      Sens Spec       PCC        D2 thresh
@@ -776,7 +763,7 @@ r_rf_bin &lt;- r_rf_pred &lt;- terra::rast(cbind(bio_curr_df[,1:2],
 values(r_rf_bin) &lt;- ifelse(values(r_rf_pred)&gt;=perf_rf$thresh, 1, 0)
 
 plot(c(r_rf_pred, r_rf_bin),main=c(&#39;RF prob.&#39;,&#39;RF bin.&#39;), axes=F)   </code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-11-4.png" width="672" /></p>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-10-4.png" width="672" /></p>
 </div>
 <div id="boosted-regression-trees-brts" class="section level3"
 number="2.3.2">
@@ -845,7 +832,7 @@ m_brt &lt;- gbm.step(data = lynx_train,
 ## total mean deviance =  1.3799 
 ## tolerance is fixed at  0.0014 
 ## now adding trees...</code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <pre class="r"><code># Variable importance:
 m_brt$contributions</code></pre>
 <pre><code>##         var  rel.inf
@@ -866,11 +853,11 @@ wireframe(z ~ bio11 + bio10, data = xyz, zlab = list(&quot;Occurrence prob.&quot
           drape = TRUE, col.regions = cls, scales = list(arrows = FALSE), 
           zlim = c(0, 1), main=&#39;Boosted regression trees&#39;, xlab=&#39;bio11&#39;, 
           ylab=&#39;bio10&#39;, screen=list(z = -120, x = -70, y = 3))</code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-12-2.png" width="672" /></p>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-11-2.png" width="672" /></p>
 <pre class="r"><code># Plot partial response curves:
 par(mfrow=c(1,2)) 
 partial_response(m_brt, predictors = lynx_train[,my_preds], main=&#39;BRT&#39;)</code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-12-3.png" width="672" /></p>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-11-3.png" width="672" /></p>
 <pre class="r"><code># Performance measures of BRT
 (perf_brt &lt;- evalSDM(lynx_test$occ, predict.gbm(m_brt, lynx_test[,my_preds], n.trees=m_brt$gbm.call$best.trees, type=&#39;response&#39;) ))</code></pre>
 <pre><code>##         AUC       TSS     Kappa      Sens      Spec       PCC        D2 thresh
@@ -884,7 +871,7 @@ r_brt_bin &lt;- r_brt_pred &lt;- terra::rast(cbind(bio_curr_df[,1:2],
 values(r_brt_bin) &lt;- ifelse(values(r_brt_pred)&gt;=perf_brt$thresh, 1, 0)
 
 plot(c(r_brt_pred, r_brt_bin),main=c(&#39;BRT prob.&#39;,&#39;BRT bin.&#39;), axes=F)  </code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-12-4.png" width="672" /></p>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-11-4.png" width="672" /></p>
 </div>
 </div>
 <div id="comparing-all-algorithms" class="section level2" number="2.4">
@@ -1097,35 +1084,35 @@ wireframe(z ~ bio11 + bio10, data = xyz, zlab = list(&quot;Occurrence prob.&quot
           drape = TRUE, col.regions = cls, scales = list(arrows = FALSE), 
           zlim = c(0, 1), main=&#39;Ensemble: mean prob&#39;, xlab=&#39;bio11&#39;, 
           ylab=&#39;bio10&#39;, screen=list(z = -120, x = -70, y = 3))</code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 <pre class="r"><code># Plot ensemble of median probabilities:
 xyz$z &lt;- xyz_ensemble[,&#39;median_prob&#39;]
 wireframe(z ~ bio11 + bio10, data = xyz, zlab = list(&quot;Occurrence prob.&quot;, rot=90), 
           drape = TRUE, col.regions = cls, scales = list(arrows = FALSE), 
           zlim = c(0, 1), main=&#39;Ensemble: median prob&#39;, xlab=&#39;bio11&#39;, 
           ylab=&#39;bio10&#39;, screen=list(z = -120, x = -70, y = 3))</code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-18-2.png" width="672" /></p>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-17-2.png" width="672" /></p>
 <pre class="r"><code># Plot ensemble of weighted mean probabilities:
 xyz$z &lt;- xyz_ensemble[,&#39;wmean_prob&#39;]
 wireframe(z ~ bio11 + bio10, data = xyz, zlab = list(&quot;Occurrence prob.&quot;, rot=90), 
           drape = TRUE, col.regions = cls, scales = list(arrows = FALSE), 
           zlim = c(0, 1), main=&#39;Ensemble: weighted mean prob&#39;, xlab=&#39;bio11&#39;, 
           ylab=&#39;bio10&#39;, screen=list(z = -120, x = -70, y = 3))</code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-18-3.png" width="672" /></p>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-17-3.png" width="672" /></p>
 <pre class="r"><code># Plot ensemble of committee average. This provides the proportion of models that agree on predicted presence:
 xyz$z &lt;- xyz_ensemble[,&#39;committee_av&#39;]
 wireframe(z ~ bio11 + bio10, data = xyz, zlab = list(&quot;Occurrence prob.&quot;, rot=90), 
           drape = TRUE, col.regions = cls, scales = list(arrows = FALSE), 
           zlim = c(0, 1), main=&#39;Ensemble: committee average&#39;, xlab=&#39;bio11&#39;, 
           ylab=&#39;bio10&#39;, screen=list(z = -120, x = -70, y = 3))</code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-18-4.png" width="672" /></p>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-17-4.png" width="672" /></p>
 <pre class="r"><code># Plot standard deviation of mean probabilities. This gives us an indication where in environmental space we have highest uncertainty:
 xyz$z &lt;- xyz_ensemble[,&#39;sd_prob&#39;]
 wireframe(z ~ bio11 + bio10, data = xyz, zlab = list(&quot;Occurrence prob.&quot;, rot=90), 
           drape = TRUE, col.regions = cls, scales = list(arrows = FALSE), 
           zlim = c(0, 1), main=&#39;Ensemble: sd&#39;, xlab=&#39;bio11&#39;, ylab=&#39;bio10&#39;, 
           screen=list(z = -120, x = -70, y = 3))</code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-18-5.png" width="672" /></p>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-17-5.png" width="672" /></p>
 </div>
 <div id="mapping-ensemble-predictions" class="section level2"
 number="3.4">
@@ -1158,10 +1145,10 @@ r_preds_bin &lt;- terra::rast(env_preds_bin, crs=crs(bio_curr))
 
 # Map predicted occurrence probabilities:
 terra::plot(r_preds, range=c(0,1))</code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <pre class="r"><code># Map predicted presences:
 terra::plot(r_preds_bin)</code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-19-2.png" width="672" /></p>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-18-2.png" width="672" /></p>
 <p>Now, we map the ensemble predictions.</p>
 <pre class="r"><code># We make ensembles:    
 env_ensemble &lt;- data.frame(bio_curr_df[,1:2], 
@@ -1176,12 +1163,12 @@ r_ens &lt;- terra::rast(env_ensemble, crs=crs(bio_curr))
 
 # Map continuous ensemble predictions:
 terra::plot(r_ens[[1:4]], range=c(0,1))</code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 <p>Mapping the standard deviation of model predictions shows us the
 areas of highest deviation between model algorithms.</p>
 <pre class="r"><code># Map standard deviation across model algorithms:
 plot(r_ens[[&#39;sd_prob&#39;]])</code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
 <p>We can also derive binary ensemble predictions. We have already
 estimated the optimal thresholds when calculating the performance
 measures for the ensembles.</p>
@@ -1195,13 +1182,22 @@ r_ens_bin &lt;- terra::rast(env_ensemble_bin, crs=crs(bio_curr))
 
 # Map predicted presence from ensembles:
 terra::plot(r_ens_bin)  </code></pre>
-<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
-<p>Don’t forget to save your workspace!</p>
-<pre class="r"><code>save.image(&#39;data/6_SDM_algorithms.RData&#39;)</code></pre>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+</div>
+</div>
+<div id="homework-prep" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Homework prep</h1>
+<p>For this homework, you will not need to save additional objects.</p>
+<pre class="r"><code># terra objects:
+# Already on file and ready to read it back in for the homework: &quot;bio_curr&quot;
+
+# other (non-terra) objects from the workspace already on file: &quot;5_SDM_eval.RData&quot;</code></pre>
+<p>As homework, solve all the exercises in the blue boxes.</p>
 <div class="alert alert-info">
 <p><em><strong>Exercise:</strong></em></p>
-<p>In the Practical 4 (Simple SDM fitting), you estimated another (full)
-model with different (or more) predictors. Use this model now and:</p>
+<p>In the homework for Practical 4 (Simple SDM fitting), you estimated
+another (full) model with different (or more) predictors. Use this model
+now and:</p>
 <ul>
 <li>run at least two more algorithms using the predictors of your
 previous GLM</li>
@@ -1213,9 +1209,8 @@ map the resulting predictions</li>
 </ul>
 </div>
 </div>
-</div>
-<div id="outlook" class="section level1" number="4">
-<h1><span class="header-section-number">4</span> Outlook</h1>
+<div id="outlook" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> Outlook</h1>
 <p>We have now fitted multiple SDM algorithms to our species
 distribution data and made predictions in space and time. Of course,
 science doesn’t stop here and you may want to answer different questions

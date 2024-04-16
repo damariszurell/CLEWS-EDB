@@ -1111,8 +1111,18 @@ ggplot(data = abund_sens, mapping = aes(x = Year, y = log(Abundance),  color=Sce
   geom_line(size=2) +
   geom_ribbon(aes(ymin=log(Abundance-sd), ymax=log(Abundance+sd)), linetype=2, alpha=0.1)</code></pre>
 <p><img src="9_RS_grouse_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
-<p>Don’t forget to save your workspace!</p>
-<pre class="r"><code>save.image(&#39;data/9_RS_grouse.RData&#39;)</code></pre>
+</div>
+</div>
+<div id="homework-prep" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Homework prep</h1>
+<p>For the homework, you will need several objects that you should not
+forget to save.</p>
+<pre class="r"><code># terra objects:
+# Already on file and ready to read it back in for the homework: &quot;CH_mask&quot;, &quot;r_lc&quot;, 
+
+# Save other (non-terra) objects from the workspace:
+save(s, s_cc, s2, s3, s4, abund_sens, file=&#39;data/9_RS_grouse.RData&#39;)</code></pre>
+<p>As homework, solve all the exercises in the blue boxes.</p>
 <div class="alert alert-info">
 <p><em><strong>Exercise:</strong></em></p>
 <ul>
@@ -1124,7 +1134,6 @@ and occupancy) to previous results from sensitivity analyses.
 with <code>readRange()</code>, specifically from the column
 “NOccupCells”.</li>
 </ul>
-</div>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">

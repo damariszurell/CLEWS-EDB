@@ -13,7 +13,7 @@
 
 <title>Environmental data in R</title>
 
-<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -759,8 +759,17 @@ ndvi &lt;- terra::rast(&#39;data/NDVI_1km_DE.tif&#39;)
 # plot NDVI layers
 plot(ndvi)</code></pre>
 <p><img src="3_EnvData_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
-<p>Don’t forget to save your workspace!</p>
-<pre class="r"><code>save.image(&#39;data/3_EnvData.RData&#39;)</code></pre>
+</div>
+<div id="homework-prep" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Homework prep</h1>
+<p>For the homework, you will need several objects that you should not
+forget to save.</p>
+<pre class="r"><code># terra objects:
+# Already on file and ready to read it back in for the homework: corine2018, ndvi
+
+# Save other (non-terra) objects from the workspace:
+save(legend, file=&#39;data/3_EnvData.RData&#39;)</code></pre>
+<p>As homework, solve all the exercises in the blue boxes.</p>
 <div class="alert alert-info">
 <p><em><strong>Exercise:</strong></em></p>
 <ul>

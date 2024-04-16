@@ -14,7 +14,7 @@
 
 <title>Session # : _______________</title>
 
-<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -426,17 +426,25 @@ div.tocify {
 
 <h1 class="title toc-ignore">Session # : _______________</h1>
 <h4 class="author">Student name</h4>
-<h4 class="date">07.04.2024</h4>
+<h4 class="date">16.04.2024</h4>
 
 </div>
 
 
 <div id="preparations" class="section level1">
 <h1>Preparations</h1>
-<pre class="r"><code># load workspace of the practical:
-load(&#39;data/1_SpatialData.RData&#39;)</code></pre>
 <p>Load libraries, e.g. <code>terra</code>:</p>
 <pre class="r"><code>library(terra)</code></pre>
+<p>Load terra objects and workspace needed from the practical, e.g. for
+homework of practical “Occ1_SpatialData.RData”:</p>
+<pre class="r"><code># load terra objects:
+temp_eur &lt;- terra::rast(&#39;data/temp_eur.tif&#39;)
+temp_eur_onedeg &lt;- terra::rast(&#39;data/temp_eur_onedeg.tif&#39;)
+temp_eur_twodeg &lt;- terra::rast(&#39;data/temp_eur_twodeg.tif&#39;)
+clim &lt;- geodata::worldclim_global(var = &#39;bio&#39;, res = 10, download = F, path = &#39;data&#39;)
+
+# load (non-terra) objects from workspace
+load(&#39;data/1_SpatialData.RData&#39;)</code></pre>
 </div>
 <div id="exercise" class="section level1">
 <h1>Exercise</h1>
@@ -469,11 +477,11 @@ load(&#39;data/1_SpatialData.RData&#39;)</code></pre>
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] Rcpp_1.0.12       codetools_0.2-20  digest_0.6.35     R6_2.5.1         
-##  [5] jsonlite_1.8.8    evaluate_0.23     cachem_1.0.8      rlang_1.1.3      
-##  [9] cli_3.6.2         rstudioapi_0.16.0 jquerylib_0.1.4   bslib_0.5.1      
-## [13] rmarkdown_2.25    tools_4.2.1       xfun_0.43         yaml_2.3.8       
-## [17] fastmap_1.1.1     compiler_4.2.1    htmltools_0.5.6   knitr_1.44       
-## [21] sass_0.4.7</code></pre>
+##  [5] lifecycle_1.0.4   jsonlite_1.8.8    evaluate_0.23     cachem_1.0.8     
+##  [9] rlang_1.1.3       cli_3.6.2         rstudioapi_0.16.0 jquerylib_0.1.4  
+## [13] bslib_0.7.0       rmarkdown_2.26    tools_4.2.1       xfun_0.43        
+## [17] yaml_2.3.8        fastmap_1.1.1     compiler_4.2.1    geodata_0.5-9    
+## [21] htmltools_0.5.8.1 knitr_1.46        sass_0.4.9</code></pre>
 </div>
 
 <!DOCTYPE html>

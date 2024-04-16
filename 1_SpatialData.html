@@ -13,7 +13,7 @@
 
 <title>Spatial data in R</title>
 
-<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -980,8 +980,21 @@ na.exclude(capitals_clim)</code></pre>
 ## 6 21.000000 52.25000     Warsaw  6        8.199729
 ## 7 23.316667 42.68333      Sofia  7        9.835594
 ## 8 24.100000 56.95000       Riga  8        6.548781</code></pre>
-<p>Don’t forget to save your workspace!</p>
-<pre class="r"><code>save.image(&#39;data/1_SpatialData.RData&#39;)</code></pre>
+</div>
+</div>
+<div id="homework-prep" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Homework prep</h1>
+<p>For the homework, you will need several objects that you should not
+forget to save.</p>
+<pre class="r"><code># Write terra objects to file:
+terra::writeRaster(temp_eur, &#39;data/temp_eur.tif&#39;)
+terra::writeRaster(temp_eur_onedeg, &#39;data/temp_eur_onedeg.tif&#39;)
+terra::writeRaster(temp_eur_twodeg, &#39;data/temp_eur_twodeg.tif&#39;)
+# You will also need the SpatRaster &quot;clim&quot; but this was directly downloaded from geodata package, so is already on file
+
+# Save other (non-terra) objects from the workspace:
+save(capitals, file=&#39;data/1_SpatialData.RData&#39;)</code></pre>
+<p>As homework, solve all the exercises in the blue boxes.</p>
 <div class="alert alert-info">
 <p><em><strong>Exercise:</strong></em></p>
 <ul>
@@ -991,7 +1004,7 @@ values at the aggregated scales (<code>temp_eur_onedeg</code>,
 <li><p>Take the capital locations and extract all 19 bioclimatic
 variables for these (from the <code>SpatRaster</code> object
 <code>clim</code>)</p></li>
-<li><p>Find the coordinates of 10 other capitol cities and extract the
+<li><p>Find the coordinates of 10 other capital cities and extract the
 climate values</p></li>
 <li><p>Take a look at the description of <a
 href="https://rspatial.org/spatial/6-crs.html">Coordinate Reference
@@ -1003,7 +1016,6 @@ Systems, CRS, by Robert Hijmans</a></p></li>
 instructions on above-mentioned website</p></li>
 <li><p>When is reprojection useful?</p></li>
 </ul>
-</div>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">
