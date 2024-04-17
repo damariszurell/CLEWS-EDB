@@ -666,6 +666,10 @@ patches, the centroid might not even fall within an occupied patch.</p>
 <li>Use the range map of the mammal species you selected above, and
 calculate the range size and range centroid. Add the point location of
 your centroid to the range map that you have plotted previously.</li>
+<li>Note that if your SpatVector contains multiple layers then it will
+likely calculate a range size and range centroid for each single layer.
+You can dissolve polygons by using
+<code>terra::expanse(aggregate(shrew), unit="km")</code></li>
 </ul>
 </div>
 </div>
@@ -1160,28 +1164,39 @@ lynx</a> example, and at the <a
 href="https://www.iucnredlist.org/resources/threat-classification-scheme">Threat
 Classification Scheme</a>.</p>
 <pre class="r"><code>redlist_threats[sample(nrow(redlist_threats),10),-c(1:2)]</code></pre>
-<pre><code>##                                                          title  timing
-## 139                     Hunting &amp; trapping terrestrial animals Ongoing
-## 1055                    Hunting &amp; trapping terrestrial animals Ongoing
-## 947  Problematic native species/diseases (Capreolus capreolus) Ongoing
-## 520                    Intentional use (species is the target) Ongoing
-## 586                                    Wood &amp; pulp plantations Ongoing
-## 163                    Intentional use (species is the target) Ongoing
-## 148                    Intentional use (species is the target) Ongoing
-## 958                                                   Droughts Ongoing
-## 32                         Annual &amp; perennial non-timber crops Ongoing
-## 712                          Agricultural &amp; forestry effluents Ongoing
-##                  scope            severity         score            invasive
-## 139               &lt;NA&gt;                &lt;NA&gt; Low Impact: 3                &lt;NA&gt;
-## 1055   Minority (&lt;50%)                &lt;NA&gt; Low Impact: 4                &lt;NA&gt;
-## 947               &lt;NA&gt;                &lt;NA&gt; Low Impact: 3 Capreolus capreolus
-## 520  Majority (50-90%) Negligible declines Low Impact: 5                &lt;NA&gt;
-## 586               &lt;NA&gt;                &lt;NA&gt;          &lt;NA&gt;                &lt;NA&gt;
-## 163               &lt;NA&gt;                &lt;NA&gt; Low Impact: 3                &lt;NA&gt;
-## 148               &lt;NA&gt;                &lt;NA&gt; Low Impact: 3                &lt;NA&gt;
-## 958    Minority (&lt;50%)             Unknown       Unknown                &lt;NA&gt;
-## 32                &lt;NA&gt;                &lt;NA&gt; Low Impact: 3                &lt;NA&gt;
-## 712               &lt;NA&gt;                &lt;NA&gt; Low Impact: 3                &lt;NA&gt;</code></pre>
+<pre><code>##                                                                   title
+## 495                                   Subsistence/artisinal aquaculture
+## 198                              Hunting &amp; trapping terrestrial animals
+## 398  Invasive non-native/alien species/diseases (Oryctolagus cuniculus)
+## 260                                            Scale Unknown/Unrecorded
+## 328                                          Tourism &amp; recreation areas
+## 1001                                            Recreational activities
+## 402                 Problematic native species/diseases (Vulpes vulpes)
+## 1115                             Hunting &amp; trapping terrestrial animals
+## 1067                                      Other ecosystem modifications
+## 392                   Unintentional effects (species is not the target)
+##                        timing             scope                   severity
+## 495                   Ongoing Majority (50-90%)             Rapid Declines
+## 198  Past, Unlikely to Return      Whole (&gt;90%)        Very Rapid Declines
+## 398                   Ongoing              &lt;NA&gt;                       &lt;NA&gt;
+## 260                   Ongoing              &lt;NA&gt;                       &lt;NA&gt;
+## 328                   Ongoing   Minority (&lt;50%) Slow, Significant Declines
+## 1001                  Ongoing              &lt;NA&gt;                       &lt;NA&gt;
+## 402                   Ongoing              &lt;NA&gt;                       &lt;NA&gt;
+## 1115                  Ongoing Majority (50-90%)        Negligible declines
+## 1067                  Ongoing              &lt;NA&gt;                       &lt;NA&gt;
+## 392                   Ongoing              &lt;NA&gt;                       &lt;NA&gt;
+##                 score              invasive
+## 495  Medium Impact: 7                  &lt;NA&gt;
+## 198       Past Impact                  &lt;NA&gt;
+## 398     Low Impact: 3 Oryctolagus cuniculus
+## 260     Low Impact: 3                  &lt;NA&gt;
+## 328     Low Impact: 5                  &lt;NA&gt;
+## 1001    Low Impact: 3                  &lt;NA&gt;
+## 402     Low Impact: 3         Vulpes vulpes
+## 1115    Low Impact: 5                  &lt;NA&gt;
+## 1067    Low Impact: 3                  &lt;NA&gt;
+## 392     Low Impact: 3                  &lt;NA&gt;</code></pre>
 <p>We can extract many useful information from this table, for example,
 when specific threats occurred.</p>
 <pre class="r"><code>table(redlist_threats$timing)</code></pre>
