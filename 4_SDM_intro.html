@@ -923,7 +923,7 @@ correlations below |r|&lt;0.7 are considered unproblematic (or below
 # We first estimate a correlation matrix from the predictors. 
 # We use Spearman rank correlation coefficient, as we do not know 
 # whether all variables are normally distributed.
-cor_mat &lt;- cor(lynx_thinned[,-c(1:3)], method=&#39;spearman&#39;)
+cor_mat &lt;- cor(lynx_thinned[,-c(1:4)], method=&#39;spearman&#39;)
 
 # We can visualise this correlation matrix. For better visibility, 
 # we plot the correlation coefficients as percentages.
@@ -962,19 +962,19 @@ out the help pages for <code>?select07</code>.</p>
 <pre class="r"><code>library(mecofun)
 
 # Run select07()
-var_sel &lt;- select07(X=lynx_thinned[,-c(1:3)], 
+var_sel &lt;- select07(X=lynx_thinned[,-c(1:4)], 
                     y=lynx_thinned$occ, 
                     threshold=0.7)
 
 # Check out the structure of the resulting object:
 str(var_sel)</code></pre>
 <pre><code>## List of 3
-##  $ AIC     : Named num [1:20] 281 282 287 314 315 ...
-##   ..- attr(*, &quot;names&quot;)= chr [1:20] &quot;bio11&quot; &quot;bio06&quot; &quot;bio01&quot; &quot;bio03&quot; ...
-##  $ cor_mat : num [1:20, 1:20] 1 0.901 0.729 0.747 -0.309 ...
+##  $ AIC     : Named num [1:19] 281 282 287 314 324 ...
+##   ..- attr(*, &quot;names&quot;)= chr [1:19] &quot;bio11&quot; &quot;bio06&quot; &quot;bio01&quot; &quot;bio03&quot; ...
+##  $ cor_mat : num [1:19, 1:19] 1 0.554 0.815 -0.495 0.818 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2
-##   .. ..$ : chr [1:20] &quot;ID&quot; &quot;bio01&quot; &quot;bio02&quot; &quot;bio03&quot; ...
-##   .. ..$ : chr [1:20] &quot;ID&quot; &quot;bio01&quot; &quot;bio02&quot; &quot;bio03&quot; ...
+##   .. ..$ : chr [1:19] &quot;bio01&quot; &quot;bio02&quot; &quot;bio03&quot; &quot;bio04&quot; ...
+##   .. ..$ : chr [1:19] &quot;bio01&quot; &quot;bio02&quot; &quot;bio03&quot; &quot;bio04&quot; ...
 ##  $ pred_sel: chr [1:8] &quot;bio11&quot; &quot;bio10&quot; &quot;bio07&quot; &quot;bio15&quot; ...</code></pre>
 <pre class="r"><code># We extract the names of the weakly correlated predictors ordered by the univariate variable importance in terms of AIC:
 pred_sel &lt;- var_sel$pred_sel</code></pre>
