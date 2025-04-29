@@ -13,7 +13,7 @@
 
 <title>SDM algorithms</title>
 
-<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -495,6 +495,8 @@ that we have already tested the data for multicollinearity and
 identified bio11 and bio10 as weakly correlated variables with high
 univariate variable importance.</p>
 <pre class="r"><code>library(terra)
+library(mecofun)
+
 load(&#39;data/4_SDM_intro.RData&#39;)
 
 my_preds &lt;- c(&#39;bio11&#39;, &#39;bio10&#39;)</code></pre>
@@ -546,8 +548,8 @@ class="section level2" number="2.1">
 distance-based) methods</h2>
 <p>Profile methods constitute the oldest family of SDM algorithms and
 are the only “true” presence-only methods that do not need any absence
-or background data, but rely on envelope or distance-based
-approaches.</p>
+or background data, but rely on envelope or distance-based approaches.
+Here, we only look at the envelope method BIOCLIM.</p>
 <div id="bioclim" class="section level3" number="2.1.1">
 <h3><span class="header-section-number">2.1.1</span> BIOCLIM</h3>
 <p>BIOCLIM is a pioneering envelope approach <span
@@ -555,17 +557,23 @@ class="citation">(Booth et al. 2014)</span>. It defines the niche as an
 <em>n</em>-dimensional, rectangular bounding box, which is similar to
 Hutchinson’s view of the <em>n</em>-dimensional hyperspace <span
 class="citation">(Hutchinson 1957)</span>. To reduce sensitivity to
-outliers, the bounding box can be limited by only considering a certain
-percentile range (e.g. 5-95%) of the species records along each
-environmental gradient. In <code>dismo</code>, the BIOCLIM algorithm is
-implemented such that it will produce continuous probabilities between 0
-and 1, indicating how similar/close the environmental conditions are to
-the median conditions.</p>
-<pre class="r"><code>library(dismo)
+outliers, the bounding box is limited by only considering a certain
+percentile range (here, 5-95%) of the species records along each
+environmental gradient. In <code>predicts</code>, the BIOCLIM algorithm
+is implemented in the function <code>envelope()</code> and will produce
+continuous probabilities between 0 and 1, indicating how similar/close
+the environmental conditions are to the median conditions.</p>
+<p>Previous studies have shown that the BIOCLIM algorithm performs
+poorly compared to other methods <span class="citation">(Elith et al.
+2006)</span> and should not be used for predicting species distribution
+under climate change <span class="citation">(Elith and Leathwick
+2009)</span>. It is still useful in some situations, for example
+envelope methods are more prominent in paleoecological studies where
+fossil data are sparse.</p>
+<pre class="r"><code>library(predicts)
 
-# Fit BIOCLIM model - please note that bioclim() expects a Raster* rather than SpatRaster object
-m_bc &lt;- bioclim(raster::stack(bio_curr[[my_preds]]), # provide environmental SpatRast
-                lynx_train[lynx_train$occ==1,1:2]) # provide coordinates of presence locations
+# Fit BIOCLIM model - the algorithm expects a data.frame with environmental variables, but only at the presence locations
+m_bc &lt;- predicts::envelope(lynx_train[lynx_train$occ==1,my_preds])
 plot(m_bc)</code></pre>
 <p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>The resulting plot shows the bounding box (5-95% percentile range).
@@ -595,13 +603,14 @@ wireframe(z ~ bio11 + bio10, data = xyz, zlab = list(&quot;Occurrence prob.&quot
 <p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>We nicely see the median as the peak of the surface, representing the
 median environmental conditions in presence locations. Let’s look at the
-corresponding partial response plots.</p>
-<pre class="r"><code>library(mecofun)
-
-# Plot partial response curves:
-par(mfrow=c(1,2)) 
-partial_response(m_bc, predictors = lynx_train[,my_preds], main=&#39;BIOCLIM&#39;)</code></pre>
+corresponding partial response plots. The <code>predicts</code> package
+offers a function <code>partialResponse()</code> to calculate the
+partial response.</p>
+<pre class="r"><code># Plot partial response curves:
+partialResponse(m_bc, var=1, nsteps=50)</code></pre>
 <p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="r"><code>partialResponse(m_bc, var=2, nsteps=50)</code></pre>
+<p><img src="6_SDM_algorithms_files/figure-html/unnamed-chunk-6-2.png" width="672" /></p>
 <p>Last, we validate model performance on the hold-out test data.</p>
 <pre class="r"><code># We use the default MaxSens+Spec threshold:
 (perf_bc &lt;- evalSDM(lynx_test$occ, predict(m_bc, lynx_test[,my_preds])))</code></pre>
@@ -612,14 +621,12 @@ partial_response(m_bc, predictors = lynx_train[,my_preds], main=&#39;BIOCLIM&#39
 <p>Finally, let’s map the predicted occurrence probabilities across
 Britain and the predicted presence/absence.</p>
 <pre class="r"><code># Map predictions:
-r_bc_pred &lt;- r_bc_bin &lt;- predict(m_bc,stack(bio_curr))
+bio_curr_df &lt;- as.data.frame(bio_curr,cell=T,xy=T)
+pred_bc_curr &lt;- predict(m_bc, bio_curr_df[,my_preds])
+r_bc_pred &lt;- r_bc_bin &lt;- terra::rast(data.frame(bio_curr_df[,c(&#39;x&#39;,&#39;y&#39;)], pred_bc_curr), type=&#39;xyz&#39;)
 
 # Threshold predictions using the maxTSS threshold (max sens+spec)
 values(r_bc_bin) &lt;- ifelse(values(r_bc_pred)&gt;=perf_bc$thresh, 1, 0)
-
-# Convert to SpatRaster objects:
-r_bc_pred &lt;- terra::rast(r_bc_pred)
-r_bc_bin &lt;- terra::rast(r_bc_bin)
 
 # plot the maps
 plot(c(r_bc_pred, r_bc_bin),main=c(&#39;BIOCLIM prob.&#39;,&#39;BIOCLIM bin.&#39;), axes=F) </code></pre>
@@ -809,6 +816,7 @@ by the model is below 1000, you should decrease your learning rate; if
 it is above 10000, you should increase your learning rate. A tutorial on
 BRTs is contained in the dismo package: <code>vignette('brt')</code></p>
 <pre class="r"><code>library(gbm)
+library(dismo)
 
 # Fit BRT
 m_brt &lt;- gbm.step(data = lynx_train, 
@@ -948,9 +956,12 @@ separately.</p>
 <h2><span class="header-section-number">3.1</span> Single model
 predictions</h2>
 <p>We first derive the predictions for each single model algorithms -
-here, we predict to independent test data:</p>
+here, we predict to independent test data. Note that we will not use
+envelope methods as they are typically performing more poorly than other
+methods are less suited for making predictions under climate change
+<span class="citation">(Elith et al. 2006; Elith and Leathwick
+2009)</span>.</p>
 <pre class="r"><code>pred_testdata &lt;- data.frame(
-  bc = predict(m_bc, lynx_test[,my_preds]),
   glm = predict(m_glm, lynx_test[,my_preds], type=&#39;response&#39;),
   rf = predict(m_rf, lynx_test[,my_preds], type=&#39;response&#39;),
   brt = predict.gbm(m_brt, lynx_test[,my_preds], 
@@ -958,13 +969,13 @@ here, we predict to independent test data:</p>
 )
 
 summary(pred_testdata)</code></pre>
-<pre><code>##        bc               glm                 rf                brt         
-##  Min.   :0.00000   Min.   :0.000048   Min.   :0.007883   Min.   :0.07390  
-##  1st Qu.:0.03846   1st Qu.:0.067098   1st Qu.:0.096150   1st Qu.:0.09218  
-##  Median :0.07692   Median :0.367094   Median :0.194283   Median :0.15074  
-##  Mean   :0.17486   Mean   :0.414709   Mean   :0.390053   Mean   :0.39101  
-##  3rd Qu.:0.21154   3rd Qu.:0.801708   3rd Qu.:0.828133   3rd Qu.:0.82843  
-##  Max.   :0.88462   Max.   :0.973535   Max.   :1.000000   Max.   :0.93335</code></pre>
+<pre><code>##       glm                 rf                brt         
+##  Min.   :0.000048   Min.   :0.007883   Min.   :0.07390  
+##  1st Qu.:0.067098   1st Qu.:0.096150   1st Qu.:0.09218  
+##  Median :0.367094   Median :0.194283   Median :0.15074  
+##  Mean   :0.414709   Mean   :0.390053   Mean   :0.39101  
+##  3rd Qu.:0.801708   3rd Qu.:0.828133   3rd Qu.:0.82843  
+##  Max.   :0.973535   Max.   :1.000000   Max.   :0.93335</code></pre>
 <p>As we have stored the maxSens+Spec threshold for each model, we can
 also threshold the predictions to obtain predicted presences and
 absences.</p>
@@ -976,13 +987,13 @@ binpred_testdata &lt;- sapply(names(pred_testdata), FUN=function(alg){
 })
 
 summary(binpred_testdata)</code></pre>
-<pre><code>##        bc              glm               rf              brt        
-##  Min.   :0.0000   Min.   :0.0000   Min.   :0.0000   Min.   :0.0000  
-##  1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000  
-##  Median :0.0000   Median :0.0000   Median :0.0000   Median :0.0000  
-##  Mean   :0.4948   Mean   :0.4536   Mean   :0.3299   Mean   :0.4124  
-##  3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:1.0000  
-##  Max.   :1.0000   Max.   :1.0000   Max.   :1.0000   Max.   :1.0000</code></pre>
+<pre><code>##       glm               rf              brt        
+##  Min.   :0.0000   Min.   :0.0000   Min.   :0.0000  
+##  1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000  
+##  Median :0.0000   Median :0.0000   Median :0.0000  
+##  Mean   :0.4536   Mean   :0.3299   Mean   :0.4124  
+##  3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:1.0000  
+##  Max.   :1.0000   Max.   :1.0000   Max.   :1.0000</code></pre>
 </div>
 <div id="making-ensembles" class="section level2" number="3.2">
 <h2><span class="header-section-number">3.2</span> Making ensembles</h2>
@@ -1003,7 +1014,7 @@ median_prob &lt;- apply(pred_testdata, 1, median)
 
 # Weighted mean of probabilities, weighted by TSS 
 # (Make sure that order of models is the same in df for predictions and performance!!)
-wmean_prob &lt;- apply(pred_testdata, 1, weighted.mean, w=comp_perf[,&#39;TSS&#39;])
+wmean_prob &lt;- apply(pred_testdata, 1, weighted.mean, w=comp_perf[names(pred_testdata),&#39;TSS&#39;])
 
 # Committee averaging of binary predictions: calculates the proportion of
 # models that predict the species to be present.
@@ -1027,26 +1038,26 @@ al. 2009)</span>.</p>
 <pre class="r"><code># performance measures for &quot;mean of probabilities&quot;
 (perf_mean_prob &lt;- evalSDM(lynx_test$occ, mean_prob))</code></pre>
 <pre><code>##         AUC       TSS     Kappa      Sens      Spec       PCC        D2 thresh
-## 1 0.9455575 0.8066202 0.8092637 0.8780488 0.9285714 0.9072165 0.5016186  0.305</code></pre>
+## 1 0.9472997 0.8066202 0.8092637 0.8780488 0.9285714 0.9072165 0.5640132   0.35</code></pre>
 <pre class="r"><code># performance measures for &quot;median of probabilities&quot;:
 (perf_median_prob &lt;- evalSDM(lynx_test$occ, median_prob))</code></pre>
-<pre><code>##        AUC       TSS     Kappa      Sens      Spec       PCC       D2 thresh
-## 1 0.940331 0.8244774 0.8298992 0.8780488 0.9464286 0.9175258 0.545368  0.305</code></pre>
+<pre><code>##         AUC       TSS     Kappa      Sens      Spec       PCC        D2 thresh
+## 1 0.9453397 0.8244774 0.8298992 0.8780488 0.9464286 0.9175258 0.5764701   0.41</code></pre>
 <pre class="r"><code># performance measures for &quot;weighted mean of probabilities&quot;:
 (perf_wmean_prob &lt;- evalSDM(lynx_test$occ, wmean_prob))</code></pre>
 <pre><code>##         AUC       TSS     Kappa      Sens      Spec       PCC        D2 thresh
-## 1 0.9468641 0.8066202 0.8092637 0.8780488 0.9285714 0.9072165 0.5105983  0.315</code></pre>
+## 1 0.9472997 0.8066202 0.8092637 0.8780488 0.9285714 0.9072165 0.5641125   0.35</code></pre>
 <pre class="r"><code># Compare:
 (ens_perf &lt;- rbind(mean_prob = perf_mean_prob, median_prob = perf_median_prob, 
                     wmean_prob = perf_mean_prob))</code></pre>
 <pre><code>##                   AUC       TSS     Kappa      Sens      Spec       PCC
-## mean_prob   0.9455575 0.8066202 0.8092637 0.8780488 0.9285714 0.9072165
-## median_prob 0.9403310 0.8244774 0.8298992 0.8780488 0.9464286 0.9175258
-## wmean_prob  0.9455575 0.8066202 0.8092637 0.8780488 0.9285714 0.9072165
+## mean_prob   0.9472997 0.8066202 0.8092637 0.8780488 0.9285714 0.9072165
+## median_prob 0.9453397 0.8244774 0.8298992 0.8780488 0.9464286 0.9175258
+## wmean_prob  0.9472997 0.8066202 0.8092637 0.8780488 0.9285714 0.9072165
 ##                    D2 thresh
-## mean_prob   0.5016186  0.305
-## median_prob 0.5453680  0.305
-## wmean_prob  0.5016186  0.305</code></pre>
+## mean_prob   0.5640132   0.35
+## median_prob 0.5764701   0.41
+## wmean_prob  0.5640132   0.35</code></pre>
 <pre class="r"><code># Note that we do not assess the performance of the committee average as the interpretation of this ensemble is quite different: it gives the proportion of models that agree on predicted presence</code></pre>
 </div>
 <div id="visualising-response-surfaces" class="section level2"
@@ -1057,7 +1068,6 @@ surfaces</h2>
 <pre class="r"><code># Response surfaces:
 # Make predictions of all models to hypothetical grid:
 xyz_preds &lt;- data.frame(
-  bc = predict(m_bc, xyz),
   glm = predict(m_glm, xyz, type=&#39;response&#39;),
   rf = predict(m_rf, xyz, type=&#39;response&#39;),
   brt = predict.gbm(m_brt, xyz, 
@@ -1073,7 +1083,7 @@ xyz_bin &lt;- sapply(names(xyz_preds), FUN=function(alg){
 xyz_ensemble &lt;- data.frame(
   mean_prob = rowMeans(xyz_preds),
   median_prob = apply(xyz_preds, 1, median),
-  wmean_prob = apply(xyz_preds, 1, weighted.mean, w=comp_perf[,&#39;TSS&#39;]),
+  wmean_prob = apply(xyz_preds, 1, weighted.mean, w=comp_perf[names(xyz_preds),&#39;TSS&#39;]),
   committee_av = rowSums(xyz_bin)/ncol(xyz_bin),
   sd_prob = apply(xyz_preds, 1, sd)
 )   
@@ -1126,7 +1136,6 @@ bio_curr_df &lt;- data.frame(crds(bio_curr[[my_preds]]),as.points(bio_curr[[my_p
 
 # We make predictions of all models:
 env_preds &lt;- data.frame(bio_curr_df[,1:2], 
-  bc = predict(m_bc, bio_curr_df),
   glm = predict(m_glm, bio_curr_df, type=&#39;response&#39;),
   rf = predict(m_rf, bio_curr_df, type=&#39;response&#39;),
   brt = predict.gbm(m_brt, bio_curr_df, 
@@ -1154,7 +1163,7 @@ terra::plot(r_preds_bin)</code></pre>
 env_ensemble &lt;- data.frame(bio_curr_df[,1:2], 
   mean_prob = rowMeans(env_preds[,-c(1:2)]),
   median_prob = apply(env_preds[,-c(1:2)], 1, median),
-  wmean_prob = apply(env_preds[,-c(1:2)], 1, weighted.mean, w=comp_perf[,&#39;TSS&#39;]),
+  wmean_prob = apply(env_preds[,-c(1:2)], 1, weighted.mean, w=comp_perf[names(env_preds[,-c(1:2)]),&#39;TSS&#39;]),
   committee_av = rowSums(env_preds_bin[,-c(1:2)])/ncol(env_preds_bin[,-c(1:2)]),
   sd_prob = apply(env_preds[,-c(1:2)], 1, sd))
 
@@ -1274,6 +1283,12 @@ Elith, J., C. H. Graham, R. P. Anderson, M. Dudik, S. Ferrier, A.
 Guisan, R. J. Hijmans, et al. 2006. <span>“Novel Methods Improve
 Prediction of Species’ Distribution from Occurence Data.”</span>
 <em>Ecography</em> 29: 129–51.
+</div>
+<div id="ref-Elith2009" class="csl-entry">
+Elith, J., and J. R. Leathwick. 2009. <span>“Species Distribution
+Models: Ecological Explanation and Prediction Across Space and
+Time.”</span> <em>Annual Review of Ecology, Evolution, and
+Systematics</em> 40: 677–97.
 </div>
 <div id="ref-elith2008" class="csl-entry">
 Elith, J., J. R. Leathwick, and T. Hastie. 2008. <span>“A Working Guide
