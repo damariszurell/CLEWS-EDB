@@ -13,7 +13,7 @@
 
 <title>Eurasian lynx reintroduction</title>
 
-<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -937,9 +937,9 @@ plot(col_stats_29$map_col_time, axes=F, breaks=c(-9,seq(-9,100,length=11)), col=
 <div id="extinction-probability" class="section level3" number="2.1.2">
 <h3><span class="header-section-number">2.1.2</span> Extinction
 probability</h3>
-<p>Extinction probability at a specific time can be defined as the
-proportion of replicate simulation runs without viable population at a
-specific point in time. We can extract this information from the
+<p>The cumulative probability of extinction at a time <em>t</em> can be
+defined as the proportion of replicate simulation runs without viable
+population at <em>t</em>. We can extract this information from the
 population output file.</p>
 <pre class="r"><code># read population output file into a data frame
 pop_29 &lt;- readPop(s_29, dirpath)
@@ -954,7 +954,7 @@ pop_29 %&gt;%
   # Sum individuals over all cells per year and replicate
   summarise(sumPop = sum(NInd), .groups=&#39;keep&#39;) %&gt;%
   group_by(Year) %&gt;%
-  # Average extinction probability (1 minus the proportion of replicates with surviving populations)
+  # Cumulative extinction probability (1 minus the proportion of replicates with surviving populations)
   summarise(extProb = 1-sum(sumPop&gt;0, na.rm=T)/RepNb)</code></pre>
 <pre><code>## # A tibble: 101 × 2
 ##     Year extProb
@@ -970,10 +970,15 @@ pop_29 %&gt;%
 ##  9     8  0     
 ## 10     9  0.0100
 ## # ℹ 91 more rows</code></pre>
-<p>Accordingly, the mean time to extinction can then be defined as the
-mean time across all replicates when the population went extinct. Again,
-this information can be extracted from the population output file.</p>
-<pre class="r"><code># Mean time to extinction:
+<p>Additionally, we might be interested in the mean time to extinction.
+The arithmetic mean time to extinction can simply be extracted as the
+mean time across all replicates when the population went extinct.
+However, as we arbitrarily set the time horizon for the simulation, the
+arithmetic mean might not be comparable across studies. <span
+class="citation">Grimm and Wissel (2004)</span> introduced the concept
+of the intrinsic mean time of extinction, which can be derived from the
+cumulative probability of extinction.</p>
+<pre class="r"><code># Arithmetic mean time to extinction:
 pop_29 %&gt;%
   group_by(Rep,Year) %&gt;%
   # Sum individuals over all cells per year and replicate    
@@ -982,12 +987,27 @@ pop_29 %&gt;%
   filter(sumPop==0) %&gt;% 
   pull(Year) %&gt;% mean</code></pre>
 <pre><code>## [1] 24</code></pre>
+<pre class="r"><code># Intrinsic mean time to extinction:
+pop_29 %&gt;%
+  group_by(Rep,Year) %&gt;%
+  # Sum individuals over all cells per year and replicate
+  summarise(sumPop = sum(NInd), .groups=&#39;keep&#39;) %&gt;%
+  group_by(Year) %&gt;%
+  # Cumulative extinction probability
+  summarise(extProb = 1-sum(sumPop&gt;0, na.rm=T)/RepNb) %&gt;%
+  # Regress -log(1-ext_prob) against time 
+  lm(I(-log(1-extProb))~Year, data=.) %&gt;%
+  # Extract slope coefficient 
+  coef() %&gt;% .[2] %&gt;% 
+  {1 / .}  # Intrinsic mean time to extinction is the inverse of the slope coefficient</code></pre>
+<pre><code>##     Year 
+## 214.7156</code></pre>
 <p>As the computation of these measures takes a few line of code, it is
 useful to define an own function to ease computation and keep our R
 script as short as possible. We thus define two new functions (using the
 construct <code>function()</code>) for calculating extinction
 probability and mean time to extinction.</p>
-<pre class="r"><code># Define a function for calculating extinction probability
+<pre class="r"><code># Define a function for calculating cumulative extinction probability
 Calc_ExtProb &lt;- function(pop_df,s) {
   require(dplyr)
   
@@ -1002,8 +1022,8 @@ Calc_ExtProb &lt;- function(pop_df,s) {
   right_join(tibble(Year = seq_len(s@simul@Years)), by=&#39;Year&#39;) %&gt;% replace_na(list(extProb=1))
 }
 
-# Define a function for calculating mean time to extinction
-Calc_ExtTime &lt;- function(pop_df) {
+# Define a function for calculating arithmetic mean time to extinction
+Calc_AvExtTime &lt;- function(pop_df) {
   require(dplyr)
   
   pop_df %&gt;%
@@ -1013,10 +1033,28 @@ Calc_ExtTime &lt;- function(pop_df) {
   # Identify in which year they go extinct
   filter(sumPop==0) %&gt;% 
   pull(Year) %&gt;% mean
+}
+
+# Define a function for calculating intrinsic mean time to extinction
+Calc_ExtTime &lt;- function(pop_df) {
+  require(dplyr)
+  
+  pop_df %&gt;%
+  group_by(Rep,Year) %&gt;%
+  # Sum individuals over all cells per year and replicate
+  summarise(sumPop = sum(NInd), .groups=&#39;keep&#39;) %&gt;%
+  group_by(Year) %&gt;%
+  # Average extinction probability (1 minus the proportion of replicates with surviving populations)
+  summarise(extProb = 1-sum(sumPop&gt;0, na.rm=T)/RepNb) %&gt;%
+  # Regress -log(1-ext_prob) against time 
+  lm(I(-log(1-extProb))~Year, data=.) %&gt;%
+  # Extract slope coefficient 
+  coef() %&gt;% .[2] %&gt;% 
+  {1 / .}  # Intrinsic mean time to extinction is the inverse of the slope coefficient
 }</code></pre>
 <p>Once loaded into your R console, these functions can be used just as
 any other function from the different packages. Let’s use our new
-functions to calculate extinction probability and mean time to
+functions to calculate extinction probability and intrinsic mean time to
 extinction for the single-site reintroduction scenario.</p>
 <pre class="r"><code># extinction probability
 extProb_29 &lt;- Calc_ExtProb(pop_29,s_29)
@@ -1028,13 +1066,12 @@ ggplot(data = extProb_29, mapping = aes(x = Year, y = extProb)) +
 <p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
 <pre class="r"><code># mean time to extinction
 Calc_ExtTime(pop_29)</code></pre>
-<pre><code>## [1] 24</code></pre>
+<pre><code>##     Year 
+## 214.7156</code></pre>
 <p>The results indicate that although the mean abundances across 100
 replicate simulations are increasing over time, there is still a certain
-risk of extinction for the reintroduced lynx. Whether the reintroduced
-population is deemed to extinction or not seems to be determined
-comparably early with a mean time to extinction of <em>c.</em> 24
-years.</p>
+risk of extinction for the reintroduced lynx. Still, the intrinsic mean
+time to extinction is <em>c.</em> 215 years.</p>
 </div>
 </div>
 <div id="multi-site-reintroduction-1" class="section level2"
@@ -1060,7 +1097,6 @@ probability and colonisation time</h3>
 occupancy probability and time to colonisation.</p>
 <pre class="r"><code># Colonisation metrics
 col_stats_29_15 &lt;- ColonisationStats(s_29_15, dirpath, years = 100, maps = T)</code></pre>
-<pre><code>## Warning: [rast] the first raster was empty and was ignored</code></pre>
 <pre class="r"><code># map occupancy probability after 100 years
 bg() 
 plot(col_stats_29_15$map_occ_prob, axes=F, range=c(0,1), col=mycol_occprob(10), type=&quot;continuous&quot;, plg=list(x=&quot;bottom&quot;), add =T)</code></pre>
@@ -1077,7 +1113,7 @@ colonisation.</p>
 number="2.2.2">
 <h3><span class="header-section-number">2.2.2</span> Extinction
 probability</h3>
-<p>Last, we calculate extinction probability and mean time to
+<p>Last, we calculate extinction probability and arithmetic mean time to
 extinction, and compare these between the single-site and multi-site
 reintroductions.</p>
 <pre class="r"><code># read population output file into a data frame
@@ -1086,9 +1122,10 @@ pop_29_15 &lt;- readPop(s_29_15, dirpath)
 # extinction probability
 extProb_29_15 &lt;- Calc_ExtProb(pop_29_15,s_29_15)
 
-# mean time to extinction
+# intrinsic mean time to extinction
 Calc_ExtTime(pop_29_15)</code></pre>
-<pre><code>## [1] 39.42857</code></pre>
+<pre><code>##     Year 
+## 237.6675</code></pre>
 <pre class="r"><code># Compare extinction probabilities for single- and multi-site reintroduction
 
 # Join extinction probabilities in a single data frame
@@ -1100,8 +1137,8 @@ ggplot(data = extProb_scens, mapping = aes(x = Year, y = extProb, color=Scenario
   ylim(0,1)</code></pre>
 <p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
 <p>As result, the multi-site reintroduction reduces the extinction
-probability of lynx and also the mean time to extinction takes longer.
-Still, there is only a 75 % chance of successfull long-term
+probability of lynx and also the intrinsic mean time to extinction
+increases. Still, there is only a 75 % chance of successful long-term
 establishment of lynx in Scotland.</p>
 </div>
 </div>
@@ -1114,7 +1151,7 @@ forget to save.</p>
 # Already on file and ready to read it back in for the homework: &quot;landsc&quot;
 
 # Save other (non-terra) objects and functions from the workspace:
-save(bg, Calc_ExtProb, Calc_ExtTime, extProb_29, extProb_29_15, file=&#39;data/8_RS_lynx.RData&#39;)</code></pre>
+save(bg, Calc_ExtProb, Calc_AvExtTime, Calc_ExtTime, extProb_29, extProb_29_15, file=&#39;data/8_RS_lynx.RData&#39;)</code></pre>
 <p>As homework, solve all the exercises in the blue boxes.</p>
 <div class="alert alert-info">
 <p><em><strong>Exercise:</strong></em></p>
@@ -1137,6 +1174,12 @@ Zurell, Kevin Watts, and Justin M. J. Travis. 2021. <span>“RangeShifter
 Eco-Evolutionary Dynamics and Species’ Responses to Environmental
 Changes.”</span> <em>Ecography</em> 44 (10): 1453–62. https://doi.org/<a
 href="https://doi.org/10.1111/ecog.05687">https://doi.org/10.1111/ecog.05687</a>.
+</div>
+<div id="ref-Grimm2004" class="csl-entry">
+Grimm, V., and C. Wissel. 2004. <span>“The Intrinsic Mean Time to
+Extinction: A Unifying Approach to Analysing Persistence and Viability
+of Populations.”</span> <em>Oikos</em> 105 (3): 501–11. <a
+href="https://doi.org/10.1111/j.0030-1299.2004.12606.x">https://doi.org/10.1111/j.0030-1299.2004.12606.x</a>.
 </div>
 <div id="ref-Malchow2021" class="csl-entry">
 Malchow, Anne-Kathleen, Greta Bocedi, Stephen C. F. Palmer, Justin M. J.
