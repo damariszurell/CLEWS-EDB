@@ -13,7 +13,7 @@
 
 <title>Getting started with RangeShiftR</title>
 
-<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -71,6 +71,7 @@ if (window.hljs) {
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging div.csl-entry {
   margin-left:2em;
@@ -537,8 +538,8 @@ number="1.2">
 working example</h2>
 <p>Load the package by typing:</p>
 <pre class="r"><code>library(RangeShiftR)</code></pre>
-<pre><code>## RangeshiftR version 1.0.4 (10.05.2022)
-## Copyright (C) 2020-2022 Anne-Kathleen Malchow, Greta Bocedi, Stephen C.F. Palmer, Justin M.J. Travis, Damaris Zurell
+<pre><code>## RangeshiftR version 3.0.0 (22.04.2026)
+## Copyright (C) 2020-2026 Anne-Kathleen Malchow, Greta Bocedi, Stephen C.F. Palmer, Justin M.J. Travis, Jette Wolff, Théo Pannetier, Roslyn Henry, Damaris Zurell
 ## 
 ## This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY.
 ## You are welcome to redistribute it and/or modify it under certain conditions;
@@ -564,30 +565,32 @@ typing:</p>
 ## Control Parameters checked
 ## 
 ## Run Simulation(s) with random seed ...
+## ReadLandParamsR() done
+## ReadParametersR() done.
+## ReadEmigrationR() done.
+## ReadTransferR() done.
+## ReadSettlementR() done.
+## ReadInitialisationR() done.
 ## 
 ## Running simulation nr. 1
-## 
-## starting replicate 0
 ## RunModel(): completed initialisation 
-## starting year 0...
-## starting year 1...
-## starting year 2...
-## starting year 3...
-## starting year 10...
-## starting year 20...
-## starting year 30...
-## 
-## starting replicate 1
+## Starting year 0...
+## Starting year 1...
+## Starting year 2...
+## Starting year 3...
+## Starting year 10...
+## Starting year 20...
+## Starting year 30...
 ## RunModel(): completed initialisation 
-## starting year 0...
-## starting year 1...
-## starting year 2...
-## starting year 3...
-## starting year 10...
-## starting year 20...
-## starting year 30...
+## Starting year 0...
+## Starting year 1...
+## Starting year 2...
+## Starting year 3...
+## Starting year 10...
+## Starting year 20...
+## Starting year 30...
 ## 
-## ***** Elapsed time: 2 seconds
+## ***** Elapsed time: 5 seconds
 ## 
 ## *****
 ## ***** Simulation completed 
@@ -641,9 +644,12 @@ as some log files - in the ‘Outputs’ folder.</p>
 ## 
 ##   Settlement:
 ##    Settlement conditions:
-##      [,1]
-## [1,]    0
-##    FindMate = FALSE 
+## [1] 0
+##    FindMate =
+## [1] FALSE
+## 
+##  Management: 
+##  [1] FALSE
 ## 
 ##  Initialisation: 
 ##    InitType = 0 : Free initialisation 
@@ -661,15 +667,19 @@ are:</p>
 <li>Initialisation</li>
 </ul>
 <p>Here is a schematic overview of the module constructors and their
-relations <span class="citation">(Malchow et al. 2021)</span>:</p>
+relations <span class="citation">(adapated from Malchow et al.
+2021)</span>:</p>
 <div class="figure">
-<img src="figures/func_overview.png" alt="*RangeshiftR function overview*" width="1604" />
+<img src="figures/function_overview_3.0.png" alt="*RangeshiftR function overview*" width="412" />
 <p class="caption">
 <em>RangeshiftR function overview</em>
 </p>
 </div>
 <p>In the following, we go through some of the most relevant aspects of
-each module.</p>
+each module. A full overview of all functions is provided in the
+official <a
+href="https://rangeshifter.github.io/RangeshiftR-tutorials/overview_0.html">RangeShiftR
+tutorials</a>.</p>
 <div id="simulation" class="section level2" number="2.1">
 <h2><span class="header-section-number">2.1</span> Simulation</h2>
 <p>This module is used to set general simulation parameters
@@ -850,12 +860,12 @@ pop_wide_rep0 &lt;- reshape(subset(pop_df,Rep==0)[,c(&#39;Year&#39;,&#39;x&#39;,
 
 head(pop_wide_rep0)</code></pre>
 <pre><code>##     x    y NInd.0 NInd.50
-## 1  15  165      3       5
-## 2 265 2505      3       3
-## 3 425 2435      3       6
-## 4 435 1855      3       6
-## 5 155 1085      3       4
-## 6 515 2335      3       6</code></pre>
+## 1 365  625      3       6
+## 2 835 2495      3       5
+## 3 485   45      3       7
+## 4 425  795      3       8
+## 5 365   85      3       8
+## 6 255  995      3       3</code></pre>
 <pre class="r"><code># use terra package to make a SpatRaster from the data frame
 library(terra)
 
@@ -867,7 +877,8 @@ terra::plot(stack_years_rep0, range = c(0,10), type=&#39;continuous&#39;)</code>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="unnumbered">References</h1>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
 <div id="ref-Bocedi2014" class="csl-entry">
 Bocedi, G., S. C. F. Palmer, G. Pe’er, R. K. Heikkinen, Y. G. Matsinos,
 K. Watts, and J. M. J. Travis. 2014. <span>“RangeShifter: A Platform for
@@ -901,7 +912,7 @@ href="https://doi.org/10.1111/ecog.05689">https://doi.org/10.1111/ecog.05689</a>
 <br>
 <hr />
 <div id="footer">
-<p>Damaris Zurell 2023 <a href="http://creativecommons.org/licenses/by/4.0/" >(CC BY 4.0)</a>.  </p>
+<p>Damaris Zurell 2023-2026 <a href="http://creativecommons.org/licenses/by/4.0/" >(CC BY 4.0)</a>.  </p>
 </div>
 
 </html>

@@ -13,7 +13,7 @@
 
 <title>Black grouse range dynamics</title>
 
-<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -71,6 +71,7 @@ if (window.hljs) {
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging div.csl-entry {
   margin-left:2em;
@@ -829,6 +830,10 @@ replicates.</p>
 # Read population output file into a data frame
 pop_static &lt;- readPop(s, dirpath)
 
+# Transfer into correct coordinate system
+pop_static$x &lt;- pop_static$x + xmin(CH_mask)
+pop_static$y &lt;- pop_static$y + ymin(CH_mask)
+
 # Make data frame with mean abundances per cell and selected year:
 pop_static_wide &lt;- pop_static %&gt;%
   # Select years you want to map
@@ -843,30 +848,24 @@ pop_static_wide &lt;- pop_static %&gt;%
 pop_static_wide</code></pre>
 <pre><code>## # A tibble: 8,580 × 4
 ## # Groups:   x, y [8,580]
-##        x     y  `25` `125`
-##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1 63500 57500   0.5   0.3
-##  2 63500 58500   0.2   0.1
-##  3 63500 60500   0.6   1  
-##  4 64500 36500   0.1   0.3
-##  5 64500 57500   0.5   0.2
-##  6 64500 58500   0.1   0  
-##  7 65500 35500   0.3   0.3
-##  8 65500 36500   0.2   0  
-##  9 65500 37500   0     0  
-## 10 65500 38500   0.4   0.3
+##         x      y  `25` `125`
+##     &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 548500 132500   0.4   0.2
+##  2 548500 133500   0.5   0.3
+##  3 548500 135500   0.3   0.3
+##  4 549500 111500   0.3   0.3
+##  5 549500 132500   0.4   0.1
+##  6 549500 133500   0.1   0.1
+##  7 550500 110500   0.2   0.2
+##  8 550500 111500   0.1   0.1
+##  9 550500 112500   0.2   0.3
+## 10 550500 113500   0.4   0.2
 ## # ℹ 8,570 more rows</code></pre>
 <p>Next, we make SpatRaster maps from the selected output years.
 Thereby, we have to take care that the coordinates are in the same
 format as the original input map to ease mapping and allow masking to
 the Swiss borders.</p>
 <pre class="r"><code># Make multi-layer SpatRaster
-
-# Transfer into correct coordinate system
-pop_static_wide$x &lt;- pop_static_wide$x + xmin(CH_mask)
-pop_static_wide$y &lt;- pop_static_wide$y + ymin(CH_mask)
-
-# Make SpatRaster
 r_pop_static &lt;- terra::rast(pop_static_wide, crs=crs(CH_mask), type=&#39;xyz&#39;)
 
 # Extend to original spatial extent
@@ -922,6 +921,11 @@ phase to map the simulated range dynamics.</p>
 <pre class="r"><code># Read population output file into a data frame
 pop_dynamic &lt;- readPop(s_cc, dirpath)
 
+# Transfer into correct coordinate system
+pop_dynamic$x &lt;- pop_dynamic$x + xmin(CH_mask)
+pop_dynamic$y &lt;- pop_dynamic$y + ymin(CH_mask)
+
+
 # Make data frame with mean abundances per cell and selected year:
 pop_dynamic_wide &lt;- pop_dynamic %&gt;%
   # Select years you want to map: every ten years after spinup
@@ -933,14 +937,7 @@ pop_dynamic_wide &lt;- pop_dynamic %&gt;%
   # Make separate columns for different years
   pivot_wider(names_from=Year, values_from=meanInd)</code></pre>
 <pre class="r"><code># Make multi-layer SpatRaster
-
-# Transfer into correct coordinate system
-pop_dynamic_wide_corr &lt;- pop_dynamic_wide
-pop_dynamic_wide_corr$x &lt;- pop_dynamic_wide$x + xmin(CH_mask)
-pop_dynamic_wide_corr$y &lt;- pop_dynamic_wide$y + ymin(CH_mask)
-
-# Make SpatRaster
-r_pop_dynamic &lt;- terra::rast(pop_dynamic_wide_corr, crs=crs(CH_mask), type=&#39;xyz&#39;)
+r_pop_dynamic &lt;- terra::rast(pop_dynamic_wide, crs=crs(CH_mask), type=&#39;xyz&#39;)
 
 # Extend to original spatial extent
 r_pop_dynamic &lt;- terra::extend(r_pop_dynamic, CH_mask)
@@ -1138,7 +1135,8 @@ with <code>readRange()</code>, specifically from the column
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="unnumbered">References</h1>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
 <div id="ref-Bocedi2014" class="csl-entry">
 Bocedi, G., S. C. F. Palmer, G. Pe’er, R. K. Heikkinen, Y. G. Matsinos,
 K. Watts, and J. M. J. Travis. 2014. <span>“RangeShifter: A Platform for
@@ -1203,7 +1201,7 @@ href="https://doi.org/10.1111/jbi.13608">https://doi.org/10.1111/jbi.13608</a>.
 <br>
 <hr />
 <div id="footer">
-<p>Damaris Zurell 2023 <a href="http://creativecommons.org/licenses/by/4.0/" >(CC BY 4.0)</a>.  </p>
+<p>Damaris Zurell 2023-2026 <a href="http://creativecommons.org/licenses/by/4.0/" >(CC BY 4.0)</a>.  </p>
 </div>
 
 </html>

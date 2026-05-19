@@ -71,6 +71,7 @@ if (window.hljs) {
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging div.csl-entry {
   margin-left:2em;
@@ -739,7 +740,7 @@ the maximum number of steps.</p>
 <pre class="r"><code>settle &lt;- Settlement(StageDep = F,
                      SexDep = T,
                      Settle = cbind(c(0, 1), c(1.0, 1.0), c(-10, -10), c(1, 1)), # here no difference between sexes
-                     FindMate = c(F, T), # only males need to find a female
+                     FindMate = cbind(c(0,1),c(F, T)), # only males need to find a female
                      DensDep = T,
                      MaxSteps = 500
                      )</code></pre>
@@ -899,12 +900,12 @@ col_stats_29 &lt;- ColonisationStats(s_29, dirpath, years = 100, maps = T)</code
 <pre class="r"><code># mean occupancy probability in year 100
 head(col_stats_29$occ_prob)</code></pre>
 <pre><code>##   patch  100
-## 1     1 0.06
-## 2     2 0.12
-## 3     3 0.09
-## 4     4 0.37
+## 1     1 0.08
+## 2     2 0.11
+## 3     3 0.14
+## 4     4 0.29
 ## 5     5 0.46
-## 6     6 0.26</code></pre>
+## 6     6 0.32</code></pre>
 <pre class="r"><code># map occupancy probability
 mycol_occprob &lt;- colorRampPalette(c(&#39;blue&#39;,&#39;orangered&#39;,&#39;gold&#39;))
 plot(col_stats_29$map_occ_prob, axes=F, range=c(0,1), col=mycol_occprob(10), type=&quot;continuous&quot;)</code></pre>
@@ -964,11 +965,11 @@ pop_29 %&gt;%
 ##  3     2  0     
 ##  4     3  0     
 ##  5     4  0     
-##  6     5  0     
-##  7     6  0     
-##  8     7  0     
-##  9     8  0     
-## 10     9  0.0100
+##  6     5  0.0100
+##  7     6  0.0100
+##  8     7  0.0100
+##  9     8  0.0300
+## 10     9  0.0300
 ## # ℹ 91 more rows</code></pre>
 <p>Additionally, we might be interested in the mean time to extinction.
 The arithmetic mean time to extinction can simply be extracted as the
@@ -986,7 +987,7 @@ pop_29 %&gt;%
   # Identify in which year they go extinct
   filter(sumPop==0) %&gt;% 
   pull(Year) %&gt;% mean</code></pre>
-<pre><code>## [1] 24</code></pre>
+<pre><code>## [1] 20.67647</code></pre>
 <pre class="r"><code># Intrinsic mean time to extinction:
 pop_29 %&gt;%
   group_by(Rep,Year) %&gt;%
@@ -1001,7 +1002,7 @@ pop_29 %&gt;%
   coef() %&gt;% .[2] %&gt;% 
   {1 / .}  # Intrinsic mean time to extinction is the inverse of the slope coefficient</code></pre>
 <pre><code>##     Year 
-## 214.7156</code></pre>
+## 252.5797</code></pre>
 <p>As the computation of these measures takes a few line of code, it is
 useful to define an own function to ease computation and keep our R
 script as short as possible. We thus define two new functions (using the
@@ -1067,7 +1068,7 @@ ggplot(data = extProb_29, mapping = aes(x = Year, y = extProb)) +
 <pre class="r"><code># mean time to extinction
 Calc_ExtTime(pop_29)</code></pre>
 <pre><code>##     Year 
-## 214.7156</code></pre>
+## 252.5797</code></pre>
 <p>The results indicate that although the mean abundances across 100
 replicate simulations are increasing over time, there is still a certain
 risk of extinction for the reintroduced lynx. Still, the intrinsic mean
@@ -1125,7 +1126,7 @@ extProb_29_15 &lt;- Calc_ExtProb(pop_29_15,s_29_15)
 # intrinsic mean time to extinction
 Calc_ExtTime(pop_29_15)</code></pre>
 <pre><code>##     Year 
-## 237.6675</code></pre>
+## 284.0972</code></pre>
 <pre class="r"><code># Compare extinction probabilities for single- and multi-site reintroduction
 
 # Join extinction probabilities in a single data frame
@@ -1166,7 +1167,8 @@ scenarios.</li>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="unnumbered">References</h1>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
 <div id="ref-Bocedi2021" class="csl-entry">
 Bocedi, Greta, Stephen C. F. Palmer, Anne-Kathleen Malchow, Damaris
 Zurell, Kevin Watts, and Justin M. J. Travis. 2021. <span>“RangeShifter
@@ -1212,7 +1214,7 @@ href="https://doi.org/10.5285/BB15E200-9349-403C-BDA9-B430093807C7">https://doi.
 <br>
 <hr />
 <div id="footer">
-<p>Damaris Zurell 2023 <a href="http://creativecommons.org/licenses/by/4.0/" >(CC BY 4.0)</a>.  </p>
+<p>Damaris Zurell 2023-2026 <a href="http://creativecommons.org/licenses/by/4.0/" >(CC BY 4.0)</a>.  </p>
 </div>
 
 </html>
