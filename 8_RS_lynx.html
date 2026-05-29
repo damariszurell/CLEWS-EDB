@@ -669,24 +669,27 @@ territory of <em>c.</em> 3509 ha or 35 km<sup>2</sup>.</p>
 settings</h2>
 <p>All demographic parameters are listed in Table 2 of <span
 class="citation">Ovenden et al. (2019)</span>. The demographic model
-comprises three stages: first-year juveniles (0–12 months), non-breeding
-sub-adults (12–24 months) and breeding adults (&gt;24months). To
-properly simulate natal dispersal, we have to set an additional
-<em>dummy</em> stage 0 (dispersing juveniles) in
-<code>RangeShiftR</code>. After dispersal, dispersing juveniles (stage
-0) will be assigned to stage 1 (first-year juveniles). This is fully
-described in the <a
-href="https://raw.githubusercontent.com/RangeShifter/RangeShifter-software-and-documentation/master/RangeShifter_v2.0_UserManual.pdf">RangeShifter
+comprises three stages: newborns / first-year juveniles (0–12 months),
+non-breeding sub-adults (12–24 months) and breeding adults
+(&gt;24months). The newborn stage is not typically considered in matrix
+population models but is explicitly defined in <code>RangeShiftR</code>
+simulations to allow e.g. for dispersing juveniles. All surviving
+newborns will reach stage 1 at the end of the first year. Often this
+newborn stage simply receives a survival probability of 1 if the
+first-year mortality is already considered in the fecundity rate.
+Alternatively, first-year survival can be explicitly provided &lt; 1,
+which is the case in the lynx example here. The logic of the newborn
+stage is fully described in the <a
+href="https://github.com/RangeShifter/RangeShifter-documentation-and-tutorial/blob/master/RangeShifter_v3.0_UserManual.pdf">RangeShifter
 user manual</a>.</p>
 <pre class="r"><code># Transition matrix
-(trans_mat &lt;- matrix(c(0,1,0,0,0,0, 0.53, 0,0, 0, 0, 0.63, 5,0, 0, 0.8), nrow = 4, byrow = F))  # stage 0: dispersing newborns; stage 1 : first-year juveniles; stage 2: non-breeding sub-adults; stage 3: breeding adults</code></pre>
-<pre><code>##      [,1] [,2] [,3] [,4]
-## [1,]    0 0.00 0.00  5.0
-## [2,]    1 0.00 0.00  0.0
-## [3,]    0 0.53 0.00  0.0
-## [4,]    0 0.00 0.63  0.8</code></pre>
+(trans_mat &lt;- matrix(c(0, 0.53, 0,0, 0, 0.63, 5, 0, 0.8), nrow = 3, byrow = F))  # stage 0: dispersing newborns / first-year juveniles; stage 1: non-breeding sub-adults; stage 2: breeding adults</code></pre>
+<pre><code>##      [,1] [,2] [,3]
+## [1,] 0.00 0.00  5.0
+## [2,] 0.53 0.00  0.0
+## [3,] 0.00 0.63  0.8</code></pre>
 <pre class="r"><code># Define the stage structure
-stg &lt;- StageStructure(Stages = 4, # four stages including dispersing juveniles
+stg &lt;- StageStructure(Stages = 3, # three stages including dispersing juveniles
                       TransMatrix = trans_mat,  # transition matrix
                       MaxAge = 17,  # maximum age
                       FecDensDep = T   # density dependence in fecundity
@@ -708,11 +711,11 @@ al. (2019)</span> considered Eurasian lynx as poor dispersers with some
 sex bias in the dispersal probability. Specifically, the males were
 assigned a higher emigration probability compared to females.</p>
 <pre class="r"><code>emig &lt;- Emigration(DensDep=T, StageDep=T, SexDep = T,
-                   EmigProb = cbind(c(0,0,1,1,2,2,3,3),
-                                    c(0,1,0,1,0,1,0,1),
-                                    c(0.4, 0.9, 0, 0, 0, 0, 0, 0),  # only emigration of juveniles, males higher than females
-                                    c(10, 10, 0, 0, 0, 0, 0, 0), 
-                                    c(1, 1, 0, 0, 0, 0, 0, 0)) ) </code></pre>
+                   EmigProb = cbind(c(0,0,1,1,2,2),
+                                    c(0,1,0,1,0,1),
+                                    c(0.4, 0.9, 0, 0, 0, 0),  # only emigration of juveniles, males higher than females
+                                    c(10, 10, 0, 0, 0, 0), 
+                                    c(1, 1, 0, 0, 0, 0)) ) </code></pre>
 <p>The transfer phase of dispersal was modelled using a stochastic
 movement simulator (SMS). This mechanistic movement model allows
 individuals to perceive certain aspects of the landscape and select
@@ -791,10 +794,10 @@ and stage.</p>
 <!--                    InitAge = 0)       # at min age for the respective stage -->
 <!-- ``` -->
 <pre class="r"><code># prepare dataframe for InitIndsFile
-(init_df_29 &lt;- data.frame(Year=0,Species=0,PatchID=29,Ninds=c(5,5),Sex=c(0,1),Age=3,Stage=3))</code></pre>
+(init_df_29 &lt;- data.frame(Year=0,Species=0,PatchID=29,Ninds=c(5,5),Sex=c(0,1),Age=3,Stage=2))</code></pre>
 <pre><code>##   Year Species PatchID Ninds Sex Age Stage
-## 1    0       0      29     5   0   3     3
-## 2    0       0      29     5   1   3     3</code></pre>
+## 1    0       0      29     5   0   3     2
+## 2    0       0      29     5   1   3     2</code></pre>
 <p>We write the list of initial individuals into a file in the
 <em>Inputs</em> folder and then specify the initialisation module.</p>
 <pre class="r"><code># write InitIndsFile to file
@@ -814,12 +817,12 @@ Kintyre Peninsula and 14 lynx to Aberdeenshire. Similar to above, we
 write the initial individuals list to file and then specify the
 initialisation module.</p>
 <pre class="r"><code># prepare dataframe for InitIndsFile
-(init_df_29_15 &lt;- data.frame(Year=0,Species=0,PatchID=rep(c(29,15),each=2),Ninds=rep(c(9,7),each=2),Sex=c(0,1),Age=3,Stage=3))</code></pre>
+(init_df_29_15 &lt;- data.frame(Year=0,Species=0,PatchID=rep(c(29,15),each=2),Ninds=rep(c(9,7),each=2),Sex=c(0,1),Age=3,Stage=2))</code></pre>
 <pre><code>##   Year Species PatchID Ninds Sex Age Stage
-## 1    0       0      29     9   0   3     3
-## 2    0       0      29     9   1   3     3
-## 3    0       0      15     7   0   3     3
-## 4    0       0      15     7   1   3     3</code></pre>
+## 1    0       0      29     9   0   3     2
+## 2    0       0      29     9   1   3     2
+## 3    0       0      15     7   0   3     2
+## 4    0       0      15     7   1   3     2</code></pre>
 <pre class="r"><code># write InitIndsFile to fil
 write.table(init_df_29_15, file=paste0(dirpath,&#39;Inputs/InitInds_29_15.txt&#39;), sep=&#39;\t&#39;, row.names=F, quote=F)
 
@@ -900,12 +903,12 @@ col_stats_29 &lt;- ColonisationStats(s_29, dirpath, years = 100, maps = T)</code
 <pre class="r"><code># mean occupancy probability in year 100
 head(col_stats_29$occ_prob)</code></pre>
 <pre><code>##   patch  100
-## 1     1 0.08
-## 2     2 0.11
-## 3     3 0.14
-## 4     4 0.29
-## 5     5 0.46
-## 6     6 0.32</code></pre>
+## 1     1 0.20
+## 2     2 0.42
+## 3     3 0.42
+## 4     4 0.63
+## 5     5 0.71
+## 6     6 0.54</code></pre>
 <pre class="r"><code># map occupancy probability
 mycol_occprob &lt;- colorRampPalette(c(&#39;blue&#39;,&#39;orangered&#39;,&#39;gold&#39;))
 plot(col_stats_29$map_occ_prob, axes=F, range=c(0,1), col=mycol_occprob(10), type=&quot;continuous&quot;)</code></pre>
@@ -964,11 +967,11 @@ pop_29 %&gt;%
 ##  2     1  0     
 ##  3     2  0     
 ##  4     3  0     
-##  5     4  0     
+##  5     4  0.0100
 ##  6     5  0.0100
 ##  7     6  0.0100
 ##  8     7  0.0100
-##  9     8  0.0300
+##  9     8  0.0200
 ## 10     9  0.0300
 ## # ℹ 91 more rows</code></pre>
 <p>Additionally, we might be interested in the mean time to extinction.
@@ -987,7 +990,7 @@ pop_29 %&gt;%
   # Identify in which year they go extinct
   filter(sumPop==0) %&gt;% 
   pull(Year) %&gt;% mean</code></pre>
-<pre><code>## [1] 20.67647</code></pre>
+<pre><code>## [1] 19.03846</code></pre>
 <pre class="r"><code># Intrinsic mean time to extinction:
 pop_29 %&gt;%
   group_by(Rep,Year) %&gt;%
@@ -1002,7 +1005,7 @@ pop_29 %&gt;%
   coef() %&gt;% .[2] %&gt;% 
   {1 / .}  # Intrinsic mean time to extinction is the inverse of the slope coefficient</code></pre>
 <pre><code>##     Year 
-## 252.5797</code></pre>
+## 368.9602</code></pre>
 <p>As the computation of these measures takes a few line of code, it is
 useful to define an own function to ease computation and keep our R
 script as short as possible. We thus define two new functions (using the
@@ -1068,11 +1071,11 @@ ggplot(data = extProb_29, mapping = aes(x = Year, y = extProb)) +
 <pre class="r"><code># mean time to extinction
 Calc_ExtTime(pop_29)</code></pre>
 <pre><code>##     Year 
-## 252.5797</code></pre>
+## 368.9602</code></pre>
 <p>The results indicate that although the mean abundances across 100
 replicate simulations are increasing over time, there is still a certain
 risk of extinction for the reintroduced lynx. Still, the intrinsic mean
-time to extinction is <em>c.</em> 215 years.</p>
+time to extinction is <em>c.</em> 368 years.</p>
 </div>
 </div>
 <div id="multi-site-reintroduction-1" class="section level2"
@@ -1126,7 +1129,7 @@ extProb_29_15 &lt;- Calc_ExtProb(pop_29_15,s_29_15)
 # intrinsic mean time to extinction
 Calc_ExtTime(pop_29_15)</code></pre>
 <pre><code>##     Year 
-## 284.0972</code></pre>
+## 3631.906</code></pre>
 <pre class="r"><code># Compare extinction probabilities for single- and multi-site reintroduction
 
 # Join extinction probabilities in a single data frame
@@ -1139,7 +1142,7 @@ ggplot(data = extProb_scens, mapping = aes(x = Year, y = extProb, color=Scenario
 <p><img src="8_RS_lynx_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
 <p>As result, the multi-site reintroduction reduces the extinction
 probability of lynx and also the intrinsic mean time to extinction
-increases. Still, there is only a 75 % chance of successful long-term
+increases. There is thus a high chance of successful long-term
 establishment of lynx in Scotland.</p>
 </div>
 </div>
